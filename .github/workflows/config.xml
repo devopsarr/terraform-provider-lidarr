@@ -9,6 +9,7 @@
   <AuthenticationMethod>None</AuthenticationMethod>
   <UpdateMechanism>Docker</UpdateMechanism>
   <LaunchBrowser>True</LaunchBrowser>
-  <Branch>main</Branch>
-  <SslCertHash></SslCertHash>
+  <Branch>master</Branch>
+  <SslCertPath></SslCertPath>
+  <SslCertPassword></SslCertPassword>
 </Config>

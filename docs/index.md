@@ -24,5 +24,5 @@ provider "lidarr" {
 
 ### Optional
 
-- **api_key** (String, Sensitive) API key for Lidarr authentication. Can be specified via the `LIDARR_API_KEY` environment variable.
-- **url** (String) Full Lidarr URL with protocol and port (e.g. `https://test.lidarr.audio:8686`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `LIDARR_URL` environment variable.
+- `api_key` (String, Sensitive) API key for Lidarr authentication. Can be specified via the `LIDARR_API_KEY` environment variable.
+- `url` (String) Full Lidarr URL with protocol and port (e.g. `https://test.lidarr.audio:8686`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `LIDARR_URL` environment variable.
