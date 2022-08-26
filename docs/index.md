@@ -3,12 +3,12 @@
 page_title: "lidarr Provider"
 subcategory: ""
 description: |-
-  
+  The Lidarr provider is used to interact with any Lidarr https://lidarr.audio/ installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.
 ---
 
 # lidarr Provider
 
-
+The Lidarr provider is used to interact with any [Lidarr](https://lidarr.audio/) installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.
 
 ## Example Usage
 
