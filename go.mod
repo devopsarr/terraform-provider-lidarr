@@ -1,4 +1,4 @@
-module github.com/Fuochi/terraform-provider-lidarr
+module github.com/devopsarr/terraform-provider-lidarr
 
 go 1.18
 
