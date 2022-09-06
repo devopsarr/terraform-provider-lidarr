@@ -123,6 +123,7 @@ func (p *lidarrProvider) GetResources(ctx context.Context) (map[string]provider.
 
 func (p *lidarrProvider) GetDataSources(ctx context.Context) (map[string]provider.DataSourceType, diag.Diagnostics) {
 	return map[string]provider.DataSourceType{
+		"lidarr_tag":  dataTagType{},
 		"lidarr_tags": dataTagsType{},
 	}, nil
 }
