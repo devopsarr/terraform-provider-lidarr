@@ -96,13 +96,8 @@ func (d *SystemStatusDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, d
 				Computed:            true,
 				Type:                types.BoolType,
 			},
-			"is_mono_runtime": {
-				MarkdownDescription: "Is mono runtime flag.",
-				Computed:            true,
-				Type:                types.BoolType,
-			},
-			"is_mono": {
-				MarkdownDescription: "Is mono flag.",
+			"is_net_core": {
+				MarkdownDescription: "Is net core flag.",
 				Computed:            true,
 				Type:                types.BoolType,
 			},
@@ -151,11 +146,6 @@ func (d *SystemStatusDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, d
 				Computed:            true,
 				Type:                types.StringType,
 			},
-			"os_version": {
-				MarkdownDescription: "OS version.",
-				Computed:            true,
-				Type:                types.StringType,
-			},
 			"mode": {
 				MarkdownDescription: "Mode.",
 				Computed:            true,
@@ -198,6 +188,31 @@ func (d *SystemStatusDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, d
 			},
 			"start_time": {
 				MarkdownDescription: "Start time.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"app_name": {
+				MarkdownDescription: "App name.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"instance_name": {
+				MarkdownDescription: "Instance name.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"package_author": {
+				MarkdownDescription: "Package author.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"package_update_mechanism": {
+				MarkdownDescription: "Package update mechanism.",
+				Computed:            true,
+				Type:                types.StringType,
+			},
+			"package_version": {
+				MarkdownDescription: "Package version.",
 				Computed:            true,
 				Type:                types.StringType,
 			},
