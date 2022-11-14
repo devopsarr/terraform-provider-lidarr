@@ -25,16 +25,17 @@ data "lidarr_system_status" "example" {
 ### Read-Only
 
 - `app_data` (String) App data folder.
+- `app_name` (String) App name.
 - `authentication` (String) Authentication.
 - `branch` (String) Branch.
 - `build_time` (String) Build time.
 - `id` (Number) Delay Profile ID.
+- `instance_name` (String) Instance name.
 - `is_admin` (Boolean) Is admin flag.
 - `is_debug` (Boolean) Is debug flag.
 - `is_docker` (Boolean) Is docker flag.
 - `is_linux` (Boolean) Is linux flag.
-- `is_mono` (Boolean) Is mono flag.
-- `is_mono_runtime` (Boolean) Is mono runtime flag.
+- `is_net_core` (Boolean) Is net core flag.
 - `is_osx` (Boolean) Is osx flag.
 - `is_production` (Boolean) Is production flag.
 - `is_user_interactive` (Boolean) Is user interactive flag.
@@ -42,7 +43,9 @@ data "lidarr_system_status" "example" {
 - `migration_version` (Number) Migration version.
 - `mode` (String) Mode.
 - `os_name` (String) OS name.
-- `os_version` (String) OS version.
+- `package_author` (String) Package author.
+- `package_update_mechanism` (String) Package update mechanism.
+- `package_version` (String) Package version.
 - `runtime_name` (String) Runtime name.
 - `runtime_version` (String) Runtime version.
 - `sqlite_version` (String) SQLite version.

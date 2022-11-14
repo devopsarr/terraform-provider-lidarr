@@ -229,7 +229,7 @@ func (d *SystemStatusDataSource) Configure(ctx context.Context, req datasource.C
 	client, ok := req.ProviderData.(*lidarr.Lidarr)
 	if !ok {
 		resp.Diagnostics.AddError(
-			UnexpectedDataSourceConfigureType,
+			tools.UnexpectedDataSourceConfigureType,
 			fmt.Sprintf("Expected *lidarr.Lidarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
