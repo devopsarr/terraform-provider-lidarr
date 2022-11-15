@@ -140,6 +140,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 
 func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewNotificationsDataSource,
 		NewSystemStatusDataSource,
 		NewTagDataSource,
 		NewTagsDataSource,
