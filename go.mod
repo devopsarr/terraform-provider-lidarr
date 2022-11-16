@@ -3,9 +3,9 @@ module github.com/devopsarr/terraform-provider-lidarr
 go 1.19
 
 require (
-	github.com/devopsarr/terraform-provider-sonarr v1.2.3-0.20221114074200-e446fc4cef7f
+	github.com/devopsarr/terraform-provider-sonarr v1.2.2
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
-	github.com/hashicorp/terraform-plugin-framework v0.15.0
+	github.com/hashicorp/terraform-plugin-framework v0.16.0
 	github.com/hashicorp/terraform-plugin-go v0.14.1
 	github.com/hashicorp/terraform-plugin-log v0.7.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
@@ -58,7 +58,7 @@ require (
 	github.com/russross/blackfriday v1.6.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
-	github.com/stretchr/testify v1.8.0 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/vmihailenco/msgpack v4.0.4+incompatible // indirect
 	github.com/vmihailenco/msgpack/v4 v4.3.12 // indirect
 	github.com/vmihailenco/tagparser v0.1.1 // indirect
@@ -80,3 +80,6 @@ replace golift.io/starr => github.com/golift/starr v0.14.1-0.20221112201502-0058
 
 // To be removed once terraform docs allows subcategories
 replace github.com/hashicorp/terraform-plugin-docs => github.com/fuochi/terraform-plugin-docs v0.0.0-20221102115635-d0b02bd5fc0f
+
+// to be removed on next update
+replace github.com/devopsarr/terraform-provider-sonarr => github.com/devopsarr/terraform-provider-sonarr v1.2.3-0.20221116081055-b4d6d2957175
