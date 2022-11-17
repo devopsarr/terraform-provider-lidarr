@@ -150,6 +150,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewDownloadClientsDataSource,
 		NewNotificationDataSource,
 		NewNotificationsDataSource,
+		NewRemotePathMappingsDataSource,
 		NewSystemStatusDataSource,
 		NewTagDataSource,
 		NewTagsDataSource,
