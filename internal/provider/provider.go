@@ -132,6 +132,7 @@ func (p *LidarrProvider) Configure(ctx context.Context, req provider.ConfigureRe
 
 func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		NewDownloadClientResource,
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
