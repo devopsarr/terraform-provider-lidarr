@@ -135,6 +135,10 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
 		NewDownloadClientTransmissionResource,
+		NewIndexerResource,
+		NewIndexerNewznabResource,
+		NewIndexerRarbgResource,
+		NewIndexerConfigResource,
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
@@ -145,6 +149,9 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 
 func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewIndexerConfigDataSource,
+		NewIndexerDataSource,
+		NewIndexersDataSource,
 		NewDownloadClientConfigDataSource,
 		NewDownloadClientDataSource,
 		NewDownloadClientsDataSource,
