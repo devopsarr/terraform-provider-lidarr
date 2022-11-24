@@ -38,28 +38,29 @@ Read-Only:
 - `base_url` (String) Base URL.
 - `captcha_token` (String) Captcha token.
 - `categories` (Set of Number) Series list.
-- `codecs` (Set of Number) Codecs.
 - `config_contract` (String) Indexer configuration template.
 - `cookie` (String) Cookie.
 - `delay` (Number) Delay before grabbing.
+- `discography_seed_time` (Number) Discography seed time.
+- `early_release_limit` (Number) Early release limit.
 - `enable_automatic_search` (Boolean) Enable automatic search flag.
 - `enable_interactive_search` (Boolean) Enable interactive search flag.
 - `enable_rss` (Boolean) Enable RSS flag.
 - `id` (Number) Indexer ID.
 - `implementation` (String) Indexer implementation name.
-- `mediums` (Set of Number) Mediumd.
 - `minimum_seeders` (Number) Minimum seeders.
-- `multi_languages` (Set of Number) Language list.
 - `name` (String) Indexer name.
 - `passkey` (String) Passkey.
+- `password` (String) Password.
 - `priority` (Number) Priority.
 - `protocol` (String) Protocol. Valid values are 'usenet' and 'torrent'.
 - `ranked_only` (Boolean) Allow ranked only.
-- `remove_year` (Boolean) Remove year.
-- `required_flags` (Set of Number) Computed flags.
+- `rss_passkey` (String) RSS passkey.
 - `seed_ratio` (Number) Seed ratio.
 - `seed_time` (Number) Seed time.
 - `tags` (Set of Number) List of associated tags.
+- `use_freeleech_token` (Boolean) Use freeleech token flag.
+- `user_id` (String) User ID.
 - `username` (String) Username.
 
 

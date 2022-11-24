@@ -110,13 +110,13 @@ func (d *IndexersDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 						Computed:            true,
 						Type:                types.BoolType,
 					},
-					"remove_year": {
-						MarkdownDescription: "Remove year.",
+					"ranked_only": {
+						MarkdownDescription: "Allow ranked only.",
 						Computed:            true,
 						Type:                types.BoolType,
 					},
-					"ranked_only": {
-						MarkdownDescription: "Allow ranked only.",
+					"use_freeleech_token": {
+						MarkdownDescription: "Use freeleech token flag.",
 						Computed:            true,
 						Type:                types.BoolType,
 					},
@@ -130,8 +130,18 @@ func (d *IndexersDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 						Computed:            true,
 						Type:                types.Int64Type,
 					},
+					"early_release_limit": {
+						MarkdownDescription: "Early release limit.",
+						Computed:            true,
+						Type:                types.Int64Type,
+					},
 					"seed_time": {
 						MarkdownDescription: "Seed time.",
+						Computed:            true,
+						Type:                types.Int64Type,
+					},
+					"discography_seed_time": {
+						MarkdownDescription: "Discography seed time.",
 						Computed:            true,
 						Type:                types.Int64Type,
 					},
@@ -160,6 +170,16 @@ func (d *IndexersDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 						Computed:            true,
 						Type:                types.StringType,
 					},
+					"user_id": {
+						MarkdownDescription: "User ID.",
+						Computed:            true,
+						Type:                types.StringType,
+					},
+					"rss_passkey": {
+						MarkdownDescription: "RSS passkey.",
+						Computed:            true,
+						Type:                types.StringType,
+					},
 					"base_url": {
 						MarkdownDescription: "Base URL.",
 						Computed:            true,
@@ -185,36 +205,13 @@ func (d *IndexersDataSource) GetSchema(ctx context.Context) (tfsdk.Schema, diag.
 						Computed:            true,
 						Type:                types.StringType,
 					},
+					"password": {
+						MarkdownDescription: "Password.",
+						Computed:            true,
+						Type:                types.StringType,
+					},
 					"categories": {
 						MarkdownDescription: "Series list.",
-						Computed:            true,
-						Type: types.SetType{
-							ElemType: types.Int64Type,
-						},
-					},
-					"multi_languages": {
-						MarkdownDescription: "Language list.",
-						Computed:            true,
-						Type: types.SetType{
-							ElemType: types.Int64Type,
-						},
-					},
-					"required_flags": {
-						MarkdownDescription: "Computed flags.",
-						Computed:            true,
-						Type: types.SetType{
-							ElemType: types.Int64Type,
-						},
-					},
-					"codecs": {
-						MarkdownDescription: "Codecs.",
-						Computed:            true,
-						Type: types.SetType{
-							ElemType: types.Int64Type,
-						},
-					},
-					"mediums": {
-						MarkdownDescription: "Mediumd.",
 						Computed:            true,
 						Type: types.SetType{
 							ElemType: types.Int64Type,
