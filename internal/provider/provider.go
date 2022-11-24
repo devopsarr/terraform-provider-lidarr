@@ -135,6 +135,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
 		NewDownloadClientTransmissionResource,
+		NewIndexerResource,
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
