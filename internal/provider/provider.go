@@ -131,34 +131,57 @@ func (p *LidarrProvider) Configure(ctx context.Context, req provider.ConfigureRe
 
 func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		// Download Clients
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
+		NewDownloadClientAria2Resource,
 		NewDownloadClientTransmissionResource,
+		NewRemotePathMappingResource,
+
+		// Indexers
 		NewIndexerResource,
 		NewIndexerNewznabResource,
 		NewIndexerRarbgResource,
 		NewIndexerConfigResource,
+
+		// Media Management
+
+		// Notifications
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
-		NewRemotePathMappingResource,
+
+		// Profiles
+
+		// Tags
 		NewTagResource,
 	}
 }
 
 func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewIndexerConfigDataSource,
-		NewIndexerDataSource,
-		NewIndexersDataSource,
+		// Download Clients
 		NewDownloadClientConfigDataSource,
 		NewDownloadClientDataSource,
 		NewDownloadClientsDataSource,
-		NewNotificationDataSource,
-		NewNotificationsDataSource,
 		NewRemotePathMappingDataSource,
 		NewRemotePathMappingsDataSource,
+
+		// Indexers
+		NewIndexerConfigDataSource,
+		NewIndexerDataSource,
+		NewIndexersDataSource,
+
+		// Media Management
+
+		// Notifications
+		NewNotificationDataSource,
+		NewNotificationsDataSource,
+
+		// System Status
 		NewSystemStatusDataSource,
+
+		// Tags
 		NewTagDataSource,
 		NewTagsDataSource,
 	}
