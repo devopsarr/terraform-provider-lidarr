@@ -117,11 +117,11 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Port.",
 				Computed:            true,
 			},
-			"recent_tv_priority": schema.Int64Attribute{
+			"recent_music_priority": schema.Int64Attribute{
 				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
 				Computed:            true,
 			},
-			"older_tv_priority": schema.Int64Attribute{
+			"older_music_priority": schema.Int64Attribute{
 				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
 				Computed:            true,
 			},
@@ -161,15 +161,15 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Password.",
 				Computed:            true,
 			},
-			"tv_category": schema.StringAttribute{
+			"music_category": schema.StringAttribute{
 				MarkdownDescription: "TV category.",
 				Computed:            true,
 			},
-			"tv_imported_category": schema.StringAttribute{
+			"music_imported_category": schema.StringAttribute{
 				MarkdownDescription: "TV imported category.",
 				Computed:            true,
 			},
-			"tv_directory": schema.StringAttribute{
+			"music_directory": schema.StringAttribute{
 				MarkdownDescription: "TV directory.",
 				Computed:            true,
 			},
@@ -207,7 +207,7 @@ func (d *DownloadClientDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 				ElementType:         types.StringType,
 			},
-			"post_im_tags": schema.SetAttribute{
+			"post_import_tags": schema.SetAttribute{
 				MarkdownDescription: "Post import tags.",
 				Computed:            true,
 				ElementType:         types.StringType,

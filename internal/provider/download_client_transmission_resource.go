@@ -21,14 +21,16 @@ import (
 
 const (
 	downloadClientTransmissionResourceName   = "download_client_transmission"
-	DownloadClientTransmissionImplementation = "Transmission"
-	DownloadClientTransmissionConfigContrat  = "TransmissionSettings"
-	DownloadClientTransmissionProtocol       = "torrent"
+	downloadClientTransmissionImplementation = "Transmission"
+	downloadClientTransmissionConfigContract = "TransmissionSettings"
+	downloadClientTransmissionProtocol       = "torrent"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &DownloadClientTransmissionResource{}
-var _ resource.ResourceWithImportState = &DownloadClientTransmissionResource{}
+var (
+	_ resource.Resource                = &DownloadClientTransmissionResource{}
+	_ resource.ResourceWithImportState = &DownloadClientTransmissionResource{}
+)
 
 func NewDownloadClientTransmissionResource() resource.Resource {
 	return &DownloadClientTransmissionResource{}
@@ -47,10 +49,10 @@ type DownloadClientTransmission struct {
 	URLBase                  types.String `tfsdk:"url_base"`
 	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
-	TvCategory               types.String `tfsdk:"tv_category"`
-	TvDirectory              types.String `tfsdk:"tv_directory"`
-	RecentTvPriority         types.Int64  `tfsdk:"recent_tv_priority"`
-	OlderTvPriority          types.Int64  `tfsdk:"older_tv_priority"`
+	MusicCategory            types.String `tfsdk:"music_category"`
+	MusicDirectory           types.String `tfsdk:"music_directory"`
+	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
+	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -69,10 +71,10 @@ func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
 		URLBase:                  d.URLBase,
 		Username:                 d.Username,
 		Password:                 d.Password,
-		TvCategory:               d.TvCategory,
-		TvDirectory:              d.TvDirectory,
-		RecentTvPriority:         d.RecentTvPriority,
-		OlderTvPriority:          d.OlderTvPriority,
+		MusicCategory:            d.MusicCategory,
+		MusicDirectory:           d.MusicDirectory,
+		RecentMusicPriority:      d.RecentMusicPriority,
+		OlderMusicPriority:       d.OlderMusicPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -91,10 +93,10 @@ func (d *DownloadClientTransmission) fromDownloadClient(client *DownloadClient) 
 	d.URLBase = client.URLBase
 	d.Username = client.Username
 	d.Password = client.Password
-	d.TvCategory = client.TvCategory
-	d.TvDirectory = client.TvDirectory
-	d.RecentTvPriority = client.RecentTvPriority
-	d.OlderTvPriority = client.OlderTvPriority
+	d.MusicCategory = client.MusicCategory
+	d.MusicDirectory = client.MusicDirectory
+	d.RecentMusicPriority = client.RecentMusicPriority
+	d.OlderMusicPriority = client.OlderMusicPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
@@ -166,7 +168,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Optional:            true,
 				Computed:            true,
 			},
-			"recent_tv_priority": schema.Int64Attribute{
+			"recent_music_priority": schema.Int64Attribute{
 				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -174,7 +176,7 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 					int64validator.OneOf(0, 1),
 				},
 			},
-			"older_tv_priority": schema.Int64Attribute{
+			"older_music_priority": schema.Int64Attribute{
 				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
@@ -202,12 +204,12 @@ func (r *DownloadClientTransmissionResource) Schema(ctx context.Context, req res
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_category": schema.StringAttribute{
+			"music_category": schema.StringAttribute{
 				MarkdownDescription: "TV category.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"tv_directory": schema.StringAttribute{
+			"music_directory": schema.StringAttribute{
 				MarkdownDescription: "TV directory.",
 				Optional:            true,
 				Computed:            true,
@@ -374,10 +376,10 @@ func (d *DownloadClientTransmission) read(ctx context.Context) *lidarr.DownloadC
 		RemoveFailedDownloads:    d.RemoveFailedDownloads.ValueBool(),
 		Priority:                 int(d.Priority.ValueInt64()),
 		ID:                       d.ID.ValueInt64(),
-		ConfigContract:           DownloadClientTransmissionConfigContrat,
-		Implementation:           DownloadClientTransmissionImplementation,
+		ConfigContract:           downloadClientTransmissionConfigContract,
+		Implementation:           downloadClientTransmissionImplementation,
 		Name:                     d.Name.ValueString(),
-		Protocol:                 DownloadClientTransmissionProtocol,
+		Protocol:                 downloadClientTransmissionProtocol,
 		Tags:                     tags,
 		Fields:                   d.toDownloadClient().readFields(ctx),
 	}
