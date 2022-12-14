@@ -19,14 +19,16 @@ import (
 
 const (
 	indexerNewznabResourceName   = "indexer_newznab"
-	IndexerNewznabImplementation = "Newznab"
-	IndexerNewznabConfigContrat  = "NewznabSettings"
-	IndexerNewznabProtocol       = "usenet"
+	indexerNewznabImplementation = "Newznab"
+	indexerNewznabConfigContract = "NewznabSettings"
+	indexerNewznabProtocol       = "usenet"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ resource.Resource = &IndexerNewznabResource{}
-var _ resource.ResourceWithImportState = &IndexerNewznabResource{}
+var (
+	_ resource.Resource                = &IndexerNewznabResource{}
+	_ resource.ResourceWithImportState = &IndexerNewznabResource{}
+)
 
 func NewIndexerNewznabResource() resource.Resource {
 	return &IndexerNewznabResource{}
@@ -320,10 +322,10 @@ func (i *IndexerNewznab) read(ctx context.Context) *lidarr.IndexerInput {
 		EnableRss:               i.EnableRss.ValueBool(),
 		Priority:                i.Priority.ValueInt64(),
 		ID:                      i.ID.ValueInt64(),
-		ConfigContract:          IndexerNewznabConfigContrat,
-		Implementation:          IndexerNewznabImplementation,
+		ConfigContract:          indexerNewznabConfigContract,
+		Implementation:          indexerNewznabImplementation,
 		Name:                    i.Name.ValueString(),
-		Protocol:                IndexerNewznabProtocol,
+		Protocol:                indexerNewznabProtocol,
 		Tags:                    tags,
 		Fields:                  i.toIndexer().readFields(ctx),
 	}

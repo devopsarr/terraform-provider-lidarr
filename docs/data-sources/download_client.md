@@ -43,15 +43,18 @@ data "lidarr_download_client" "test" {
 - `initial_state` (Number) Initial state. `0` Start, `1` ForceStart, `2` Pause.
 - `intial_state` (Number) Initial state, with Stop support. `0` Start, `1` ForceStart, `2` Pause, `3` Stop.
 - `magnet_file_extension` (String) Magnet file extension.
+- `music_category` (String) TV category.
+- `music_directory` (String) TV directory.
+- `music_imported_category` (String) TV imported category.
 - `nzb_folder` (String) NZB folder.
-- `older_tv_priority` (Number) Older TV priority. `0` Last, `1` First.
+- `older_music_priority` (Number) Older TV priority. `0` Last, `1` First.
 - `password` (String) Password.
 - `port` (Number) Port.
-- `post_im_tags` (Set of String) Post import tags.
+- `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
 - `protocol` (String) Protocol. Valid values are 'usenet' and 'torrent'.
 - `read_only` (Boolean) Read only flag.
-- `recent_tv_priority` (Number) Recent TV priority. `0` Last, `1` First.
+- `recent_music_priority` (Number) Recent TV priority. `0` Last, `1` First.
 - `remove_completed_downloads` (Boolean) Remove completed downloads flag.
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `rpc_path` (String) RPC path.
@@ -62,12 +65,9 @@ data "lidarr_download_client" "test" {
 - `strm_folder` (String) STRM folder.
 - `tags` (Set of Number) List of associated tags.
 - `torrent_folder` (String) Torrent folder.
-- `tv_category` (String) TV category.
-- `tv_directory` (String) TV directory.
-- `tv_imported_category` (String) TV imported category.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.
 - `username` (String) Username.
-- `watch_folder` (Boolean) Watch folder flag.
+- `watch_folder` (String) Watch folder flag.
 
 

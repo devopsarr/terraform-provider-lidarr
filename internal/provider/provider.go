@@ -17,8 +17,10 @@ import (
 // var stderr = os.Stderr
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ provider.Provider = &LidarrProvider{}
-var _ provider.ProviderWithMetadata = &LidarrProvider{}
+var (
+	_ provider.Provider             = &LidarrProvider{}
+	_ provider.ProviderWithMetadata = &LidarrProvider{}
+)
 
 // ScaffoldingProvider defines the provider implementation.
 type LidarrProvider struct {
@@ -129,34 +131,72 @@ func (p *LidarrProvider) Configure(ctx context.Context, req provider.ConfigureRe
 
 func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
+		// Download Clients
 		NewDownloadClientConfigResource,
 		NewDownloadClientResource,
+		NewDownloadClientAria2Resource,
+		NewDownloadClientDelugeResource,
+		NewDownloadClientFloodResource,
+		NewDownloadClientHadoukenResource,
+		NewDownloadClientNzbgetResource,
+		NewDownloadClientNzbvortexResource,
+		NewDownloadClientPneumaticResource,
+		NewDownloadClientQbittorrentResource,
+		NewDownloadClientRtorrentResource,
+		NewDownloadClientSabnzbdResource,
+		NewDownloadClientTorrentBlackholeResource,
+		NewDownloadClientTorrentDownloadStationResource,
 		NewDownloadClientTransmissionResource,
+		NewDownloadClientUsenetBlackholeResource,
+		NewDownloadClientUsenetDownloadStationResource,
+		NewDownloadClientUtorrentResource,
+		NewDownloadClientVuzeResource,
+		NewRemotePathMappingResource,
+
+		// Indexers
 		NewIndexerResource,
 		NewIndexerNewznabResource,
 		NewIndexerRarbgResource,
 		NewIndexerConfigResource,
+
+		// Media Management
+
+		// Notifications
 		NewNotificationResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationWebhookResource,
-		NewRemotePathMappingResource,
+
+		// Profiles
+
+		// Tags
 		NewTagResource,
 	}
 }
 
 func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewIndexerConfigDataSource,
-		NewIndexerDataSource,
-		NewIndexersDataSource,
+		// Download Clients
 		NewDownloadClientConfigDataSource,
 		NewDownloadClientDataSource,
 		NewDownloadClientsDataSource,
-		NewNotificationDataSource,
-		NewNotificationsDataSource,
 		NewRemotePathMappingDataSource,
 		NewRemotePathMappingsDataSource,
+
+		// Indexers
+		NewIndexerConfigDataSource,
+		NewIndexerDataSource,
+		NewIndexersDataSource,
+
+		// Media Management
+
+		// Notifications
+		NewNotificationDataSource,
+		NewNotificationsDataSource,
+
+		// System Status
 		NewSystemStatusDataSource,
+
+		// Tags
 		NewTagDataSource,
 		NewTagsDataSource,
 	}
