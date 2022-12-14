@@ -148,6 +148,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewDownloadClientTorrentDownloadStationResource,
 		NewDownloadClientTransmissionResource,
 		NewDownloadClientUsenetBlackholeResource,
+		NewDownloadClientUsenetDownloadStationResource,
 		NewRemotePathMappingResource,
 
 		// Indexers
