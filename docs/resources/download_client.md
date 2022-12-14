@@ -3,13 +3,13 @@
 page_title: "lidarr_download_client Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
-  Download Client resource.
+  Generic Download Client resource. When possible use a specific resource instead.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients.
 ---
 
 # lidarr_download_client (Resource)
 
-<!-- subcategory:Download Clients -->Download Client resource.
+<!-- subcategory:Download Clients -->Generic Download Client resource. When possible use a specific resource instead.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients).
 
 ## Example Usage
