@@ -136,6 +136,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewDownloadClientResource,
 		NewDownloadClientAria2Resource,
 		NewDownloadClientDelugeResource,
+		NewDownloadClientFloodResource,
 		NewDownloadClientTransmissionResource,
 		NewRemotePathMappingResource,
 
