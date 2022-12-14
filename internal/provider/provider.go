@@ -143,6 +143,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewDownloadClientPneumaticResource,
 		NewDownloadClientQbittorrentResource,
 		NewDownloadClientRtorrentResource,
+		NewDownloadClientSabnzbdResource,
 		NewDownloadClientTransmissionResource,
 		NewRemotePathMappingResource,
 
