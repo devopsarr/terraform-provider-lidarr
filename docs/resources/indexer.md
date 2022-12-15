@@ -3,13 +3,13 @@
 page_title: "lidarr_indexer Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
-  Indexer resource.
+  Generic Indexer resource. When possible use a specific resource instead.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers documentation.
 ---
 
 # lidarr_indexer (Resource)
 
-<!-- subcategory:Indexers -->Indexer resource.
+<!-- subcategory:Indexers -->Generic Indexer resource. When possible use a specific resource instead.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) documentation.
 
 ## Example Usage
