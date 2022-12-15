@@ -97,6 +97,7 @@ Read-Only:
 - `token` (String) Token.
 - `update_library` (Boolean) Update library flag.
 - `url` (String) URL.
+- `url_base` (String) URL base.
 - `use_eu_endpoint` (Boolean) Use EU endpoint flag.
 - `use_ssl` (Boolean) Use SSL flag.
 - `user_key` (String) User key.

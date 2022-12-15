@@ -187,6 +187,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewNotificationPushoverResource,
 		NewNotificationSendgridResource,
 		NewNotificationSlackResource,
+		NewNotificationSubsonicResource,
 		NewNotificationSynologyResource,
 		NewNotificationTelegramResource,
 		NewNotificationTwitterResource,

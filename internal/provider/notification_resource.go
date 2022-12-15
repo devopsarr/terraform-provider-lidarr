@@ -31,7 +31,7 @@ var (
 
 var (
 	notificationBoolFields        = []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSSL"}
-	notificationStringFields      = []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "url", "userKey", "username", "webHookUrl"}
+	notificationStringFields      = []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "webHookUrl"}
 	notificationIntFields         = []string{"method", "port", "priority", "displayTime", "retry", "expire"}
 	notificationStringSliceFields = []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc"}
 	notificationIntSliceFields    = []string{"grabFields", "importFields"}
@@ -68,6 +68,7 @@ type Notification struct {
 	Avatar                types.String `tfsdk:"avatar"`
 	ConfigContract        types.String `tfsdk:"config_contract"`
 	URL                   types.String `tfsdk:"url"`
+	URLBase               types.String `tfsdk:"url_base"`
 	Token                 types.String `tfsdk:"token"`
 	Sound                 types.String `tfsdk:"sound"`
 	SignIn                types.String `tfsdk:"sign_in"`
@@ -424,6 +425,11 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"url": schema.StringAttribute{
 				MarkdownDescription: "URL.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"url_base": schema.StringAttribute{
+				MarkdownDescription: "URL base.",
 				Optional:            true,
 				Computed:            true,
 			},

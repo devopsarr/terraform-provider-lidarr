@@ -294,6 +294,10 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "URL.",
 							Computed:            true,
 						},
+						"url_base": schema.StringAttribute{
+							MarkdownDescription: "URL base.",
+							Computed:            true,
+						},
 						"user_key": schema.StringAttribute{
 							MarkdownDescription: "User key.",
 							Computed:            true,
