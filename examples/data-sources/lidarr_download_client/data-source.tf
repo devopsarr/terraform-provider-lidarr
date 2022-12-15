@@ -1,3 +1,3 @@
-data "lidarr_download_client" "test" {
+data "lidarr_download_client" "example" {
   name = "Example"
 }

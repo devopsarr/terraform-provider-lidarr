@@ -17,7 +17,7 @@ For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings
 ```terraform
 resource "lidarr_indexer_newznab" "example" {
   enable_automatic_search = true
-  name                    = "Test"
+  name                    = "Example"
   base_url                = "https://lolo.sickbeard.com"
   api_path                = "/api"
   categories              = [8000, 5000]
