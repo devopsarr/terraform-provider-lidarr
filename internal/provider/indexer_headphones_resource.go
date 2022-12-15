@@ -18,44 +18,43 @@ import (
 )
 
 const (
-	indexerNewznabResourceName   = "indexer_newznab"
-	indexerNewznabImplementation = "Newznab"
-	indexerNewznabConfigContract = "NewznabSettings"
-	indexerNewznabProtocol       = "usenet"
+	indexerHeadphonesResourceName   = "indexer_headphones"
+	indexerHeadphonesImplementation = "Headphones"
+	indexerHeadphonesConfigContract = "HeadphonesSettings"
+	indexerHeadphonesProtocol       = "usenet"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &IndexerNewznabResource{}
-	_ resource.ResourceWithImportState = &IndexerNewznabResource{}
+	_ resource.Resource                = &IndexerHeadphonesResource{}
+	_ resource.ResourceWithImportState = &IndexerHeadphonesResource{}
 )
 
-func NewIndexerNewznabResource() resource.Resource {
-	return &IndexerNewznabResource{}
+func NewIndexerHeadphonesResource() resource.Resource {
+	return &IndexerHeadphonesResource{}
 }
 
-// IndexerNewznabResource defines the Newznab indexer implementation.
-type IndexerNewznabResource struct {
+// IndexerHeadphonesResource defines the Headphones indexer implementation.
+type IndexerHeadphonesResource struct {
 	client *lidarr.Lidarr
 }
 
-// IndexerNewznab describes the Newznab indexer data model.
-type IndexerNewznab struct {
+// IndexerHeadphones describes the Headphones indexer data model.
+type IndexerHeadphones struct {
 	Tags                    types.Set    `tfsdk:"tags"`
 	Categories              types.Set    `tfsdk:"categories"`
-	AdditionalParameters    types.String `tfsdk:"additional_parameters"`
-	BaseURL                 types.String `tfsdk:"base_url"`
-	APIPath                 types.String `tfsdk:"api_path"`
-	APIKey                  types.String `tfsdk:"api_key"`
 	Name                    types.String `tfsdk:"name"`
-	ID                      types.Int64  `tfsdk:"id"`
+	Username                types.String `tfsdk:"username"`
+	Password                types.String `tfsdk:"password"`
 	Priority                types.Int64  `tfsdk:"priority"`
+	ID                      types.Int64  `tfsdk:"id"`
+	EarlyReleaseLimit       types.Int64  `tfsdk:"early_release_limit"`
+	EnableAutomaticSearch   types.Bool   `tfsdk:"enable_automatic_search"`
 	EnableRss               types.Bool   `tfsdk:"enable_rss"`
 	EnableInteractiveSearch types.Bool   `tfsdk:"enable_interactive_search"`
-	EnableAutomaticSearch   types.Bool   `tfsdk:"enable_automatic_search"`
 }
 
-func (i IndexerNewznab) toIndexer() *Indexer {
+func (i IndexerHeadphones) toIndexer() *Indexer {
 	return &Indexer{
 		EnableAutomaticSearch:   i.EnableAutomaticSearch,
 		EnableInteractiveSearch: i.EnableInteractiveSearch,
@@ -63,37 +62,35 @@ func (i IndexerNewznab) toIndexer() *Indexer {
 		Priority:                i.Priority,
 		ID:                      i.ID,
 		Name:                    i.Name,
-		AdditionalParameters:    i.AdditionalParameters,
-		APIKey:                  i.APIKey,
-		APIPath:                 i.APIKey,
-		BaseURL:                 i.BaseURL,
+		EarlyReleaseLimit:       i.EarlyReleaseLimit,
+		Username:                i.Username,
+		Password:                i.Password,
 		Categories:              i.Categories,
 		Tags:                    i.Tags,
 	}
 }
 
-func (i *IndexerNewznab) fromIndexer(indexer *Indexer) {
+func (i *IndexerHeadphones) fromIndexer(indexer *Indexer) {
 	i.EnableAutomaticSearch = indexer.EnableAutomaticSearch
 	i.EnableInteractiveSearch = indexer.EnableInteractiveSearch
 	i.EnableRss = indexer.EnableRss
 	i.Priority = indexer.Priority
 	i.ID = indexer.ID
 	i.Name = indexer.Name
-	i.AdditionalParameters = indexer.AdditionalParameters
-	i.APIKey = indexer.APIKey
-	i.APIPath = indexer.APIPath
-	i.BaseURL = indexer.BaseURL
+	i.EarlyReleaseLimit = indexer.EarlyReleaseLimit
+	i.Username = indexer.Username
+	i.Password = indexer.Password
 	i.Categories = indexer.Categories
 	i.Tags = indexer.Tags
 }
 
-func (r *IndexerNewznabResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + indexerNewznabResourceName
+func (r *IndexerHeadphonesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + indexerHeadphonesResourceName
 }
 
-func (r *IndexerNewznabResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *IndexerHeadphonesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Newznab resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Newznab](https://wiki.servarr.com/lidarr/supported#newznab).",
+		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Headphones resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Headphones](https://wiki.servarr.com/lidarr/supported#headphones).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_search": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic search flag.",
@@ -116,7 +113,7 @@ func (r *IndexerNewznabResource) Schema(ctx context.Context, req resource.Schema
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "IndexerNewznab name.",
+				MarkdownDescription: "IndexerHeadphones name.",
 				Required:            true,
 			},
 			"tags": schema.SetAttribute{
@@ -126,44 +123,37 @@ func (r *IndexerNewznabResource) Schema(ctx context.Context, req resource.Schema
 				ElementType:         types.Int64Type,
 			},
 			"id": schema.Int64Attribute{
-				MarkdownDescription: "IndexerNewznab ID.",
+				MarkdownDescription: "IndexerHeadphones ID.",
 				Computed:            true,
 				PlanModifiers: []planmodifier.Int64{
 					int64planmodifier.UseStateForUnknown(),
 				},
 			},
 			// Field values
-			"additional_parameters": schema.StringAttribute{
-				MarkdownDescription: "Additional parameters.",
+			"early_release_limit": schema.Int64Attribute{
+				MarkdownDescription: "Early release limit.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"api_key": schema.StringAttribute{
-				MarkdownDescription: "API key.",
-				Optional:            true,
-				Computed:            true,
+			"username": schema.StringAttribute{
+				MarkdownDescription: "Username.",
+				Required:            true,
 			},
-			"api_path": schema.StringAttribute{
-				MarkdownDescription: "API path.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"base_url": schema.StringAttribute{
-				MarkdownDescription: "Base URL.",
-				Optional:            true,
-				Computed:            true,
+			"password": schema.StringAttribute{
+				MarkdownDescription: "Password.",
+				Required:            true,
+				Sensitive:           true,
 			},
 			"categories": schema.SetAttribute{
 				MarkdownDescription: "Series list.",
-				Optional:            true,
-				Computed:            true,
+				Required:            true,
 				ElementType:         types.Int64Type,
 			},
 		},
 	}
 }
 
-func (r *IndexerNewznabResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *IndexerHeadphonesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -182,9 +172,9 @@ func (r *IndexerNewznabResource) Configure(ctx context.Context, req resource.Con
 	r.client = client
 }
 
-func (r *IndexerNewznabResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *IndexerHeadphonesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var indexer *IndexerNewznab
+	var indexer *IndexerHeadphones
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &indexer)...)
 
@@ -192,25 +182,25 @@ func (r *IndexerNewznabResource) Create(ctx context.Context, req resource.Create
 		return
 	}
 
-	// Create new IndexerNewznab
+	// Create new IndexerHeadphones
 	request := indexer.read(ctx)
 
 	response, err := r.client.AddIndexerContext(ctx, request)
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", indexerNewznabResourceName, err))
+		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", indexerHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+indexerNewznabResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "created "+indexerHeadphonesResourceName+": "+strconv.Itoa(int(response.ID)))
 	// Generate resource state struct
 	indexer.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
-func (r *IndexerNewznabResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *IndexerHeadphonesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var indexer *IndexerNewznab
+	var indexer *IndexerHeadphones
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &indexer)...)
 
@@ -218,23 +208,23 @@ func (r *IndexerNewznabResource) Read(ctx context.Context, req resource.ReadRequ
 		return
 	}
 
-	// Get IndexerNewznab current value
+	// Get IndexerHeadphones current value
 	response, err := r.client.GetIndexerContext(ctx, indexer.ID.ValueInt64())
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerNewznabResourceName, err))
+		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+indexerNewznabResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "read "+indexerHeadphonesResourceName+": "+strconv.Itoa(int(response.ID)))
 	// Map response body to resource schema attribute
 	indexer.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
-func (r *IndexerNewznabResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *IndexerHeadphonesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var indexer *IndexerNewznab
+	var indexer *IndexerHeadphones
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &indexer)...)
 
@@ -242,24 +232,24 @@ func (r *IndexerNewznabResource) Update(ctx context.Context, req resource.Update
 		return
 	}
 
-	// Update IndexerNewznab
+	// Update IndexerHeadphones
 	request := indexer.read(ctx)
 
 	response, err := r.client.UpdateIndexerContext(ctx, request)
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", indexerNewznabResourceName, err))
+		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update "+indexerHeadphonesResourceName+", got error: %s", err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+indexerNewznabResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "updated "+indexerHeadphonesResourceName+": "+strconv.Itoa(int(response.ID)))
 	// Generate resource state struct
 	indexer.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
-func (r *IndexerNewznabResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var indexer IndexerNewznab
+func (r *IndexerHeadphonesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var indexer *IndexerHeadphones
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &indexer)...)
 
@@ -267,19 +257,19 @@ func (r *IndexerNewznabResource) Delete(ctx context.Context, req resource.Delete
 		return
 	}
 
-	// Delete IndexerNewznab current value
+	// Delete IndexerHeadphones current value
 	err := r.client.DeleteIndexerContext(ctx, indexer.ID.ValueInt64())
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerNewznabResourceName, err))
+		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+indexerNewznabResourceName+": "+strconv.Itoa(int(indexer.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+indexerHeadphonesResourceName+": "+strconv.Itoa(int(indexer.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *IndexerNewznabResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *IndexerHeadphonesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 	id, err := strconv.Atoi(req.ID)
 	if err != nil {
@@ -291,11 +281,11 @@ func (r *IndexerNewznabResource) ImportState(ctx context.Context, req resource.I
 		return
 	}
 
-	tflog.Trace(ctx, "imported "+indexerNewznabResourceName+": "+strconv.Itoa(id))
+	tflog.Trace(ctx, "imported "+indexerHeadphonesResourceName+": "+strconv.Itoa(id))
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
 }
 
-func (i *IndexerNewznab) write(ctx context.Context, indexer *lidarr.IndexerOutput) {
+func (i *IndexerHeadphones) write(ctx context.Context, indexer *lidarr.IndexerOutput) {
 	genericIndexer := Indexer{
 		EnableAutomaticSearch:   types.BoolValue(indexer.EnableAutomaticSearch),
 		EnableInteractiveSearch: types.BoolValue(indexer.EnableInteractiveSearch),
@@ -309,7 +299,7 @@ func (i *IndexerNewznab) write(ctx context.Context, indexer *lidarr.IndexerOutpu
 	i.fromIndexer(&genericIndexer)
 }
 
-func (i *IndexerNewznab) read(ctx context.Context) *lidarr.IndexerInput {
+func (i *IndexerHeadphones) read(ctx context.Context) *lidarr.IndexerInput {
 	var tags []int
 
 	tfsdk.ValueAs(ctx, i.Tags, &tags)
@@ -320,10 +310,10 @@ func (i *IndexerNewznab) read(ctx context.Context) *lidarr.IndexerInput {
 		EnableRss:               i.EnableRss.ValueBool(),
 		Priority:                i.Priority.ValueInt64(),
 		ID:                      i.ID.ValueInt64(),
-		ConfigContract:          indexerNewznabConfigContract,
-		Implementation:          indexerNewznabImplementation,
+		ConfigContract:          indexerHeadphonesConfigContract,
+		Implementation:          indexerHeadphonesImplementation,
 		Name:                    i.Name.ValueString(),
-		Protocol:                indexerNewznabProtocol,
+		Protocol:                indexerHeadphonesProtocol,
 		Tags:                    tags,
 		Fields:                  i.toIndexer().readFields(ctx),
 	}

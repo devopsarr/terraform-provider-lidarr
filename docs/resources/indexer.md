@@ -57,7 +57,7 @@ resource "lidarr_indexer" "example" {
 - `enable_rss` (Boolean) Enable RSS flag.
 - `minimum_seeders` (Number) Minimum seeders.
 - `passkey` (String) Passkey.
-- `password` (String) Password.
+- `password` (String, Sensitive) Password.
 - `priority` (Number) Priority.
 - `ranked_only` (Boolean) Allow ranked only.
 - `rss_passkey` (String) RSS passkey.
