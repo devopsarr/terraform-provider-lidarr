@@ -31,9 +31,10 @@ var (
 
 var (
 	notificationBoolFields        = []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSSL"}
-	notificationStringFields      = []string{"accessToken", "accessTokenSecret", "apiKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "bcc", "botToken", "cc", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "displayTime", "expire", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "retry", "senderDomain", "senderId", "server", "signIn", "sound", "to", "token", "url", "userKey", "username", "webHookUrl"}
-	notificationIntFields         = []string{"grabFields", "importFields", "method", "port", "priority"}
-	notificationStringSliceFields = []string{"channelTags", "deviceIds", "devices", "recipients"}
+	notificationStringFields      = []string{"accessToken", "accessTokenSecret", "apiKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "url", "userKey", "username", "webHookUrl"}
+	notificationIntFields         = []string{"method", "port", "priority", "displayTime", "retry", "expire"}
+	notificationStringSliceFields = []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc"}
+	notificationIntSliceFields    = []string{"grabFields", "importFields"}
 )
 
 func NewNotificationResource() resource.Resource {
@@ -51,7 +52,12 @@ type Notification struct {
 	Recipients            types.Set    `tfsdk:"recipients"`
 	Devices               types.Set    `tfsdk:"devices"`
 	DeviceIds             types.Set    `tfsdk:"device_ids"`
+	To                    types.Set    `tfsdk:"to"`
+	Cc                    types.Set    `tfsdk:"cc"`
+	Bcc                   types.Set    `tfsdk:"bcc"`
 	ChannelTags           types.Set    `tfsdk:"channel_tags"`
+	ImportFields          types.Set    `tfsdk:"import_fields"`
+	GrabFields            types.Set    `tfsdk:"grab_fields"`
 	Path                  types.String `tfsdk:"path"`
 	RefreshToken          types.String `tfsdk:"refresh_token"`
 	WebHookURL            types.String `tfsdk:"web_hook_url"`
@@ -63,9 +69,7 @@ type Notification struct {
 	ConfigContract        types.String `tfsdk:"config_contract"`
 	URL                   types.String `tfsdk:"url"`
 	Token                 types.String `tfsdk:"token"`
-	To                    types.String `tfsdk:"to"`
 	Sound                 types.String `tfsdk:"sound"`
-	Bcc                   types.String `tfsdk:"bcc"`
 	SignIn                types.String `tfsdk:"sign_in"`
 	Server                types.String `tfsdk:"server"`
 	SenderID              types.String `tfsdk:"sender_id"`
@@ -75,7 +79,6 @@ type Notification struct {
 	Host                  types.String `tfsdk:"host"`
 	From                  types.String `tfsdk:"from"`
 	Expires               types.String `tfsdk:"expires"`
-	Expire                types.String `tfsdk:"expire"`
 	AccessToken           types.String `tfsdk:"access_token"`
 	AccessTokenSecret     types.String `tfsdk:"access_token_secret"`
 	APIKey                types.String `tfsdk:"api_key"`
@@ -85,20 +88,18 @@ type Notification struct {
 	AuthToken             types.String `tfsdk:"auth_token"`
 	AuthUser              types.String `tfsdk:"auth_user"`
 	Implementation        types.String `tfsdk:"implementation"`
-	Retry                 types.String `tfsdk:"retry"`
 	Password              types.String `tfsdk:"password"`
-	Cc                    types.String `tfsdk:"cc"`
 	Channel               types.String `tfsdk:"channel"`
 	ChatID                types.String `tfsdk:"chat_id"`
 	ConsumerKey           types.String `tfsdk:"consumer_key"`
 	ConsumerSecret        types.String `tfsdk:"consumer_secret"`
 	DeviceNames           types.String `tfsdk:"device_names"`
-	DisplayTime           types.String `tfsdk:"display_time"`
+	Retry                 types.Int64  `tfsdk:"retry"`
+	Expire                types.Int64  `tfsdk:"expire"`
+	DisplayTime           types.Int64  `tfsdk:"display_time"`
 	Priority              types.Int64  `tfsdk:"priority"`
 	Port                  types.Int64  `tfsdk:"port"`
 	Method                types.Int64  `tfsdk:"method"`
-	ImportFields          types.Int64  `tfsdk:"import_fields"`
-	GrabFields            types.Int64  `tfsdk:"grab_fields"`
 	ID                    types.Int64  `tfsdk:"id"`
 	UpdateLibrary         types.Bool   `tfsdk:"update_library"`
 	UseEuEndpoint         types.Bool   `tfsdk:"use_eu_endpoint"`
@@ -127,7 +128,7 @@ func (r *NotificationResource) Metadata(ctx context.Context, req resource.Metada
 
 func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect).",
+		MarkdownDescription: "<!-- subcategory:Notifications --Generic >Notification resource. When possible use a specific resource instead.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
@@ -245,22 +246,6 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
-			"grab_fields": schema.Int64Attribute{
-				MarkdownDescription: "Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart.",
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
-				},
-			},
-			"import_fields": schema.Int64Attribute{
-				MarkdownDescription: "Import fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Codecs, `5` Group, `6` Size, `7` Languages, `8` Subtitles, `9` Links, `10` Release, `11` Poster, `12` Fanart.",
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-				},
-			},
 			"method": schema.Int64Attribute{
 				MarkdownDescription: "Method. `1` POST, `2` PUT.",
 				Optional:            true,
@@ -276,6 +261,16 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Validators: []validator.Int64{
 					int64validator.OneOf(-2, -1, 0, 1, 2, 3, 4, 5, 7),
 				},
+			},
+			"retry": schema.Int64Attribute{
+				MarkdownDescription: "Retry.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"expire": schema.Int64Attribute{
+				MarkdownDescription: "Expire.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"access_token": schema.StringAttribute{
 				MarkdownDescription: "Access token.",
@@ -322,18 +317,8 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
-			"bcc": schema.StringAttribute{
-				MarkdownDescription: "Bcc.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"bot_token": schema.StringAttribute{
 				MarkdownDescription: "Bot token.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"cc": schema.StringAttribute{
-				MarkdownDescription: "Cc.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -362,13 +347,8 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
-			"display_time": schema.StringAttribute{
+			"display_time": schema.Int64Attribute{
 				MarkdownDescription: "Display time.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"expire": schema.StringAttribute{
-				MarkdownDescription: "Expire.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -412,11 +392,6 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
-			"retry": schema.StringAttribute{
-				MarkdownDescription: "Retry.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"sender_domain": schema.StringAttribute{
 				MarkdownDescription: "Sender domain.",
 				Optional:            true,
@@ -439,11 +414,6 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"sound": schema.StringAttribute{
 				MarkdownDescription: "Sound.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"to": schema.StringAttribute{
-				MarkdownDescription: "To.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -492,6 +462,36 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"recipients": schema.SetAttribute{
 				MarkdownDescription: "Recipients.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"grab_fields": schema.SetAttribute{
+				MarkdownDescription: "Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.Int64Type,
+			},
+			"import_fields": schema.SetAttribute{
+				MarkdownDescription: "Import fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Codecs, `5` Group, `6` Size, `7` Languages, `8` Subtitles, `9` Links, `10` Release, `11` Poster, `12` Fanart.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.Int64Type,
+			},
+			"to": schema.SetAttribute{
+				MarkdownDescription: "To.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"cc": schema.SetAttribute{
+				MarkdownDescription: "Cc.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"bcc": schema.SetAttribute{
+				MarkdownDescription: "Bcc.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.StringType,
@@ -657,10 +657,15 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.Implementation = types.StringValue(notification.Implementation)
 	n.ConfigContract = types.StringValue(notification.ConfigContract)
 	n.Tags = types.SetValueMust(types.Int64Type, nil)
+	n.GrabFields = types.SetValueMust(types.Int64Type, nil)
+	n.ImportFields = types.SetValueMust(types.Int64Type, nil)
 	n.ChannelTags = types.SetValueMust(types.StringType, nil)
 	n.DeviceIds = types.SetValueMust(types.StringType, nil)
 	n.Devices = types.SetValueMust(types.StringType, nil)
 	n.Recipients = types.SetValueMust(types.StringType, nil)
+	n.To = types.SetValueMust(types.StringType, nil)
+	n.Cc = types.SetValueMust(types.StringType, nil)
+	n.Bcc = types.SetValueMust(types.StringType, nil)
 	tfsdk.ValueFrom(ctx, notification.Tags, n.Tags.Type(ctx), &n.Tags)
 	n.writeFields(ctx, notification.Fields)
 }
@@ -683,14 +688,14 @@ func (n *Notification) writeFields(ctx context.Context, fields []*starr.FieldOut
 			continue
 		}
 
-		if slices.Contains(notificationIntFields, f.Name) {
-			tools.WriteIntField(f, n)
+		if slices.Contains(notificationStringSliceFields, f.Name) || f.Name == "tags" {
+			tools.WriteStringSliceField(ctx, f, n)
 
 			continue
 		}
 
-		if slices.Contains(notificationStringSliceFields, f.Name) {
-			tools.WriteStringSliceField(ctx, f, n)
+		if slices.Contains(notificationIntSliceFields, f.Name) {
+			tools.WriteIntSliceField(ctx, f, n)
 		}
 	}
 }
@@ -743,6 +748,12 @@ func (n *Notification) readFields(ctx context.Context) []*starr.FieldInput {
 
 	for _, s := range notificationStringSliceFields {
 		if field := tools.ReadStringSliceField(ctx, s, n); field != nil {
+			output = append(output, field)
+		}
+	}
+
+	for _, s := range notificationIntSliceFields {
+		if field := tools.ReadIntSliceField(ctx, s, n); field != nil {
 			output = append(output, field)
 		}
 	}
