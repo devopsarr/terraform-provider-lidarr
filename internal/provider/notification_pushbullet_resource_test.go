@@ -1,0 +1,60 @@
+package provider
+
+import (
+	"fmt"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+)
+
+func TestAccNotificationPushbulletResource(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Create and Read testing
+			{
+				Config: testAccNotificationPushbulletResourceConfig("resourcePushbulletTest", "key1"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("lidarr_notification_pushbullet.test", "api_key", "key1"),
+					resource.TestCheckResourceAttrSet("lidarr_notification_pushbullet.test", "id"),
+				),
+			},
+			// Update and Read testing
+			{
+				Config: testAccNotificationPushbulletResourceConfig("resourcePushbulletTest", "key2"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("lidarr_notification_pushbullet.test", "api_key", "key2"),
+				),
+			},
+			// ImportState testing
+			{
+				ResourceName:      "lidarr_notification_pushbullet.test",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			// Delete testing automatically occurs in TestCase
+		},
+	})
+}
+
+func testAccNotificationPushbulletResourceConfig(name, key string) string {
+	return fmt.Sprintf(`
+	resource "lidarr_notification_pushbullet" "test" {
+		on_grab                 = false
+		on_import_failure       = false
+		on_upgrade              = false
+		on_download_failure     = false
+		on_release_import   	= false
+		on_health_issue   	    = false
+		on_application_update   = false
+	  
+		include_health_warnings = false
+		name                    = "%s"
+	  
+		api_key = "%s"
+		device_ids = ["test"]
+	}`, name, key)
+}
