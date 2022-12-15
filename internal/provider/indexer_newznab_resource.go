@@ -303,10 +303,8 @@ func (i *IndexerNewznab) write(ctx context.Context, indexer *lidarr.IndexerOutpu
 		Priority:                types.Int64Value(indexer.Priority),
 		ID:                      types.Int64Value(indexer.ID),
 		Name:                    types.StringValue(indexer.Name),
-		Tags:                    types.SetValueMust(types.Int64Type, nil),
-		Categories:              types.SetValueMust(types.Int64Type, nil),
 	}
-	tfsdk.ValueFrom(ctx, indexer.Tags, genericIndexer.Tags.Type(ctx), &genericIndexer.Tags)
+	genericIndexer.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, indexer.Tags)
 	genericIndexer.writeFields(ctx, indexer.Fields)
 	i.fromIndexer(&genericIndexer)
 }

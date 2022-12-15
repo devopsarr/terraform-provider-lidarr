@@ -17,7 +17,7 @@ For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings
 ```terraform
 resource "lidarr_indexer" "example" {
   enable_automatic_search = true
-  name                    = "Test"
+  name                    = "Example"
   implementation          = "Newznab"
   protocol                = "usenet"
   config_contract         = "NewznabSettings"
@@ -56,8 +56,8 @@ resource "lidarr_indexer" "example" {
 - `enable_interactive_search` (Boolean) Enable interactive search flag.
 - `enable_rss` (Boolean) Enable RSS flag.
 - `minimum_seeders` (Number) Minimum seeders.
-- `passkey` (String) Passkey.
-- `password` (String) Password.
+- `passkey` (String, Sensitive) Passkey.
+- `password` (String, Sensitive) Password.
 - `priority` (Number) Priority.
 - `ranked_only` (Boolean) Allow ranked only.
 - `rss_passkey` (String) RSS passkey.

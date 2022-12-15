@@ -5,5 +5,5 @@ resource "lidarr_download_client_sabnzbd" "example" {
   host     = "sabnzbd"
   url_base = "/sabnzbd/"
   port     = 9091
-  api_key  = "test"
+  api_key  = "example"
 }

@@ -152,6 +152,7 @@ func (d *IndexerDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"passkey": schema.StringAttribute{
 				MarkdownDescription: "Passkey.",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"username": schema.StringAttribute{
 				MarkdownDescription: "Username.",
@@ -160,6 +161,7 @@ func (d *IndexerDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"password": schema.StringAttribute{
 				MarkdownDescription: "Password.",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"categories": schema.SetAttribute{
 				MarkdownDescription: "Series list.",

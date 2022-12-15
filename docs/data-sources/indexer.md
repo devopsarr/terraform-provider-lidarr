@@ -46,8 +46,8 @@ data "lidarr_indexer" "example" {
 - `id` (Number) Indexer ID.
 - `implementation` (String) Indexer implementation name.
 - `minimum_seeders` (Number) Minimum seeders.
-- `passkey` (String) Passkey.
-- `password` (String) Password.
+- `passkey` (String, Sensitive) Passkey.
+- `password` (String, Sensitive) Password.
 - `priority` (Number) Priority.
 - `protocol` (String) Protocol. Valid values are 'usenet' and 'torrent'.
 - `ranked_only` (Boolean) Allow ranked only.

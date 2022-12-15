@@ -47,7 +47,7 @@ func testAccIndexerRarbgResourceConfig(name, aSearch string) string {
 		enable_automatic_search = %s
 		name = "%s"
 		base_url = "https://torrentapi.org"
-		ranked_only = "false"
+		ranked_only = false
 		minimum_seeders = 1
 	}`, aSearch, name)
 }
