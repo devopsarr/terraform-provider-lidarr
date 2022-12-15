@@ -31,7 +31,7 @@ var (
 
 var (
 	notificationBoolFields        = []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSSL"}
-	notificationStringFields      = []string{"accessToken", "accessTokenSecret", "apiKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "url", "userKey", "username", "webHookUrl"}
+	notificationStringFields      = []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "url", "userKey", "username", "webHookUrl"}
 	notificationIntFields         = []string{"method", "port", "priority", "displayTime", "retry", "expire"}
 	notificationStringSliceFields = []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc"}
 	notificationIntSliceFields    = []string{"grabFields", "importFields"}

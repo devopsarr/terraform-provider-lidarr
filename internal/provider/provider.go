@@ -180,6 +180,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewNotificationJoinResource,
 		NewNotificationKodiResource,
 		NewNotificationMailgunResource,
+		NewNotificationNotifiarrResource,
 		NewNotificationWebhookResource,
 
 		// Profiles
