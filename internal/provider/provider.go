@@ -159,6 +159,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewIndexerOmgwtfnzbsResource,
 		NewIndexerRarbgResource,
 		NewIndexerTorrentRssResource,
+		NewIndexerTorrentleechResource,
 		NewIndexerConfigResource,
 
 		// Media Management
