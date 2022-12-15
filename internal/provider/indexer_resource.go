@@ -237,6 +237,7 @@ func (r *IndexerResource) Schema(ctx context.Context, req resource.SchemaRequest
 				MarkdownDescription: "Passkey.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"username": schema.StringAttribute{
 				MarkdownDescription: "Username.",

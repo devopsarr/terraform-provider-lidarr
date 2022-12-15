@@ -56,7 +56,7 @@ resource "lidarr_indexer" "example" {
 - `enable_interactive_search` (Boolean) Enable interactive search flag.
 - `enable_rss` (Boolean) Enable RSS flag.
 - `minimum_seeders` (Number) Minimum seeders.
-- `passkey` (String) Passkey.
+- `passkey` (String, Sensitive) Passkey.
 - `password` (String, Sensitive) Password.
 - `priority` (Number) Priority.
 - `ranked_only` (Boolean) Allow ranked only.

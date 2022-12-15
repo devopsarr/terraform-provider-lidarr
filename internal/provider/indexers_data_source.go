@@ -169,6 +169,7 @@ func (d *IndexersDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						"passkey": schema.StringAttribute{
 							MarkdownDescription: "Passkey.",
 							Computed:            true,
+							Sensitive:           true,
 						},
 						"username": schema.StringAttribute{
 							MarkdownDescription: "Username.",
