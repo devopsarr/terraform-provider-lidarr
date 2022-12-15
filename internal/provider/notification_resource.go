@@ -688,6 +688,12 @@ func (n *Notification) writeFields(ctx context.Context, fields []*starr.FieldOut
 			continue
 		}
 
+		if slices.Contains(notificationIntFields, f.Name) {
+			tools.WriteIntField(f, n)
+
+			continue
+		}
+
 		if slices.Contains(notificationStringSliceFields, f.Name) || f.Name == "tags" {
 			tools.WriteStringSliceField(ctx, f, n)
 
