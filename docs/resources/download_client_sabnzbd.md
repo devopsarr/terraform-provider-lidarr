@@ -38,12 +38,12 @@ resource "lidarr_download_client_sabnzbd" "example" {
 - `api_key` (String, Sensitive) API key.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) TV category.
-- `older_music_priority` (Number) Older TV priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.
+- `music_category` (String) Music category.
+- `older_music_priority` (Number) Older Music priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
-- `recent_music_priority` (Number) Recent TV priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.
+- `recent_music_priority` (Number) Recent Music priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.
 - `remove_completed_downloads` (Boolean) Remove completed downloads flag.
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.

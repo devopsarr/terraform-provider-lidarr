@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/lidarr-go/lidarr"
+	"github.com/devopsarr/terraform-provider-lidarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -16,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/lidarr"
 )
 
 const (
@@ -38,7 +38,7 @@ func NewDownloadClientVuzeResource() resource.Resource {
 
 // DownloadClientVuzeResource defines the download client implementation.
 type DownloadClientVuzeResource struct {
-	client *lidarr.Lidarr
+	client *lidarr.APIClient
 }
 
 // DownloadClientVuze describes the download client data model.
@@ -169,7 +169,7 @@ func (r *DownloadClientVuzeResource) Schema(ctx context.Context, req resource.Sc
 				Computed:            true,
 			},
 			"recent_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Recent Music priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -177,7 +177,7 @@ func (r *DownloadClientVuzeResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"older_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older TV priority. `0` Last, `1` First.",
+				MarkdownDescription: "Older Music priority. `0` Last, `1` First.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -206,12 +206,12 @@ func (r *DownloadClientVuzeResource) Schema(ctx context.Context, req resource.Sc
 				Sensitive:           true,
 			},
 			"music_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+				MarkdownDescription: "Music category.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "TV directory.",
+				MarkdownDescription: "Music directory.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -225,11 +225,11 @@ func (r *DownloadClientVuzeResource) Configure(ctx context.Context, req resource
 		return
 	}
 
-	client, ok := req.ProviderData.(*lidarr.Lidarr)
+	client, ok := req.ProviderData.(*lidarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.Lidarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -251,14 +251,14 @@ func (r *DownloadClientVuzeResource) Create(ctx context.Context, req resource.Cr
 	// Create new DownloadClientVuze
 	request := client.read(ctx)
 
-	response, err := r.client.AddDownloadClientContext(ctx, request)
+	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "created "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	client.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
@@ -275,14 +275,14 @@ func (r *DownloadClientVuzeResource) Read(ctx context.Context, req resource.Read
 	}
 
 	// Get DownloadClientVuze current value
-	response, err := r.client.GetDownloadClientContext(ctx, client.ID.ValueInt64())
+	response, _, err := r.client.DownloadClientApi.GetDownloadClientById(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "read "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	client.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
@@ -301,14 +301,14 @@ func (r *DownloadClientVuzeResource) Update(ctx context.Context, req resource.Up
 	// Update DownloadClientVuze
 	request := client.read(ctx)
 
-	response, err := r.client.UpdateDownloadClientContext(ctx, request)
+	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", downloadClientVuzeResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "updated "+downloadClientVuzeResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	client.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &client)...)
@@ -324,7 +324,7 @@ func (r *DownloadClientVuzeResource) Delete(ctx context.Context, req resource.De
 	}
 
 	// Delete DownloadClientVuze current value
-	err := r.client.DeleteDownloadClientContext(ctx, client.ID.ValueInt64())
+	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientVuzeResourceName, err))
 
@@ -351,36 +351,37 @@ func (r *DownloadClientVuzeResource) ImportState(ctx context.Context, req resour
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
 }
 
-func (d *DownloadClientVuze) write(ctx context.Context, downloadClient *lidarr.DownloadClientOutput) {
+func (d *DownloadClientVuze) write(ctx context.Context, downloadClient *lidarr.DownloadClientResource) {
 	genericDownloadClient := DownloadClient{
-		Enable:                   types.BoolValue(downloadClient.Enable),
-		RemoveCompletedDownloads: types.BoolValue(downloadClient.RemoveCompletedDownloads),
-		RemoveFailedDownloads:    types.BoolValue(downloadClient.RemoveFailedDownloads),
-		Priority:                 types.Int64Value(int64(downloadClient.Priority)),
-		ID:                       types.Int64Value(downloadClient.ID),
-		Name:                     types.StringValue(downloadClient.Name),
+		Enable:                   types.BoolValue(downloadClient.GetEnable()),
+		RemoveCompletedDownloads: types.BoolValue(downloadClient.GetRemoveCompletedDownloads()),
+		RemoveFailedDownloads:    types.BoolValue(downloadClient.GetRemoveFailedDownloads()),
+		Priority:                 types.Int64Value(int64(downloadClient.GetPriority())),
+		ID:                       types.Int64Value(int64(downloadClient.GetId())),
+		Name:                     types.StringValue(downloadClient.GetName()),
 	}
 	genericDownloadClient.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, downloadClient.Tags)
 	genericDownloadClient.writeFields(ctx, downloadClient.Fields)
 	d.fromDownloadClient(&genericDownloadClient)
 }
 
-func (d *DownloadClientVuze) read(ctx context.Context) *lidarr.DownloadClientInput {
-	var tags []int
+func (d *DownloadClientVuze) read(ctx context.Context) *lidarr.DownloadClientResource {
+	var tags []*int32
 
 	tfsdk.ValueAs(ctx, d.Tags, &tags)
 
-	return &lidarr.DownloadClientInput{
-		Enable:                   d.Enable.ValueBool(),
-		RemoveCompletedDownloads: d.RemoveCompletedDownloads.ValueBool(),
-		RemoveFailedDownloads:    d.RemoveFailedDownloads.ValueBool(),
-		Priority:                 int(d.Priority.ValueInt64()),
-		ID:                       d.ID.ValueInt64(),
-		ConfigContract:           downloadClientVuzeConfigContract,
-		Implementation:           downloadClientVuzeImplementation,
-		Name:                     d.Name.ValueString(),
-		Protocol:                 downloadClientVuzeProtocol,
-		Tags:                     tags,
-		Fields:                   d.toDownloadClient().readFields(ctx),
-	}
+	client := lidarr.NewDownloadClientResource()
+	client.SetEnable(d.Enable.ValueBool())
+	client.SetRemoveCompletedDownloads(d.RemoveCompletedDownloads.ValueBool())
+	client.SetRemoveFailedDownloads(d.RemoveFailedDownloads.ValueBool())
+	client.SetPriority(int32(d.Priority.ValueInt64()))
+	client.SetId(int32(d.ID.ValueInt64()))
+	client.SetConfigContract(downloadClientVuzeConfigContract)
+	client.SetImplementation(downloadClientVuzeImplementation)
+	client.SetName(d.Name.ValueString())
+	client.SetProtocol(downloadClientVuzeProtocol)
+	client.SetTags(tags)
+	client.SetFields(d.toDownloadClient().readFields(ctx))
+
+	return client
 }

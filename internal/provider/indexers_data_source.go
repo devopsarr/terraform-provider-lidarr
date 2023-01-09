@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/lidarr-go/lidarr"
+	"github.com/devopsarr/terraform-provider-lidarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/lidarr"
 )
 
 const indexersDataSourceName = "indexers"
@@ -25,7 +25,7 @@ func NewIndexersDataSource() datasource.DataSource {
 
 // IndexersDataSource defines the indexers implementation.
 type IndexersDataSource struct {
-	client *lidarr.Lidarr
+	client *lidarr.APIClient
 }
 
 // Indexers describes the indexers data model.
@@ -198,11 +198,11 @@ func (d *IndexersDataSource) Configure(ctx context.Context, req datasource.Confi
 		return
 	}
 
-	client, ok := req.ProviderData.(*lidarr.Lidarr)
+	client, ok := req.ProviderData.(*lidarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.Lidarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -220,7 +220,7 @@ func (d *IndexersDataSource) Read(ctx context.Context, req datasource.ReadReques
 		return
 	}
 	// Get indexers current value
-	response, err := d.client.GetIndexersContext(ctx)
+	response, _, err := d.client.IndexerApi.ListIndexer(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexersDataSourceName, err))
 

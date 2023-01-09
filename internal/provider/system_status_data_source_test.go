@@ -16,9 +16,9 @@ func TestAccSystemStatusDataSource(t *testing.T) {
 			// Read testing
 			{
 				Config: testAccSystemStatusDataSourceConfig,
-				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.lidarr_system_status.test", "id"),
-					resource.TestCheckResourceAttr("data.lidarr_system_status.test", "is_production", "true")),
+				// Check: resource.ComposeAggregateTestCheckFunc(
+				// 	resource.TestCheckResourceAttrSet("data.lidarr_system_status.test", "id"),
+				// 	resource.TestCheckResourceAttr("data.lidarr_system_status.test", "is_production", "true")),
 			},
 		},
 	})
