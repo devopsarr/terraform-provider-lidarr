@@ -166,12 +166,12 @@ func (r *DownloadClientUsenetDownloadStationResource) Schema(ctx context.Context
 				Sensitive:           true,
 			},
 			"music_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+				MarkdownDescription: "Music category.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "TV directory.",
+				MarkdownDescription: "Music directory.",
 				Optional:            true,
 				Computed:            true,
 			},

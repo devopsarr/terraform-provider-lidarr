@@ -53,17 +53,17 @@ resource "lidarr_download_client" "example" {
 - `initial_state` (Number) Initial state. `0` Start, `1` ForceStart, `2` Pause.
 - `intial_state` (Number) Initial state, with Stop support. `0` Start, `1` ForceStart, `2` Pause, `3` Stop.
 - `magnet_file_extension` (String) Magnet file extension.
-- `music_category` (String) TV category.
-- `music_directory` (String) TV directory.
-- `music_imported_category` (String) TV imported category.
+- `music_category` (String) Music category.
+- `music_directory` (String) Music directory.
+- `music_imported_category` (String) Music imported category.
 - `nzb_folder` (String) NZB folder.
-- `older_music_priority` (Number) Older TV priority. `0` Last, `1` First.
+- `older_music_priority` (Number) Older Music priority. `0` Last, `1` First.
 - `password` (String) Password.
 - `port` (Number) Port.
 - `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
 - `read_only` (Boolean) Read only flag.
-- `recent_music_priority` (Number) Recent TV priority. `0` Last, `1` First.
+- `recent_music_priority` (Number) Recent Music priority. `0` Last, `1` First.
 - `remove_completed_downloads` (Boolean) Remove completed downloads flag.
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `rpc_path` (String) RPC path.

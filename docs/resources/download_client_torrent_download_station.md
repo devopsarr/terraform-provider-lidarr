@@ -35,8 +35,8 @@ resource "lidarr_download_client_torrent_download_station" "example" {
 
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) TV category.
-- `music_directory` (String) TV directory.
+- `music_category` (String) Music category.
+- `music_directory` (String) Music directory.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.

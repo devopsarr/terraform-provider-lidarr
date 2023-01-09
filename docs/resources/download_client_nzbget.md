@@ -37,12 +37,12 @@ resource "lidarr_download_client_nzbget" "example" {
 - `add_paused` (Boolean) Add paused flag.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) TV category.
-- `older_music_priority` (Number) Older TV priority. `-100` VeryLow, `-50` Low, `0` Normal, `50` High, `100` VeryHigh, `900` Force.
+- `music_category` (String) Music category.
+- `older_music_priority` (Number) Older Music priority. `-100` VeryLow, `-50` Low, `0` Normal, `50` High, `100` VeryHigh, `900` Force.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
-- `recent_music_priority` (Number) Recent TV priority. `-100` VeryLow, `-50` Low, `0` Normal, `50` High, `100` VeryHigh, `900` Force.
+- `recent_music_priority` (Number) Recent Music priority. `-100` VeryLow, `-50` Low, `0` Normal, `50` High, `100` VeryHigh, `900` Force.
 - `remove_completed_downloads` (Boolean) Remove completed downloads flag.
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.

@@ -155,7 +155,7 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 				Computed:            true,
 			},
 			"recent_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent TV priority. `-1` Low, `0` Normal, `1` High.",
+				MarkdownDescription: "Recent Music priority. `-1` Low, `0` Normal, `1` High.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -163,7 +163,7 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"older_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older TV priority. `-1` Low, `0` Normal, `1` High.",
+				MarkdownDescription: "Older Music priority. `-1` Low, `0` Normal, `1` High.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -185,7 +185,7 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 				Required:            true,
 			},
 			"music_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+				MarkdownDescription: "Music category.",
 				Optional:            true,
 				Computed:            true,
 			},

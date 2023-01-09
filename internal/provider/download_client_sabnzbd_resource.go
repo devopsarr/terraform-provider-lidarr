@@ -161,7 +161,7 @@ func (r *DownloadClientSabnzbdResource) Schema(ctx context.Context, req resource
 				Computed:            true,
 			},
 			"recent_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent TV priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.",
+				MarkdownDescription: "Recent Music priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -169,7 +169,7 @@ func (r *DownloadClientSabnzbdResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"older_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older TV priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.",
+				MarkdownDescription: "Older Music priority. `-100` Default, `-2` Paused, `-1` Low, `0` Normal, `1` High, `2` Force.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -204,7 +204,7 @@ func (r *DownloadClientSabnzbdResource) Schema(ctx context.Context, req resource
 				Sensitive:           true,
 			},
 			"music_category": schema.StringAttribute{
-				MarkdownDescription: "TV category.",
+				MarkdownDescription: "Music category.",
 				Optional:            true,
 				Computed:            true,
 			},

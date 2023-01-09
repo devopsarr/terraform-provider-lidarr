@@ -37,14 +37,14 @@ resource "lidarr_download_client_rtorrent" "example" {
 - `add_stopped` (Boolean) Add stopped flag.
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
-- `music_category` (String) TV category.
-- `music_directory` (String) TV directory.
-- `music_imported_category` (String) TV imported category.
-- `older_music_priority` (Number) Older TV priority. `0` VeryLow, `1` Low, `2` Normal, `3` High.
+- `music_category` (String) Music category.
+- `music_directory` (String) Music directory.
+- `music_imported_category` (String) Music imported category.
+- `older_music_priority` (Number) Older Music priority. `0` VeryLow, `1` Low, `2` Normal, `3` High.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
-- `recent_music_priority` (Number) Recent TV priority. `0` VeryLow, `1` Low, `2` Normal, `3` High.
+- `recent_music_priority` (Number) Recent Music priority. `0` VeryLow, `1` Low, `2` Normal, `3` High.
 - `remove_completed_downloads` (Boolean) Remove completed downloads flag.
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.
