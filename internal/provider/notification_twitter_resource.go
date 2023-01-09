@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/lidarr-go/lidarr"
+	"github.com/devopsarr/terraform-provider-lidarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -14,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr/lidarr"
 )
 
 const (
@@ -35,7 +35,7 @@ func NewNotificationTwitterResource() resource.Resource {
 
 // NotificationTwitterResource defines the notification implementation.
 type NotificationTwitterResource struct {
-	client *lidarr.Lidarr
+	client *lidarr.APIClient
 }
 
 // NotificationTwitter describes the notification data model.
@@ -198,11 +198,11 @@ func (r *NotificationTwitterResource) Configure(ctx context.Context, req resourc
 		return
 	}
 
-	client, ok := req.ProviderData.(*lidarr.Lidarr)
+	client, ok := req.ProviderData.(*lidarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.Lidarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -224,14 +224,14 @@ func (r *NotificationTwitterResource) Create(ctx context.Context, req resource.C
 	// Create new NotificationTwitter
 	request := notification.read(ctx)
 
-	response, err := r.client.AddNotificationContext(ctx, request)
+	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", notificationTwitterResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+notificationTwitterResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "created "+notificationTwitterResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
@@ -248,14 +248,14 @@ func (r *NotificationTwitterResource) Read(ctx context.Context, req resource.Rea
 	}
 
 	// Get NotificationTwitter current value
-	response, err := r.client.GetNotificationContext(ctx, int(notification.ID.ValueInt64()))
+	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(int(notification.ID.ValueInt64()))).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationTwitterResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+notificationTwitterResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "read "+notificationTwitterResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
@@ -274,14 +274,14 @@ func (r *NotificationTwitterResource) Update(ctx context.Context, req resource.U
 	// Update NotificationTwitter
 	request := notification.read(ctx)
 
-	response, err := r.client.UpdateNotificationContext(ctx, request)
+	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", notificationTwitterResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+notificationTwitterResourceName+": "+strconv.Itoa(int(response.ID)))
+	tflog.Trace(ctx, "updated "+notificationTwitterResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
@@ -297,7 +297,7 @@ func (r *NotificationTwitterResource) Delete(ctx context.Context, req resource.D
 	}
 
 	// Delete NotificationTwitter current value
-	err := r.client.DeleteNotificationContext(ctx, notification.ID.ValueInt64())
+	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationTwitterResourceName, err))
 
@@ -324,43 +324,44 @@ func (r *NotificationTwitterResource) ImportState(ctx context.Context, req resou
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
 }
 
-func (n *NotificationTwitter) write(ctx context.Context, notification *lidarr.NotificationOutput) {
+func (n *NotificationTwitter) write(ctx context.Context, notification *lidarr.NotificationResource) {
 	genericNotification := Notification{
-		OnGrab:                types.BoolValue(notification.OnGrab),
-		OnImportFailure:       types.BoolValue(notification.OnImportFailure),
-		OnUpgrade:             types.BoolValue(notification.OnUpgrade),
-		OnDownloadFailure:     types.BoolValue(notification.OnDownloadFailure),
-		OnReleaseImport:       types.BoolValue(notification.OnReleaseImport),
-		OnHealthIssue:         types.BoolValue(notification.OnHealthIssue),
-		OnApplicationUpdate:   types.BoolValue(notification.OnApplicationUpdate),
-		IncludeHealthWarnings: types.BoolValue(notification.IncludeHealthWarnings),
-		ID:                    types.Int64Value(notification.ID),
-		Name:                  types.StringValue(notification.Name),
+		OnGrab:                types.BoolValue(notification.GetOnGrab()),
+		OnImportFailure:       types.BoolValue(notification.GetOnImportFailure()),
+		OnUpgrade:             types.BoolValue(notification.GetOnUpgrade()),
+		OnDownloadFailure:     types.BoolValue(notification.GetOnDownloadFailure()),
+		OnReleaseImport:       types.BoolValue(notification.GetOnReleaseImport()),
+		OnHealthIssue:         types.BoolValue(notification.GetOnHealthIssue()),
+		OnApplicationUpdate:   types.BoolValue(notification.GetOnApplicationUpdate()),
+		IncludeHealthWarnings: types.BoolValue(notification.GetIncludeHealthWarnings()),
+		ID:                    types.Int64Value(int64(notification.GetId())),
+		Name:                  types.StringValue(notification.GetName()),
 	}
 	genericNotification.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, notification.Tags)
 	genericNotification.writeFields(ctx, notification.Fields)
 	n.fromNotification(&genericNotification)
 }
 
-func (n *NotificationTwitter) read(ctx context.Context) *lidarr.NotificationInput {
-	var tags []int
+func (n *NotificationTwitter) read(ctx context.Context) *lidarr.NotificationResource {
+	var tags []*int32
 
 	tfsdk.ValueAs(ctx, n.Tags, &tags)
 
-	return &lidarr.NotificationInput{
-		OnGrab:                n.OnGrab.ValueBool(),
-		OnImportFailure:       n.OnImportFailure.ValueBool(),
-		OnUpgrade:             n.OnUpgrade.ValueBool(),
-		OnDownloadFailure:     n.OnDownloadFailure.ValueBool(),
-		OnReleaseImport:       n.OnReleaseImport.ValueBool(),
-		OnHealthIssue:         n.OnHealthIssue.ValueBool(),
-		OnApplicationUpdate:   n.OnApplicationUpdate.ValueBool(),
-		IncludeHealthWarnings: n.IncludeHealthWarnings.ValueBool(),
-		ConfigContract:        notificationTwitterConfigContract,
-		Implementation:        notificationTwitterImplementation,
-		ID:                    n.ID.ValueInt64(),
-		Name:                  n.Name.ValueString(),
-		Tags:                  tags,
-		Fields:                n.toNotification().readFields(ctx),
-	}
+	notification := lidarr.NewNotificationResource()
+	notification.SetOnGrab(n.OnGrab.ValueBool())
+	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
+	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
+	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
+	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
+	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
+	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
+	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
+	notification.SetConfigContract(notificationTwitterConfigContract)
+	notification.SetImplementation(notificationTwitterImplementation)
+	notification.SetId(int32(n.ID.ValueInt64()))
+	notification.SetName(n.Name.ValueString())
+	notification.SetTags(tags)
+	notification.SetFields(n.toNotification().readFields(ctx))
+
+	return notification
 }

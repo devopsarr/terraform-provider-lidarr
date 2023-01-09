@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/devopsarr/terraform-provider-sonarr/tools"
+	"github.com/devopsarr/lidarr-go/lidarr"
+	"github.com/devopsarr/terraform-provider-lidarr/tools"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golift.io/starr"
-	"golift.io/starr/lidarr"
 )
 
 const remotePathMappingDataSourceName = "remote_path_mapping"
@@ -24,7 +23,7 @@ func NewRemotePathMappingDataSource() datasource.DataSource {
 
 // RemotePathMappingDataSource defines the remote path mapping implementation.
 type RemotePathMappingDataSource struct {
-	client *lidarr.Lidarr
+	client *lidarr.APIClient
 }
 
 func (d *RemotePathMappingDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -62,11 +61,11 @@ func (d *RemotePathMappingDataSource) Configure(ctx context.Context, req datasou
 		return
 	}
 
-	client, ok := req.ProviderData.(*lidarr.Lidarr)
+	client, ok := req.ProviderData.(*lidarr.APIClient)
 	if !ok {
 		resp.Diagnostics.AddError(
 			tools.UnexpectedDataSourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.Lidarr, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
@@ -84,7 +83,7 @@ func (d *RemotePathMappingDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 	// Get remote path mapping current value
-	response, err := d.client.GetRemotePathMappingsContext(ctx)
+	response, _, err := d.client.RemotePathMappingApi.ListRemotePathMapping(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", remotePathMappingDataSourceName, err))
 
@@ -105,9 +104,9 @@ func (d *RemotePathMappingDataSource) Read(ctx context.Context, req datasource.R
 	resp.Diagnostics.Append(resp.State.Set(ctx, &remoteMapping)...)
 }
 
-func findRemotePathMapping(id int64, mappings []*starr.RemotePathMapping) (*starr.RemotePathMapping, error) {
+func findRemotePathMapping(id int64, mappings []*lidarr.RemotePathMappingResource) (*lidarr.RemotePathMappingResource, error) {
 	for _, m := range mappings {
-		if m.ID == id {
+		if int64(m.GetId()) == id {
 			return m, nil
 		}
 	}
