@@ -2,11 +2,10 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -260,22 +259,9 @@ func (r *IndexerResource) Schema(ctx context.Context, req resource.SchemaRequest
 }
 
 func (r *IndexerResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *IndexerResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -293,7 +279,7 @@ func (r *IndexerResource) Create(ctx context.Context, req resource.CreateRequest
 
 	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", indexerResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerResourceName, err))
 
 		return
 	}
@@ -320,7 +306,7 @@ func (r *IndexerResource) Read(ctx context.Context, req resource.ReadRequest, re
 	// Get Indexer current value
 	response, _, err := r.client.IndexerApi.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerResourceName, err))
 
 		return
 	}
@@ -349,7 +335,7 @@ func (r *IndexerResource) Update(ctx context.Context, req resource.UpdateRequest
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", indexerResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerResourceName, err))
 
 		return
 	}
@@ -375,7 +361,7 @@ func (r *IndexerResource) Delete(ctx context.Context, req resource.DeleteRequest
 	// Delete Indexer current value
 	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerResourceName, err))
 
 		return
 	}
@@ -385,19 +371,8 @@ func (r *IndexerResource) Delete(ctx context.Context, req resource.DeleteRequest
 }
 
 func (r *IndexerResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+indexerResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+indexerResourceName+": "+req.ID)
 }
 
 func (i *Indexer) write(ctx context.Context, indexer *lidarr.IndexerResource) {
@@ -423,31 +398,31 @@ func (i *Indexer) writeFields(ctx context.Context, fields []*lidarr.Field) {
 		}
 
 		if slices.Contains(indexerStringFields, f.GetName()) {
-			tools.WriteStringField(f, i)
+			helpers.WriteStringField(f, i)
 
 			continue
 		}
 
 		if slices.Contains(indexerBoolFields, f.GetName()) {
-			tools.WriteBoolField(f, i)
+			helpers.WriteBoolField(f, i)
 
 			continue
 		}
 
 		if slices.Contains(indexerIntFields, f.GetName()) {
-			tools.WriteIntField(f, i)
+			helpers.WriteIntField(f, i)
 
 			continue
 		}
 
 		if slices.Contains(indexerFloatFields, f.GetName()) {
-			tools.WriteFloatField(f, i)
+			helpers.WriteFloatField(f, i)
 
 			continue
 		}
 
 		if slices.Contains(indexerIntSliceFields, f.GetName()) {
-			tools.WriteIntSliceField(ctx, f, i)
+			helpers.WriteIntSliceField(ctx, f, i)
 		}
 	}
 }
@@ -477,31 +452,31 @@ func (i *Indexer) readFields(ctx context.Context) []*lidarr.Field {
 	var output []*lidarr.Field
 
 	for _, b := range indexerBoolFields {
-		if field := tools.ReadBoolField(b, i); field != nil {
+		if field := helpers.ReadBoolField(b, i); field != nil {
 			output = append(output, field)
 		}
 	}
 
 	for _, n := range indexerIntFields {
-		if field := tools.ReadIntField(n, i); field != nil {
+		if field := helpers.ReadIntField(n, i); field != nil {
 			output = append(output, field)
 		}
 	}
 
 	for _, f := range indexerFloatFields {
-		if field := tools.ReadFloatField(f, i); field != nil {
+		if field := helpers.ReadFloatField(f, i); field != nil {
 			output = append(output, field)
 		}
 	}
 
 	for _, s := range indexerStringFields {
-		if field := tools.ReadStringField(s, i); field != nil {
+		if field := helpers.ReadStringField(s, i); field != nil {
 			output = append(output, field)
 		}
 	}
 
 	for _, s := range indexerIntSliceFields {
-		if field := tools.ReadIntSliceField(ctx, s, i); field != nil {
+		if field := helpers.ReadIntSliceField(ctx, s, i); field != nil {
 			output = append(output, field)
 		}
 	}

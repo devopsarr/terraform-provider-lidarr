@@ -3,7 +3,7 @@ module github.com/devopsarr/terraform-provider-lidarr
 go 1.19
 
 require (
-	github.com/devopsarr/lidarr-go v0.0.0-20230109064816-45fbaa1ca41c
+	github.com/devopsarr/lidarr-go v0.1.0
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-framework v1.1.1
 	github.com/hashicorp/terraform-plugin-framework-validators v0.9.0
