@@ -1,2 +1,2 @@
 # import
-terraform import lidarr_tag.example
+terraform import lidarr_media_management.example

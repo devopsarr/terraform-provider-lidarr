@@ -71,5 +71,5 @@ Import is supported using the following syntax:
 
 ```shell
 # import
-terraform import lidarr_tag.example
+terraform import lidarr_media_management.example
 ```
