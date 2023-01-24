@@ -169,6 +169,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewIndexerConfigResource,
 
 		// Media Management
+		NewRootFolderResource,
 
 		// Notifications
 		NewNotificationResource,
