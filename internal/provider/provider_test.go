@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 )
@@ -26,4 +27,12 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("LIDARR_API_KEY"); v == "" {
 		t.Skip("LIDARR_API_KEY must be set for acceptance tests")
 	}
+}
+
+func testAccAPIClient() *lidarr.APIClient {
+	config := lidarr.NewConfiguration()
+	config.AddDefaultHeader("X-Api-Key", os.Getenv("LIDARR_API_KEY"))
+	config.Servers[0].URL = os.Getenv("LIDARR_URL")
+
+	return lidarr.NewAPIClient(config)
 }
