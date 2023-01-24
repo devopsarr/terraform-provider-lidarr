@@ -2,13 +2,14 @@
 version: "3.9"
 services:
   lidarr:
-    image: linuxserver/lidarr:1.0.2
+    image: hotio/lidarr:testing-1.1.2.2935@sha256:559eced8c6ca1e38ddc5f60cdce5a37fe6fc76d7693166560795c528e8298c2a
     container_name: lidarr
     depends_on:
       - transmission
     environment:
       - PUID=1000
       - PGID=1000
+      - UMASK=002
       - TZ=Europe/London
     volumes:
       - ./test.sh:/scripts/test.sh
@@ -17,7 +18,7 @@ services:
       - 8686:8686
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", " http://localhost:8686/system/status"]
+      test: ["CMD", "curl", "-f", "http://localhost:8686/system/status"]
   transmission:
     image: linuxserver/transmission:latest
     container_name: transmission
@@ -26,4 +27,4 @@ services:
       - PGID=1000
       - TZ=Europe/London
     ports:
-      - 9091:9091  
+      - 9091:9091
