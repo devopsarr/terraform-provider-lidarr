@@ -221,6 +221,9 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewIndexerDataSource,
 		NewIndexersDataSource,
 
+		// Import Lists
+		NewImportListExclusionsDataSource,
+
 		// Media Management
 		NewMediaManagementDataSource,
 		NewNamingDataSource,
