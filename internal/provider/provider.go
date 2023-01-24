@@ -168,6 +168,9 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewIndexerTorznabResource,
 		NewIndexerConfigResource,
 
+		// Import Lists
+		NewImportListExclusionResource,
+
 		// Media Management
 		NewMediaManagementResource,
 		NewNamingResource,
