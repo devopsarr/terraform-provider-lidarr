@@ -2,11 +2,10 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -180,22 +179,9 @@ func (r *DownloadClientUsenetDownloadStationResource) Schema(ctx context.Context
 }
 
 func (r *DownloadClientUsenetDownloadStationResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *DownloadClientUsenetDownloadStationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -213,7 +199,7 @@ func (r *DownloadClientUsenetDownloadStationResource) Create(ctx context.Context
 
 	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", downloadClientUsenetDownloadStationResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, downloadClientUsenetDownloadStationResourceName, err))
 
 		return
 	}
@@ -237,7 +223,7 @@ func (r *DownloadClientUsenetDownloadStationResource) Read(ctx context.Context, 
 	// Get DownloadClientUsenetDownloadStation current value
 	response, _, err := r.client.DownloadClientApi.GetDownloadClientById(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientUsenetDownloadStationResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientUsenetDownloadStationResourceName, err))
 
 		return
 	}
@@ -263,7 +249,7 @@ func (r *DownloadClientUsenetDownloadStationResource) Update(ctx context.Context
 
 	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", downloadClientUsenetDownloadStationResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, downloadClientUsenetDownloadStationResourceName, err))
 
 		return
 	}
@@ -286,7 +272,7 @@ func (r *DownloadClientUsenetDownloadStationResource) Delete(ctx context.Context
 	// Delete DownloadClientUsenetDownloadStation current value
 	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientUsenetDownloadStationResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientUsenetDownloadStationResourceName, err))
 
 		return
 	}
@@ -296,19 +282,8 @@ func (r *DownloadClientUsenetDownloadStationResource) Delete(ctx context.Context
 }
 
 func (r *DownloadClientUsenetDownloadStationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+downloadClientUsenetDownloadStationResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+downloadClientUsenetDownloadStationResourceName+": "+req.ID)
 }
 
 func (d *DownloadClientUsenetDownloadStation) write(ctx context.Context, downloadClient *lidarr.DownloadClientResource) {

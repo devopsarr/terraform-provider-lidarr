@@ -2,11 +2,10 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -193,22 +192,9 @@ func (r *NotificationEmbyResource) Schema(ctx context.Context, req resource.Sche
 }
 
 func (r *NotificationEmbyResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *NotificationEmbyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -226,7 +212,7 @@ func (r *NotificationEmbyResource) Create(ctx context.Context, req resource.Crea
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", notificationEmbyResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationEmbyResourceName, err))
 
 		return
 	}
@@ -250,7 +236,7 @@ func (r *NotificationEmbyResource) Read(ctx context.Context, req resource.ReadRe
 	// Get NotificationEmby current value
 	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(int(notification.ID.ValueInt64()))).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationEmbyResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationEmbyResourceName, err))
 
 		return
 	}
@@ -276,7 +262,7 @@ func (r *NotificationEmbyResource) Update(ctx context.Context, req resource.Upda
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", notificationEmbyResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationEmbyResourceName, err))
 
 		return
 	}
@@ -299,7 +285,7 @@ func (r *NotificationEmbyResource) Delete(ctx context.Context, req resource.Dele
 	// Delete NotificationEmby current value
 	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", notificationEmbyResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationEmbyResourceName, err))
 
 		return
 	}
@@ -309,19 +295,8 @@ func (r *NotificationEmbyResource) Delete(ctx context.Context, req resource.Dele
 }
 
 func (r *NotificationEmbyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+notificationEmbyResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+notificationEmbyResourceName+": "+req.ID)
 }
 
 func (n *NotificationEmby) write(ctx context.Context, notification *lidarr.NotificationResource) {

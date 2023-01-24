@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -194,22 +194,9 @@ func (r *IndexerGazelleResource) Schema(ctx context.Context, req resource.Schema
 }
 
 func (r *IndexerGazelleResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *IndexerGazelleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -227,7 +214,7 @@ func (r *IndexerGazelleResource) Create(ctx context.Context, req resource.Create
 
 	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", indexerGazelleResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerGazelleResourceName, err))
 
 		return
 	}
@@ -251,7 +238,7 @@ func (r *IndexerGazelleResource) Read(ctx context.Context, req resource.ReadRequ
 	// Get IndexerGazelle current value
 	response, _, err := r.client.IndexerApi.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerGazelleResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerGazelleResourceName, err))
 
 		return
 	}
@@ -277,7 +264,7 @@ func (r *IndexerGazelleResource) Update(ctx context.Context, req resource.Update
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update "+indexerGazelleResourceName+", got error: %s", err))
+		resp.Diagnostics.AddError(helpers.ClientError, fmt.Sprintf("Unable to update "+indexerGazelleResourceName+", got error: %s", err))
 
 		return
 	}
@@ -300,7 +287,7 @@ func (r *IndexerGazelleResource) Delete(ctx context.Context, req resource.Delete
 	// Delete IndexerGazelle current value
 	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerGazelleResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerGazelleResourceName, err))
 
 		return
 	}
@@ -310,19 +297,8 @@ func (r *IndexerGazelleResource) Delete(ctx context.Context, req resource.Delete
 }
 
 func (r *IndexerGazelleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+indexerGazelleResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+indexerGazelleResourceName+": "+req.ID)
 }
 
 func (i *IndexerGazelle) write(ctx context.Context, indexer *lidarr.IndexerResource) {

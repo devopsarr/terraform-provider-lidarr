@@ -2,11 +2,10 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -73,22 +72,9 @@ func (r *RemotePathMappingResource) Metadata(ctx context.Context, req resource.M
 }
 
 func (r *RemotePathMappingResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *RemotePathMappingResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -106,7 +92,7 @@ func (r *RemotePathMappingResource) Create(ctx context.Context, req resource.Cre
 
 	response, _, err := r.client.RemotePathMappingApi.CreateRemotePathMapping(ctx).RemotePathMappingResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", remotePathMappingResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, remotePathMappingResourceName, err))
 
 		return
 	}
@@ -130,7 +116,7 @@ func (r *RemotePathMappingResource) Read(ctx context.Context, req resource.ReadR
 	// Get remotePathMapping current value
 	response, _, err := r.client.RemotePathMappingApi.GetRemotePathMappingById(ctx, int32(mapping.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", remotePathMappingResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, remotePathMappingResourceName, err))
 
 		return
 	}
@@ -156,7 +142,7 @@ func (r *RemotePathMappingResource) Update(ctx context.Context, req resource.Upd
 
 	response, _, err := r.client.RemotePathMappingApi.UpdateRemotePathMapping(ctx, strconv.Itoa(int(request.GetId()))).RemotePathMappingResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", remotePathMappingResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, remotePathMappingResourceName, err))
 
 		return
 	}
@@ -180,7 +166,7 @@ func (r *RemotePathMappingResource) Delete(ctx context.Context, req resource.Del
 	// Delete remotePathMapping current value
 	_, err := r.client.RemotePathMappingApi.DeleteRemotePathMapping(ctx, int32(mapping.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", remotePathMappingResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, remotePathMappingResourceName, err))
 
 		return
 	}
@@ -190,19 +176,8 @@ func (r *RemotePathMappingResource) Delete(ctx context.Context, req resource.Del
 }
 
 func (r *RemotePathMappingResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+remotePathMappingResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+remotePathMappingResourceName+": "+req.ID)
 }
 
 func (r *RemotePathMapping) write(remotePathMapping *lidarr.RemotePathMappingResource) {

@@ -2,11 +2,10 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -78,22 +77,9 @@ func (r *IndexerConfigResource) Schema(ctx context.Context, req resource.SchemaR
 }
 
 func (r *IndexerConfigResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *IndexerConfigResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -113,7 +99,7 @@ func (r *IndexerConfigResource) Create(ctx context.Context, req resource.CreateR
 	// Create new IndexerConfig
 	response, _, err := r.client.IndexerConfigApi.UpdateIndexerConfig(ctx, strconv.Itoa(int(request.GetId()))).IndexerConfigResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", indexerConfigResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerConfigResourceName, err))
 
 		return
 	}
@@ -137,7 +123,7 @@ func (r *IndexerConfigResource) Read(ctx context.Context, req resource.ReadReque
 	// Get indexerConfig current value
 	response, _, err := r.client.IndexerConfigApi.GetIndexerConfig(ctx).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerConfigResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerConfigResourceName, err))
 
 		return
 	}
@@ -164,7 +150,7 @@ func (r *IndexerConfigResource) Update(ctx context.Context, req resource.UpdateR
 	// Update IndexerConfig
 	response, _, err := r.client.IndexerConfigApi.UpdateIndexerConfig(ctx, strconv.Itoa(int(request.GetId()))).IndexerConfigResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", indexerConfigResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerConfigResourceName, err))
 
 		return
 	}

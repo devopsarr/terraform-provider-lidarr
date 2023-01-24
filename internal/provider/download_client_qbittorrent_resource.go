@@ -2,11 +2,10 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -249,22 +248,9 @@ func (r *DownloadClientQbittorrentResource) Schema(ctx context.Context, req reso
 }
 
 func (r *DownloadClientQbittorrentResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *DownloadClientQbittorrentResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -282,7 +268,7 @@ func (r *DownloadClientQbittorrentResource) Create(ctx context.Context, req reso
 
 	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", downloadClientQbittorrentResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, downloadClientQbittorrentResourceName, err))
 
 		return
 	}
@@ -306,7 +292,7 @@ func (r *DownloadClientQbittorrentResource) Read(ctx context.Context, req resour
 	// Get DownloadClientQbittorrent current value
 	response, _, err := r.client.DownloadClientApi.GetDownloadClientById(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientQbittorrentResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientQbittorrentResourceName, err))
 
 		return
 	}
@@ -332,7 +318,7 @@ func (r *DownloadClientQbittorrentResource) Update(ctx context.Context, req reso
 
 	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update %s, got error: %s", downloadClientQbittorrentResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, downloadClientQbittorrentResourceName, err))
 
 		return
 	}
@@ -355,7 +341,7 @@ func (r *DownloadClientQbittorrentResource) Delete(ctx context.Context, req reso
 	// Delete DownloadClientQbittorrent current value
 	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", downloadClientQbittorrentResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientQbittorrentResourceName, err))
 
 		return
 	}
@@ -365,19 +351,8 @@ func (r *DownloadClientQbittorrentResource) Delete(ctx context.Context, req reso
 }
 
 func (r *DownloadClientQbittorrentResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+downloadClientQbittorrentResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+downloadClientQbittorrentResourceName+": "+req.ID)
 }
 
 func (d *DownloadClientQbittorrent) write(ctx context.Context, downloadClient *lidarr.DownloadClientResource) {

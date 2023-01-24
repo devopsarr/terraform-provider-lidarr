@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
-	"github.com/devopsarr/terraform-provider-lidarr/tools"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -154,22 +154,9 @@ func (r *IndexerHeadphonesResource) Schema(ctx context.Context, req resource.Sch
 }
 
 func (r *IndexerHeadphonesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	// Prevent panic if the provider has not been configured.
-	if req.ProviderData == nil {
-		return
+	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+		r.client = client
 	}
-
-	client, ok := req.ProviderData.(*lidarr.APIClient)
-	if !ok {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedResourceConfigureType,
-			fmt.Sprintf("Expected *lidarr.APIClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
-		)
-
-		return
-	}
-
-	r.client = client
 }
 
 func (r *IndexerHeadphonesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -187,7 +174,7 @@ func (r *IndexerHeadphonesResource) Create(ctx context.Context, req resource.Cre
 
 	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to create %s, got error: %s", indexerHeadphonesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerHeadphonesResourceName, err))
 
 		return
 	}
@@ -211,7 +198,7 @@ func (r *IndexerHeadphonesResource) Read(ctx context.Context, req resource.ReadR
 	// Get IndexerHeadphones current value
 	response, _, err := r.client.IndexerApi.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerHeadphonesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerHeadphonesResourceName, err))
 
 		return
 	}
@@ -237,7 +224,7 @@ func (r *IndexerHeadphonesResource) Update(ctx context.Context, req resource.Upd
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to update "+indexerHeadphonesResourceName+", got error: %s", err))
+		resp.Diagnostics.AddError(helpers.ClientError, fmt.Sprintf("Unable to update "+indexerHeadphonesResourceName+", got error: %s", err))
 
 		return
 	}
@@ -260,7 +247,7 @@ func (r *IndexerHeadphonesResource) Delete(ctx context.Context, req resource.Del
 	// Delete IndexerHeadphones current value
 	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(tools.ClientError, fmt.Sprintf("Unable to read %s, got error: %s", indexerHeadphonesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerHeadphonesResourceName, err))
 
 		return
 	}
@@ -270,19 +257,8 @@ func (r *IndexerHeadphonesResource) Delete(ctx context.Context, req resource.Del
 }
 
 func (r *IndexerHeadphonesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	id, err := strconv.Atoi(req.ID)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			tools.UnexpectedImportIdentifier,
-			fmt.Sprintf("Expected import identifier with format: ID. Got: %q", req.ID),
-		)
-
-		return
-	}
-
-	tflog.Trace(ctx, "imported "+indexerHeadphonesResourceName+": "+strconv.Itoa(id))
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
+	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
+	tflog.Trace(ctx, "imported "+indexerHeadphonesResourceName+": "+req.ID)
 }
 
 func (i *IndexerHeadphones) write(ctx context.Context, indexer *lidarr.IndexerResource) {
