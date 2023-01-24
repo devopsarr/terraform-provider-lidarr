@@ -217,6 +217,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewIndexersDataSource,
 
 		// Media Management
+		NewRootFoldersDataSource,
 
 		// Notifications
 		NewNotificationDataSource,
