@@ -223,6 +223,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewIndexersDataSource,
 
 		// Import Lists
+		NewImportListsDataSource,
 		NewImportListExclusionDataSource,
 		NewImportListExclusionsDataSource,
 
