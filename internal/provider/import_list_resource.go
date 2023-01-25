@@ -407,7 +407,7 @@ func (i *ImportList) writeFields(ctx context.Context, fields []*lidarr.Field) {
 		}
 
 		if slices.Contains(importListStringSliceFields, f.GetName()) {
-			helpers.WriteIntSliceField(ctx, f, i)
+			helpers.WriteStringSliceField(ctx, f, i)
 
 			continue
 		}
