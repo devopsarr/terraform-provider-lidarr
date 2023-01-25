@@ -1,5 +1,40 @@
 # Changelog
 
+## [1.5.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.4.0...v1.5.0) (2023-01-25)
+
+
+### Features
+
+* add import list data source ([09a1d7d](https://github.com/devopsarr/terraform-provider-lidarr/commit/09a1d7d50cddca4a539a91c927819577dd7f9c72))
+* add import list exclusion datasource ([a2cf86f](https://github.com/devopsarr/terraform-provider-lidarr/commit/a2cf86ff856acaf336965e3b6b16630f30f073c2))
+* add import list exclusion resource ([2c02efc](https://github.com/devopsarr/terraform-provider-lidarr/commit/2c02efc64315c751db38adf0f6974ccbb85e0605))
+* add import list exclusions datasource ([e36dd93](https://github.com/devopsarr/terraform-provider-lidarr/commit/e36dd937a8bfcd5565ab09e4b122beb2ace7dba7))
+* add import list headphones resource ([7bb04d8](https://github.com/devopsarr/terraform-provider-lidarr/commit/7bb04d8e0b7ff6de081791fb3ea11f62cefa22aa))
+* add import list lastfm tag resource ([ae380a2](https://github.com/devopsarr/terraform-provider-lidarr/commit/ae380a2a02390c59b834a9aab13ea9bec7d61c60))
+* add import list lastfm user resource ([9909cc3](https://github.com/devopsarr/terraform-provider-lidarr/commit/9909cc305cf8f2576bc4bf7e6d736e5c8366401f))
+* add import list lidarr list resource ([b977717](https://github.com/devopsarr/terraform-provider-lidarr/commit/b977717f1e79babd364938c045a8269b37b68520))
+* add import list lidarr resource ([114e553](https://github.com/devopsarr/terraform-provider-lidarr/commit/114e55315ee48177965c301816a93c9b29086900))
+* add import list music brainz resource ([d669766](https://github.com/devopsarr/terraform-provider-lidarr/commit/d6697668279c3b0c7755818a5559254139ea4f10))
+* add import list resource ([a824e3a](https://github.com/devopsarr/terraform-provider-lidarr/commit/a824e3ab1dfe58b2c1f6ea221cca7b90984e1158))
+* add import list spotify albums resource ([0f8043c](https://github.com/devopsarr/terraform-provider-lidarr/commit/0f8043cf4a5e4557ada07ce1203c11c49d2bfde1))
+* add import list spotify artists resource ([88f3bb6](https://github.com/devopsarr/terraform-provider-lidarr/commit/88f3bb6577ae2331dd5ae77dac9f42f643fe656f))
+* add import list spotify playlists resource ([0954ee2](https://github.com/devopsarr/terraform-provider-lidarr/commit/0954ee2dc0137f2cc37105e5bf3b61ebfdbb6969))
+* add import lists data source ([d78d705](https://github.com/devopsarr/terraform-provider-lidarr/commit/d78d7056a832a207c40995168be7c1def2e8962d))
+* add media management data source ([6bf2611](https://github.com/devopsarr/terraform-provider-lidarr/commit/6bf2611cf89f5706c732242d752a649cb17c0732))
+* add media management resource ([bc8929c](https://github.com/devopsarr/terraform-provider-lidarr/commit/bc8929c7190f7342fda35c8b5c80237adf5ecb20))
+* add naming data source ([13ad9df](https://github.com/devopsarr/terraform-provider-lidarr/commit/13ad9df8a4521957d860beb3b5692e9721c0e823))
+* add naming resource ([cc2ebc6](https://github.com/devopsarr/terraform-provider-lidarr/commit/cc2ebc69a17df93b1072f97b7e839c27c56893a6))
+* add root folder data source ([bddeaa0](https://github.com/devopsarr/terraform-provider-lidarr/commit/bddeaa06f8053a6495eca7c33069a56c989b8eb8))
+* add root folder resource ([7e6087a](https://github.com/devopsarr/terraform-provider-lidarr/commit/7e6087aba687bef5eb2773d7e36faec4fc59aac6))
+* add root folders data source ([076f632](https://github.com/devopsarr/terraform-provider-lidarr/commit/076f632dbd0c34af8dbfe546f9f51ab0174d8c6a))
+* improve tags slice allocation ([5e1c304](https://github.com/devopsarr/terraform-provider-lidarr/commit/5e1c304309e08eada3080bf9dcfcd1c716660695))
+
+
+### Bug Fixes
+
+* remove deprecated indexers ([1dd4d40](https://github.com/devopsarr/terraform-provider-lidarr/commit/1dd4d401e42ff775e009678a3812ce97094734e6))
+* rootfolder should have metadata profile id ([f2caa14](https://github.com/devopsarr/terraform-provider-lidarr/commit/f2caa1410ff9a19939f22c30fafcce5c5efe8721))
+
 ## [1.4.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.3.0...v1.4.0) (2022-12-15)
 
 
