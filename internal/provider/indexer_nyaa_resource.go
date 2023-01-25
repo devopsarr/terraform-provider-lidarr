@@ -284,8 +284,7 @@ func (i *IndexerNyaa) write(ctx context.Context, indexer *lidarr.IndexerResource
 }
 
 func (i *IndexerNyaa) read(ctx context.Context) *lidarr.IndexerResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(i.Tags.Elements()))
 	tfsdk.ValueAs(ctx, i.Tags, &tags)
 
 	indexer := lidarr.NewIndexerResource()

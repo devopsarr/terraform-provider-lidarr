@@ -282,8 +282,7 @@ func (d *DownloadClientTorrentBlackhole) write(ctx context.Context, downloadClie
 }
 
 func (d *DownloadClientTorrentBlackhole) read(ctx context.Context) *lidarr.DownloadClientResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(d.Tags.Elements()))
 	tfsdk.ValueAs(ctx, d.Tags, &tags)
 
 	client := lidarr.NewDownloadClientResource()

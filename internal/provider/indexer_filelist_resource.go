@@ -301,8 +301,7 @@ func (i *IndexerFilelist) write(ctx context.Context, indexer *lidarr.IndexerReso
 }
 
 func (i *IndexerFilelist) read(ctx context.Context) *lidarr.IndexerResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(i.Tags.Elements()))
 	tfsdk.ValueAs(ctx, i.Tags, &tags)
 
 	indexer := lidarr.NewIndexerResource()

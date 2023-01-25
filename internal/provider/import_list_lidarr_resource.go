@@ -330,8 +330,7 @@ func (i *ImportListLidarr) write(ctx context.Context, importList *lidarr.ImportL
 }
 
 func (i *ImportListLidarr) read(ctx context.Context) *lidarr.ImportListResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(i.Tags.Elements()))
 	tfsdk.ValueAs(ctx, i.Tags, &tags)
 
 	list := lidarr.NewImportListResource()

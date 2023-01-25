@@ -317,8 +317,7 @@ func (n *NotificationSlack) write(ctx context.Context, notification *lidarr.Noti
 }
 
 func (n *NotificationSlack) read(ctx context.Context) *lidarr.NotificationResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(n.Tags.Elements()))
 	tfsdk.ValueAs(ctx, n.Tags, &tags)
 
 	notification := lidarr.NewNotificationResource()
