@@ -168,6 +168,19 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewIndexerTorznabResource,
 		NewIndexerConfigResource,
 
+		// Import Lists
+		NewImportListResource,
+		NewImportListLidarrResource,
+		NewImportListLidarrListResource,
+		NewImportListSpotifyArtistsResource,
+		NewImportListSpotifyPlaylistsResource,
+		NewImportListSpotifyAlbumsResource,
+		NewImportListLastFMTagResource,
+		NewImportListLastFMUserResource,
+		NewImportListHeadphonesResource,
+		NewImportListMusicBrainzResource,
+		NewImportListExclusionResource,
+
 		// Media Management
 		NewMediaManagementResource,
 		NewNamingResource,
@@ -217,6 +230,12 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewIndexerConfigDataSource,
 		NewIndexerDataSource,
 		NewIndexersDataSource,
+
+		// Import Lists
+		NewImportListDataSource,
+		NewImportListsDataSource,
+		NewImportListExclusionDataSource,
+		NewImportListExclusionsDataSource,
 
 		// Media Management
 		NewMediaManagementDataSource,

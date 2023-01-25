@@ -333,8 +333,7 @@ func (d *DownloadClientNzbget) write(ctx context.Context, downloadClient *lidarr
 }
 
 func (d *DownloadClientNzbget) read(ctx context.Context) *lidarr.DownloadClientResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(d.Tags.Elements()))
 	tfsdk.ValueAs(ctx, d.Tags, &tags)
 
 	client := lidarr.NewDownloadClientResource()

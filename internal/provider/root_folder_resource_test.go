@@ -19,6 +19,7 @@ func TestAccRootFolderResource(t *testing.T) {
 				Config: testAccRootFolderResourceConfig("all", "/config/asp"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("lidarr_root_folder.test", "monitor_option", "all"),
+					resource.TestCheckResourceAttr("lidarr_root_folder.test", "tags.#", "0"),
 					resource.TestCheckResourceAttrSet("lidarr_root_folder.test", "id"),
 				),
 			},
@@ -45,6 +46,7 @@ func testAccRootFolderResourceConfig(monitor, path string) string {
 		resource "lidarr_root_folder" "test" {
 			name = "test"
 			quality_profile_id = 1
+			metadata_profile_id = 1
 			monitor_option = "%s"
 			new_item_monitor_option = "all"
   			path = "%s"

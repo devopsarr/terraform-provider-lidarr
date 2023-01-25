@@ -299,8 +299,7 @@ func (n *NotificationGotify) write(ctx context.Context, notification *lidarr.Not
 }
 
 func (n *NotificationGotify) read(ctx context.Context) *lidarr.NotificationResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(n.Tags.Elements()))
 	tfsdk.ValueAs(ctx, n.Tags, &tags)
 
 	notification := lidarr.NewNotificationResource()

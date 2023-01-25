@@ -31,6 +31,7 @@ resource "lidarr_root_folder" "example" {
 
 ### Required
 
+- `metadata_profile_id` (Number) Metadata profile ID.
 - `monitor_option` (String) Monitor option.
 - `name` (String) Root Folder friendly name.
 - `new_item_monitor_option` (String) New item monitor option.
@@ -39,7 +40,6 @@ resource "lidarr_root_folder" "example" {
 
 ### Optional
 
-- `metadata_profile_id` (Number) Metadata profile ID.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only
