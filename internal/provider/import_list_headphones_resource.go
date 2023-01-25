@@ -19,31 +19,29 @@ import (
 )
 
 const (
-	importListLidarrResourceName   = "import_list_lidarr"
-	importListLidarrImplementation = "LidarrImport"
-	importListLidarrConfigContract = "LidarrSettings"
-	importListLidarrType           = "program"
+	importListHeadphonesResourceName   = "import_list_headphones"
+	importListHeadphonesImplementation = "HeadphonesImport"
+	importListHeadphonesConfigContract = "HeadphonesImportSettings"
+	importListHeadphonesType           = "other"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &ImportListLidarrResource{}
-	_ resource.ResourceWithImportState = &ImportListLidarrResource{}
+	_ resource.Resource                = &ImportListHeadphonesResource{}
+	_ resource.ResourceWithImportState = &ImportListHeadphonesResource{}
 )
 
-func NewImportListLidarrResource() resource.Resource {
-	return &ImportListLidarrResource{}
+func NewImportListHeadphonesResource() resource.Resource {
+	return &ImportListHeadphonesResource{}
 }
 
-// ImportListLidarrResource defines the import list implementation.
-type ImportListLidarrResource struct {
+// ImportListHeadphonesResource defines the import list implementation.
+type ImportListHeadphonesResource struct {
 	client *lidarr.APIClient
 }
 
-// ImportListLidarr describes the import list data model.
-type ImportListLidarr struct {
-	ProfileIds            types.Set    `tfsdk:"profile_ids"`
-	TagIds                types.Set    `tfsdk:"tag_ids"`
+// ImportListHeadphones describes the import list data model.
+type ImportListHeadphones struct {
 	Tags                  types.Set    `tfsdk:"tags"`
 	Name                  types.String `tfsdk:"name"`
 	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
@@ -60,10 +58,8 @@ type ImportListLidarr struct {
 	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
-func (i ImportListLidarr) toImportList() *ImportList {
+func (i ImportListHeadphones) toImportList() *ImportList {
 	return &ImportList{
-		ProfileIds:            i.ProfileIds,
-		TagIds:                i.TagIds,
 		Tags:                  i.Tags,
 		Name:                  i.Name,
 		MonitorNewItems:       i.MonitorNewItems,
@@ -81,9 +77,7 @@ func (i ImportListLidarr) toImportList() *ImportList {
 	}
 }
 
-func (i *ImportListLidarr) fromImportList(importList *ImportList) {
-	i.ProfileIds = importList.ProfileIds
-	i.TagIds = importList.TagIds
+func (i *ImportListHeadphones) fromImportList(importList *ImportList) {
 	i.Tags = importList.Tags
 	i.Name = importList.Name
 	i.MonitorNewItems = importList.MonitorNewItems
@@ -100,13 +94,13 @@ func (i *ImportListLidarr) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListLidarrResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + importListLidarrResourceName
+func (r *ImportListHeadphonesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + importListHeadphonesResourceName
 }
 
-func (r *ImportListLidarrResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListHeadphonesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Lidarr resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Lidarr](https://wiki.servarr.com/lidarr/supported#lidarrimport).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Headphones resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Headphones](https://wiki.servarr.com/lidarr/supported#headphonesimport).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",
@@ -186,31 +180,19 @@ func (r *ImportListLidarrResource) Schema(ctx context.Context, req resource.Sche
 				MarkdownDescription: "Base URL.",
 				Required:            true,
 			},
-			"profile_ids": schema.SetAttribute{
-				MarkdownDescription: "Profile IDs.",
-				Optional:            true,
-				Computed:            true,
-				ElementType:         types.Int64Type,
-			},
-			"tag_ids": schema.SetAttribute{
-				MarkdownDescription: "Tag IDs.",
-				Optional:            true,
-				Computed:            true,
-				ElementType:         types.Int64Type,
-			},
 		},
 	}
 }
 
-func (r *ImportListLidarrResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *ImportListHeadphonesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *ImportListLidarrResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *ImportListHeadphonesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var importList *ImportListLidarr
+	var importList *ImportListHeadphones
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &importList)...)
 
@@ -218,25 +200,25 @@ func (r *ImportListLidarrResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	// Create new ImportListLidarr
+	// Create new ImportListHeadphones
 	request := importList.read(ctx)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListLidarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+importListLidarrResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+importListHeadphonesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListLidarrResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *ImportListHeadphonesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var importList *ImportListLidarr
+	var importList *ImportListHeadphones
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
 
@@ -244,23 +226,23 @@ func (r *ImportListLidarrResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
-	// Get ImportListLidarr current value
+	// Get ImportListHeadphones current value
 	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLidarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+importListLidarrResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+importListHeadphonesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListLidarrResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *ImportListHeadphonesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var importList *ImportListLidarr
+	var importList *ImportListHeadphones
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &importList)...)
 
@@ -268,24 +250,24 @@ func (r *ImportListLidarrResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 
-	// Update ImportListLidarr
+	// Update ImportListHeadphones
 	request := importList.read(ctx)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListLidarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+importListLidarrResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+importListHeadphonesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListLidarrResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListLidarr
+func (r *ImportListHeadphonesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var importList *ImportListHeadphones
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
 
@@ -293,24 +275,24 @@ func (r *ImportListLidarrResource) Delete(ctx context.Context, req resource.Dele
 		return
 	}
 
-	// Delete ImportListLidarr current value
+	// Delete ImportListHeadphones current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLidarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListLidarrResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListHeadphonesResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *ImportListLidarrResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ImportListHeadphonesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+importListLidarrResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+importListHeadphonesResourceName+": "+req.ID)
 }
 
-func (i *ImportListLidarr) write(ctx context.Context, importList *lidarr.ImportListResource) {
+func (i *ImportListHeadphones) write(ctx context.Context, importList *lidarr.ImportListResource) {
 	genericImportList := ImportList{
 		Name:                  types.StringValue(importList.GetName()),
 		ShouldMonitor:         types.StringValue(string(importList.GetShouldMonitor())),
@@ -329,7 +311,7 @@ func (i *ImportListLidarr) write(ctx context.Context, importList *lidarr.ImportL
 	i.fromImportList(&genericImportList)
 }
 
-func (i *ImportListLidarr) read(ctx context.Context) *lidarr.ImportListResource {
+func (i *ImportListHeadphones) read(ctx context.Context) *lidarr.ImportListResource {
 	tags := make([]*int32, len(i.Tags.Elements()))
 	tfsdk.ValueAs(ctx, i.Tags, &tags)
 
@@ -343,9 +325,9 @@ func (i *ImportListLidarr) read(ctx context.Context) *lidarr.ImportListResource 
 	list.SetEnableAutomaticAdd(i.EnableAutomaticAdd.ValueBool())
 	list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
 	list.SetShouldSearch(i.ShouldSearch.ValueBool())
-	list.SetListType(importListLidarrType)
-	list.SetConfigContract(importListLidarrConfigContract)
-	list.SetImplementation(importListLidarrImplementation)
+	list.SetListType(importListHeadphonesType)
+	list.SetConfigContract(importListHeadphonesConfigContract)
+	list.SetImplementation(importListHeadphonesImplementation)
 	list.SetId(int32(i.ID.ValueInt64()))
 	list.SetName(i.Name.ValueString())
 	list.SetTags(tags)
