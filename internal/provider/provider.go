@@ -169,6 +169,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewIndexerConfigResource,
 
 		// Import Lists
+		NewImportListResource,
 		NewImportListExclusionResource,
 
 		// Media Management
