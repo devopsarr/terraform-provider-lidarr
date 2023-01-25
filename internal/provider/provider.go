@@ -175,6 +175,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewImportListSpotifyPlaylistsResource,
 		NewImportListSpotifyAlbumsResource,
 		NewImportListLastFMTagResource,
+		NewImportListLastFMUserResource,
 		NewImportListExclusionResource,
 
 		// Media Management
