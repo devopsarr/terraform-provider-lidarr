@@ -31,7 +31,7 @@ func (d *ImportListExclusionDataSource) Metadata(ctx context.Context, req dataso
 
 func (d *ImportListExclusionDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Single [ImportListExclusion](../resources/import_list_exclusion).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->Single [Import List Exclusion](../resources/import_list_exclusion).",
 		Attributes: map[string]schema.Attribute{
 			"foreign_id": schema.StringAttribute{
 				MarkdownDescription: "Musicbrainz ID.",

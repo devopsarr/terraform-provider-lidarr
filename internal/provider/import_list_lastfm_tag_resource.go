@@ -19,37 +19,36 @@ import (
 )
 
 const (
-	ImportListSpotifyAlbumsResourceName   = "import_list_spotify_albums"
-	ImportListSpotifyAlbumsImplementation = "SpotifySavedAlbums"
-	ImportListSpotifyAlbumsConfigContract = "SpotifySavedAlbumsSettings"
-	ImportListSpotifyAlbumsType           = "spotify"
+	ImportListLastFMTagResourceName   = "import_list_lastfm_tag"
+	ImportListLastFMTagImplementation = "LastFmTag"
+	ImportListLastFMTagConfigContract = "LastFmTagSettings"
+	ImportListLastFMTagType           = "lastFm"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &ImportListSpotifyAlbumsResource{}
-	_ resource.ResourceWithImportState = &ImportListSpotifyAlbumsResource{}
+	_ resource.Resource                = &ImportListLastFMTagResource{}
+	_ resource.ResourceWithImportState = &ImportListLastFMTagResource{}
 )
 
-func NewImportListSpotifyAlbumsResource() resource.Resource {
-	return &ImportListSpotifyAlbumsResource{}
+func NewImportListLastFMTagResource() resource.Resource {
+	return &ImportListLastFMTagResource{}
 }
 
-// ImportListSpotifyAlbumsResource defines the import list implementation.
-type ImportListSpotifyAlbumsResource struct {
+// ImportListLastFMTagResource defines the import list implementation.
+type ImportListLastFMTagResource struct {
 	client *lidarr.APIClient
 }
 
-// ImportListSpotifyAlbums describes the import list data model.
-type ImportListSpotifyAlbums struct {
+// ImportListLastFMTag describes the import list data model.
+type ImportListLastFMTag struct {
 	Tags                  types.Set    `tfsdk:"tags"`
 	Name                  types.String `tfsdk:"name"`
-	AccessToken           types.String `tfsdk:"access_token"`
-	RefreshToken          types.String `tfsdk:"refresh_token"`
-	Expires               types.String `tfsdk:"expires"`
 	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
 	ShouldMonitor         types.String `tfsdk:"should_monitor"`
 	RootFolderPath        types.String `tfsdk:"root_folder_path"`
+	TagID                 types.String `tfsdk:"tag_id"`
+	Count                 types.Int64  `tfsdk:"count_list"`
 	QualityProfileID      types.Int64  `tfsdk:"quality_profile_id"`
 	MetadataProfileID     types.Int64  `tfsdk:"metadata_profile_id"`
 	ListOrder             types.Int64  `tfsdk:"list_order"`
@@ -59,16 +58,15 @@ type ImportListSpotifyAlbums struct {
 	ShouldSearch          types.Bool   `tfsdk:"should_search"`
 }
 
-func (i ImportListSpotifyAlbums) toImportList() *ImportList {
+func (i ImportListLastFMTag) toImportList() *ImportList {
 	return &ImportList{
 		Tags:                  i.Tags,
 		Name:                  i.Name,
 		MonitorNewItems:       i.MonitorNewItems,
 		ShouldMonitor:         i.ShouldMonitor,
 		RootFolderPath:        i.RootFolderPath,
-		AccessToken:           i.AccessToken,
-		RefreshToken:          i.RefreshToken,
-		Expires:               i.Expires,
+		TagID:                 i.TagID,
+		Count:                 i.Count,
 		QualityProfileID:      i.QualityProfileID,
 		MetadataProfileID:     i.MetadataProfileID,
 		ListOrder:             i.ListOrder,
@@ -79,15 +77,14 @@ func (i ImportListSpotifyAlbums) toImportList() *ImportList {
 	}
 }
 
-func (i *ImportListSpotifyAlbums) fromImportList(importList *ImportList) {
+func (i *ImportListLastFMTag) fromImportList(importList *ImportList) {
 	i.Tags = importList.Tags
 	i.Name = importList.Name
 	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
 	i.RootFolderPath = importList.RootFolderPath
-	i.AccessToken = importList.AccessToken
-	i.RefreshToken = importList.RefreshToken
-	i.Expires = importList.Expires
+	i.TagID = importList.TagID
+	i.Count = importList.Count
 	i.QualityProfileID = importList.QualityProfileID
 	i.MetadataProfileID = importList.MetadataProfileID
 	i.ListOrder = importList.ListOrder
@@ -97,13 +94,13 @@ func (i *ImportListSpotifyAlbums) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListSpotifyAlbumsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + ImportListSpotifyAlbumsResourceName
+func (r *ImportListLastFMTagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + ImportListLastFMTagResourceName
 }
 
-func (r *ImportListSpotifyAlbumsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListLastFMTagResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Spotify Albums resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Albums](https://wiki.servarr.com/lidarr/supported#spotifysavedalbums).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Last.fm Tag resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Last.fm Tag](https://wiki.servarr.com/lidarr/supported#lastfmtag).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",
@@ -174,33 +171,27 @@ func (r *ImportListSpotifyAlbumsResource) Schema(ctx context.Context, req resour
 				},
 			},
 			// Field values
-			"access_token": schema.StringAttribute{
-				MarkdownDescription: "Access token.",
+			"count_list": schema.Int64Attribute{
+				MarkdownDescription: "Elements to pull from list.",
 				Required:            true,
-				Sensitive:           true,
 			},
-			"refresh_token": schema.StringAttribute{
-				MarkdownDescription: "Refresh token.",
-				Required:            true,
-				Sensitive:           true,
-			},
-			"expires": schema.StringAttribute{
-				MarkdownDescription: "Expires.",
+			"tag_id": schema.StringAttribute{
+				MarkdownDescription: "Tag ID.",
 				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *ImportListSpotifyAlbumsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *ImportListLastFMTagResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *ImportListSpotifyAlbumsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *ImportListLastFMTagResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var importList *ImportListSpotifyAlbums
+	var importList *ImportListLastFMTag
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &importList)...)
 
@@ -208,25 +199,25 @@ func (r *ImportListSpotifyAlbumsResource) Create(ctx context.Context, req resour
 		return
 	}
 
-	// Create new ImportListSpotifyAlbums
+	// Create new ImportListLastFMTag
 	request := importList.read(ctx)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, ImportListLastFMTagResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+ImportListLastFMTagResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListSpotifyAlbumsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *ImportListLastFMTagResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var importList *ImportListSpotifyAlbums
+	var importList *ImportListLastFMTag
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
 
@@ -234,23 +225,23 @@ func (r *ImportListSpotifyAlbumsResource) Read(ctx context.Context, req resource
 		return
 	}
 
-	// Get ImportListSpotifyAlbums current value
+	// Get ImportListLastFMTag current value
 	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListLastFMTagResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+ImportListLastFMTagResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListSpotifyAlbumsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *ImportListLastFMTagResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var importList *ImportListSpotifyAlbums
+	var importList *ImportListLastFMTag
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &importList)...)
 
@@ -258,24 +249,24 @@ func (r *ImportListSpotifyAlbumsResource) Update(ctx context.Context, req resour
 		return
 	}
 
-	// Update ImportListSpotifyAlbums
+	// Update ImportListLastFMTag
 	request := importList.read(ctx)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, ImportListLastFMTagResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+ImportListLastFMTagResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
-func (r *ImportListSpotifyAlbumsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListSpotifyAlbums
+func (r *ImportListLastFMTagResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var importList *ImportListLastFMTag
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
 
@@ -283,24 +274,24 @@ func (r *ImportListSpotifyAlbumsResource) Delete(ctx context.Context, req resour
 		return
 	}
 
-	// Delete ImportListSpotifyAlbums current value
+	// Delete ImportListLastFMTag current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListLastFMTagResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+ImportListLastFMTagResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *ImportListSpotifyAlbumsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ImportListLastFMTagResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+ImportListSpotifyAlbumsResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+ImportListLastFMTagResourceName+": "+req.ID)
 }
 
-func (i *ImportListSpotifyAlbums) write(ctx context.Context, importList *lidarr.ImportListResource) {
+func (i *ImportListLastFMTag) write(ctx context.Context, importList *lidarr.ImportListResource) {
 	genericImportList := ImportList{
 		Name:                  types.StringValue(importList.GetName()),
 		ShouldMonitor:         types.StringValue(string(importList.GetShouldMonitor())),
@@ -319,7 +310,7 @@ func (i *ImportListSpotifyAlbums) write(ctx context.Context, importList *lidarr.
 	i.fromImportList(&genericImportList)
 }
 
-func (i *ImportListSpotifyAlbums) read(ctx context.Context) *lidarr.ImportListResource {
+func (i *ImportListLastFMTag) read(ctx context.Context) *lidarr.ImportListResource {
 	tags := make([]*int32, len(i.Tags.Elements()))
 	tfsdk.ValueAs(ctx, i.Tags, &tags)
 
@@ -333,9 +324,9 @@ func (i *ImportListSpotifyAlbums) read(ctx context.Context) *lidarr.ImportListRe
 	list.SetEnableAutomaticAdd(i.EnableAutomaticAdd.ValueBool())
 	list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
 	list.SetShouldSearch(i.ShouldSearch.ValueBool())
-	list.SetListType(ImportListSpotifyAlbumsType)
-	list.SetConfigContract(ImportListSpotifyAlbumsConfigContract)
-	list.SetImplementation(ImportListSpotifyAlbumsImplementation)
+	list.SetListType(ImportListLastFMTagType)
+	list.SetConfigContract(ImportListLastFMTagConfigContract)
+	list.SetImplementation(ImportListLastFMTagImplementation)
 	list.SetId(int32(i.ID.ValueInt64()))
 	list.SetName(i.Name.ValueString())
 	list.SetTags(tags)

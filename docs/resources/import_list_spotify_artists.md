@@ -3,13 +3,13 @@
 page_title: "lidarr_import_list_spotify_artists Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
-  ImportList Lidarr resource.
+  Import List Spotify Artists resource.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists and Spotify Followed Artists https://wiki.servarr.com/lidarr/supported#spotifyfollowedartists.
 ---
 
 # lidarr_import_list_spotify_artists (Resource)
 
-<!-- subcategory:Import Lists -->ImportList Lidarr resource.
+<!-- subcategory:Import Lists -->Import List Spotify Artists resource.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Followed Artists](https://wiki.servarr.com/lidarr/supported#spotifyfollowedartists).
 
 ## Example Usage

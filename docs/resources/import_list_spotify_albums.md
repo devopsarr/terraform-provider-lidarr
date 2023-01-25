@@ -3,13 +3,13 @@
 page_title: "lidarr_import_list_spotify_albums Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
-  ImportList Lidarr resource.
+  Import List Spotify Albums resource.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists and Spotify Albums https://wiki.servarr.com/lidarr/supported#spotifysavedalbums.
 ---
 
 # lidarr_import_list_spotify_albums (Resource)
 
-<!-- subcategory:Import Lists -->ImportList Lidarr resource.
+<!-- subcategory:Import Lists -->Import List Spotify Albums resource.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Albums](https://wiki.servarr.com/lidarr/supported#spotifysavedalbums).
 
 ## Example Usage
