@@ -40,5 +40,7 @@ func rootFolderDSInit() {
 	folder.SetPath("/config")
 	folder.SetName("config")
 	folder.SetDefaultQualityProfileId(1)
+	folder.SetDefaultMetadataProfileId(1)
+	folder.SetDefaultTags([]*int32{})
 	_, _, _ = client.RootFolderApi.CreateRootFolder(context.TODO()).RootFolderResource(*folder).Execute()
 }

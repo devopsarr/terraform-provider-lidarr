@@ -95,8 +95,7 @@ func (r *RootFolderResource) Schema(ctx context.Context, req resource.SchemaRequ
 			},
 			"metadata_profile_id": schema.Int64Attribute{
 				MarkdownDescription: "Metadata profile ID.",
-				Optional:            true,
-				Computed:            true,
+				Required:            true,
 			},
 			"quality_profile_id": schema.Int64Attribute{
 				MarkdownDescription: "Quality profile ID.",
@@ -234,8 +233,7 @@ func (r *RootFolder) write(ctx context.Context, rootFolder *lidarr.RootFolderRes
 }
 
 func (r *RootFolder) read(ctx context.Context) *lidarr.RootFolderResource {
-	var tags []*int32
-
+	tags := make([]*int32, len(r.Tags.Elements()))
 	tfsdk.ValueAs(ctx, r.Tags, &tags)
 
 	folder := lidarr.NewRootFolderResource()
