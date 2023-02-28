@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -71,6 +70,9 @@ func (i IndexerTorrentleech) toIndexer() *Indexer {
 		APIKey:                  i.APIKey,
 		BaseURL:                 i.BaseURL,
 		Tags:                    i.Tags,
+		Implementation:          types.StringValue(indexerTorrentleechImplementation),
+		ConfigContract:          types.StringValue(indexerTorrentleechConfigContract),
+		Protocol:                types.StringValue(indexerTorrentleechProtocol),
 	}
 }
 
@@ -279,35 +281,11 @@ func (r *IndexerTorrentleechResource) ImportState(ctx context.Context, req resou
 }
 
 func (i *IndexerTorrentleech) write(ctx context.Context, indexer *lidarr.IndexerResource) {
-	genericIndexer := Indexer{
-		EnableAutomaticSearch:   types.BoolValue(indexer.GetEnableAutomaticSearch()),
-		EnableInteractiveSearch: types.BoolValue(indexer.GetEnableInteractiveSearch()),
-		EnableRss:               types.BoolValue(indexer.GetEnableRss()),
-		Priority:                types.Int64Value(int64(indexer.GetPriority())),
-		ID:                      types.Int64Value(int64(indexer.GetId())),
-		Name:                    types.StringValue(indexer.GetName()),
-	}
-	genericIndexer.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, indexer.Tags)
-	genericIndexer.writeFields(ctx, indexer.GetFields())
-	i.fromIndexer(&genericIndexer)
+	genericIndexer := i.toIndexer()
+	genericIndexer.write(ctx, indexer)
+	i.fromIndexer(genericIndexer)
 }
 
 func (i *IndexerTorrentleech) read(ctx context.Context) *lidarr.IndexerResource {
-	tags := make([]*int32, len(i.Tags.Elements()))
-	tfsdk.ValueAs(ctx, i.Tags, &tags)
-
-	indexer := lidarr.NewIndexerResource()
-	indexer.SetEnableAutomaticSearch(i.EnableAutomaticSearch.ValueBool())
-	indexer.SetEnableInteractiveSearch(i.EnableInteractiveSearch.ValueBool())
-	indexer.SetEnableRss(i.EnableRss.ValueBool())
-	indexer.SetPriority(int32(i.Priority.ValueInt64()))
-	indexer.SetId(int32(i.ID.ValueInt64()))
-	indexer.SetConfigContract(indexerTorrentleechConfigContract)
-	indexer.SetImplementation(indexerTorrentleechImplementation)
-	indexer.SetName(i.Name.ValueString())
-	indexer.SetProtocol(indexerTorrentleechProtocol)
-	indexer.SetTags(tags)
-	indexer.SetFields(i.toIndexer().readFields(ctx))
-
-	return indexer
+	return i.toIndexer().read(ctx)
 }

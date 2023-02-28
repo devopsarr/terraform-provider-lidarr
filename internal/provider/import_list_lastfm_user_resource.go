@@ -13,16 +13,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 const (
-	ImportListLastFMUserResourceName   = "import_list_lastfm_user"
-	ImportListLastFMUserImplementation = "LastFMUser"
-	ImportListLastFMUserConfigContract = "LastFMUserSettings"
-	ImportListLastFMUserType           = "lastFm"
+	importListLastFMUserResourceName   = "import_list_lastfm_user"
+	importListLastFMUserImplementation = "LastFMUser"
+	importListLastFMUserConfigContract = "LastFMUserSettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -74,6 +72,8 @@ func (i ImportListLastFMUser) toImportList() *ImportList {
 		EnableAutomaticAdd:    i.EnableAutomaticAdd,
 		ShouldMonitorExisting: i.ShouldMonitorExisting,
 		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListLastFMUserImplementation),
+		ConfigContract:        types.StringValue(importListLastFMUserConfigContract),
 	}
 }
 
@@ -95,7 +95,7 @@ func (i *ImportListLastFMUser) fromImportList(importList *ImportList) {
 }
 
 func (r *ImportListLastFMUserResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + ImportListLastFMUserResourceName
+	resp.TypeName = req.ProviderTypeName + "_" + importListLastFMUserResourceName
 }
 
 func (r *ImportListLastFMUserResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -204,12 +204,12 @@ func (r *ImportListLastFMUserResource) Create(ctx context.Context, req resource.
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, ImportListLastFMUserResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListLastFMUserResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+ImportListLastFMUserResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+importListLastFMUserResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
@@ -228,12 +228,12 @@ func (r *ImportListLastFMUserResource) Read(ctx context.Context, req resource.Re
 	// Get ImportListLastFMUser current value
 	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListLastFMUserResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLastFMUserResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+ImportListLastFMUserResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+importListLastFMUserResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
@@ -254,12 +254,12 @@ func (r *ImportListLastFMUserResource) Update(ctx context.Context, req resource.
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, ImportListLastFMUserResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListLastFMUserResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+ImportListLastFMUserResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+importListLastFMUserResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
@@ -277,60 +277,26 @@ func (r *ImportListLastFMUserResource) Delete(ctx context.Context, req resource.
 	// Delete ImportListLastFMUser current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListLastFMUserResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLastFMUserResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+ImportListLastFMUserResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListLastFMUserResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
 func (r *ImportListLastFMUserResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+ImportListLastFMUserResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+importListLastFMUserResourceName+": "+req.ID)
 }
 
 func (i *ImportListLastFMUser) write(ctx context.Context, importList *lidarr.ImportListResource) {
-	genericImportList := ImportList{
-		Name:                  types.StringValue(importList.GetName()),
-		ShouldMonitor:         types.StringValue(string(importList.GetShouldMonitor())),
-		MonitorNewItems:       types.StringValue(string(importList.GetMonitorNewItems())),
-		RootFolderPath:        types.StringValue(importList.GetRootFolderPath()),
-		QualityProfileID:      types.Int64Value(int64(importList.GetQualityProfileId())),
-		MetadataProfileID:     types.Int64Value(int64(importList.GetMetadataProfileId())),
-		ID:                    types.Int64Value(int64(importList.GetId())),
-		ListOrder:             types.Int64Value(int64(importList.GetListOrder())),
-		EnableAutomaticAdd:    types.BoolValue(importList.GetEnableAutomaticAdd()),
-		ShouldMonitorExisting: types.BoolValue(importList.GetShouldMonitorExisting()),
-		ShouldSearch:          types.BoolValue(importList.GetShouldSearch()),
-	}
-	genericImportList.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, importList.Tags)
-	genericImportList.writeFields(ctx, importList.GetFields())
-	i.fromImportList(&genericImportList)
+	genericImportList := i.toImportList()
+	genericImportList.write(ctx, importList)
+	i.fromImportList(genericImportList)
 }
 
 func (i *ImportListLastFMUser) read(ctx context.Context) *lidarr.ImportListResource {
-	tags := make([]*int32, len(i.Tags.Elements()))
-	tfsdk.ValueAs(ctx, i.Tags, &tags)
-
-	list := lidarr.NewImportListResource()
-	list.SetShouldMonitor(lidarr.ImportListMonitorType(i.ShouldMonitor.ValueString()))
-	list.SetMonitorNewItems(lidarr.NewItemMonitorTypes(i.MonitorNewItems.ValueString()))
-	list.SetRootFolderPath(i.RootFolderPath.ValueString())
-	list.SetQualityProfileId(int32(i.QualityProfileID.ValueInt64()))
-	list.SetMetadataProfileId(int32(i.MetadataProfileID.ValueInt64()))
-	list.SetListOrder(int32(i.ListOrder.ValueInt64()))
-	list.SetEnableAutomaticAdd(i.EnableAutomaticAdd.ValueBool())
-	list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
-	list.SetShouldSearch(i.ShouldSearch.ValueBool())
-	list.SetListType(ImportListLastFMUserType)
-	list.SetConfigContract(ImportListLastFMUserConfigContract)
-	list.SetImplementation(ImportListLastFMUserImplementation)
-	list.SetId(int32(i.ID.ValueInt64()))
-	list.SetName(i.Name.ValueString())
-	list.SetTags(tags)
-	list.SetFields(i.toImportList().readFields(ctx))
-
-	return list
+	return i.toImportList().read(ctx)
 }

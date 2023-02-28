@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -22,7 +21,6 @@ const (
 	importListHeadphonesResourceName   = "import_list_headphones"
 	importListHeadphonesImplementation = "HeadphonesImport"
 	importListHeadphonesConfigContract = "HeadphonesImportSettings"
-	importListHeadphonesType           = "other"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -74,6 +72,8 @@ func (i ImportListHeadphones) toImportList() *ImportList {
 		EnableAutomaticAdd:    i.EnableAutomaticAdd,
 		ShouldMonitorExisting: i.ShouldMonitorExisting,
 		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListHeadphonesImplementation),
+		ConfigContract:        types.StringValue(importListHeadphonesConfigContract),
 	}
 }
 
@@ -293,45 +293,11 @@ func (r *ImportListHeadphonesResource) ImportState(ctx context.Context, req reso
 }
 
 func (i *ImportListHeadphones) write(ctx context.Context, importList *lidarr.ImportListResource) {
-	genericImportList := ImportList{
-		Name:                  types.StringValue(importList.GetName()),
-		ShouldMonitor:         types.StringValue(string(importList.GetShouldMonitor())),
-		MonitorNewItems:       types.StringValue(string(importList.GetMonitorNewItems())),
-		RootFolderPath:        types.StringValue(importList.GetRootFolderPath()),
-		QualityProfileID:      types.Int64Value(int64(importList.GetQualityProfileId())),
-		MetadataProfileID:     types.Int64Value(int64(importList.GetMetadataProfileId())),
-		ID:                    types.Int64Value(int64(importList.GetId())),
-		ListOrder:             types.Int64Value(int64(importList.GetListOrder())),
-		EnableAutomaticAdd:    types.BoolValue(importList.GetEnableAutomaticAdd()),
-		ShouldMonitorExisting: types.BoolValue(importList.GetShouldMonitorExisting()),
-		ShouldSearch:          types.BoolValue(importList.GetShouldSearch()),
-	}
-	genericImportList.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, importList.Tags)
-	genericImportList.writeFields(ctx, importList.GetFields())
-	i.fromImportList(&genericImportList)
+	genericImportList := i.toImportList()
+	genericImportList.write(ctx, importList)
+	i.fromImportList(genericImportList)
 }
 
 func (i *ImportListHeadphones) read(ctx context.Context) *lidarr.ImportListResource {
-	tags := make([]*int32, len(i.Tags.Elements()))
-	tfsdk.ValueAs(ctx, i.Tags, &tags)
-
-	list := lidarr.NewImportListResource()
-	list.SetShouldMonitor(lidarr.ImportListMonitorType(i.ShouldMonitor.ValueString()))
-	list.SetMonitorNewItems(lidarr.NewItemMonitorTypes(i.MonitorNewItems.ValueString()))
-	list.SetRootFolderPath(i.RootFolderPath.ValueString())
-	list.SetQualityProfileId(int32(i.QualityProfileID.ValueInt64()))
-	list.SetMetadataProfileId(int32(i.MetadataProfileID.ValueInt64()))
-	list.SetListOrder(int32(i.ListOrder.ValueInt64()))
-	list.SetEnableAutomaticAdd(i.EnableAutomaticAdd.ValueBool())
-	list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
-	list.SetShouldSearch(i.ShouldSearch.ValueBool())
-	list.SetListType(importListHeadphonesType)
-	list.SetConfigContract(importListHeadphonesConfigContract)
-	list.SetImplementation(importListHeadphonesImplementation)
-	list.SetId(int32(i.ID.ValueInt64()))
-	list.SetName(i.Name.ValueString())
-	list.SetTags(tags)
-	list.SetFields(i.toImportList().readFields(ctx))
-
-	return list
+	return i.toImportList().read(ctx)
 }

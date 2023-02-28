@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golang.org/x/exp/slices"
 )
 
 const importListResourceName = "import_list"
@@ -27,12 +26,12 @@ var (
 	_ resource.ResourceWithImportState = &ImportListResource{}
 )
 
-var (
-	importListIntFields         = []string{"count"}
-	importListStringFields      = []string{"baseUrl", "apiKey", "tagId", "userId", "listId", "seriesId", "accessToken", "refreshToken", "expires"}
-	importListIntSliceFields    = []string{"profileIds", "tagIds"}
-	importListStringSliceFields = []string{"playlistIds"}
-)
+var importListFields = helpers.Fields{
+	Ints:         []string{"count"},
+	Strings:      []string{"baseUrl", "apiKey", "tagId", "userId", "listId", "seriesId", "accessToken", "refreshToken", "expires"},
+	IntSlices:    []string{"profileIds", "tagIds"},
+	StringSlices: []string{"playlistIds"},
+}
 
 func NewImportListResource() resource.Resource {
 	return &ImportListResource{}
@@ -379,39 +378,7 @@ func (i *ImportList) write(ctx context.Context, importList *lidarr.ImportListRes
 	i.ProfileIds = types.SetValueMust(types.Int64Type, nil)
 	i.TagIds = types.SetValueMust(types.Int64Type, nil)
 	i.PlaylistIds = types.SetValueMust(types.StringType, nil)
-	i.writeFields(ctx, importList.GetFields())
-}
-
-func (i *ImportList) writeFields(ctx context.Context, fields []*lidarr.Field) {
-	for _, f := range fields {
-		if f.Value == nil {
-			continue
-		}
-
-		if slices.Contains(importListStringFields, f.GetName()) {
-			helpers.WriteStringField(f, i)
-
-			continue
-		}
-
-		if slices.Contains(importListIntFields, f.GetName()) {
-			helpers.WriteIntField(f, i)
-
-			continue
-		}
-
-		if slices.Contains(importListIntSliceFields, f.GetName()) {
-			helpers.WriteIntSliceField(ctx, f, i)
-
-			continue
-		}
-
-		if slices.Contains(importListStringSliceFields, f.GetName()) {
-			helpers.WriteStringSliceField(ctx, f, i)
-
-			continue
-		}
-	}
+	helpers.WriteFields(ctx, i, importList.GetFields(), importListFields)
 }
 
 func (i *ImportList) read(ctx context.Context) *lidarr.ImportListResource {
@@ -434,37 +401,7 @@ func (i *ImportList) read(ctx context.Context) *lidarr.ImportListResource {
 	list.SetImplementation(i.Implementation.ValueString())
 	list.SetName(i.Name.ValueString())
 	list.SetTags(tags)
-	list.SetFields(i.readFields(ctx))
+	list.SetFields(helpers.ReadFields(ctx, i, importListFields))
 
 	return list
-}
-
-func (i *ImportList) readFields(ctx context.Context) []*lidarr.Field {
-	var output []*lidarr.Field
-
-	for _, j := range importListIntFields {
-		if field := helpers.ReadIntField(j, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range importListStringFields {
-		if field := helpers.ReadStringField(s, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range importListIntSliceFields {
-		if field := helpers.ReadIntSliceField(ctx, s, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range importListStringSliceFields {
-		if field := helpers.ReadStringSliceField(ctx, s, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	return output
 }
