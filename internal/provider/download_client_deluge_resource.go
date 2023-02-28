@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -46,13 +45,11 @@ type DownloadClientDeluge struct {
 	Name                     types.String `tfsdk:"name"`
 	Host                     types.String `tfsdk:"host"`
 	URLBase                  types.String `tfsdk:"url_base"`
-	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	MusicDirectory           types.String `tfsdk:"music_directory"`
 	MusicImportedCategory    types.String `tfsdk:"music_imported_category"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -69,13 +66,11 @@ func (d DownloadClientDeluge) toDownloadClient() *DownloadClient {
 		Name:                     d.Name,
 		Host:                     d.Host,
 		URLBase:                  d.URLBase,
-		Username:                 d.Username,
 		Password:                 d.Password,
 		MusicCategory:            d.MusicCategory,
-		MusicDirectory:           d.MusicDirectory,
 		MusicImportedCategory:    d.MusicImportedCategory,
-		RecentMusicPriority:      d.RecentMusicPriority,
-		OlderMusicPriority:       d.OlderMusicPriority,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -84,6 +79,9 @@ func (d DownloadClientDeluge) toDownloadClient() *DownloadClient {
 		Enable:                   d.Enable,
 		RemoveFailedDownloads:    d.RemoveFailedDownloads,
 		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientDelugeImplementation),
+		ConfigContract:           types.StringValue(downloadClientDelugeConfigContract),
+		Protocol:                 types.StringValue(downloadClientDelugeProtocol),
 	}
 }
 
@@ -92,13 +90,11 @@ func (d *DownloadClientDeluge) fromDownloadClient(client *DownloadClient) {
 	d.Name = client.Name
 	d.Host = client.Host
 	d.URLBase = client.URLBase
-	d.Username = client.Username
 	d.Password = client.Password
 	d.MusicCategory = client.MusicCategory
-	d.MusicDirectory = client.MusicDirectory
 	d.MusicImportedCategory = client.MusicImportedCategory
-	d.RecentMusicPriority = client.RecentMusicPriority
-	d.OlderMusicPriority = client.OlderMusicPriority
+	d.RecentTVPriority = client.RecentTVPriority
+	d.OlderTVPriority = client.OlderTVPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
@@ -196,11 +192,6 @@ func (r *DownloadClientDelugeResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 				Computed:            true,
 			},
-			"username": schema.StringAttribute{
-				MarkdownDescription: "Username.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"password": schema.StringAttribute{
 				MarkdownDescription: "Password.",
 				Optional:            true,
@@ -209,11 +200,6 @@ func (r *DownloadClientDelugeResource) Schema(ctx context.Context, req resource.
 			},
 			"music_category": schema.StringAttribute{
 				MarkdownDescription: "Music category.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -335,35 +321,11 @@ func (r *DownloadClientDelugeResource) ImportState(ctx context.Context, req reso
 }
 
 func (d *DownloadClientDeluge) write(ctx context.Context, downloadClient *lidarr.DownloadClientResource) {
-	genericDownloadClient := DownloadClient{
-		Enable:                   types.BoolValue(downloadClient.GetEnable()),
-		RemoveCompletedDownloads: types.BoolValue(downloadClient.GetRemoveCompletedDownloads()),
-		RemoveFailedDownloads:    types.BoolValue(downloadClient.GetRemoveFailedDownloads()),
-		Priority:                 types.Int64Value(int64(downloadClient.GetPriority())),
-		ID:                       types.Int64Value(int64(downloadClient.GetId())),
-		Name:                     types.StringValue(downloadClient.GetName()),
-	}
-	genericDownloadClient.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, downloadClient.Tags)
-	genericDownloadClient.writeFields(ctx, downloadClient.Fields)
-	d.fromDownloadClient(&genericDownloadClient)
+	genericDownloadClient := d.toDownloadClient()
+	genericDownloadClient.write(ctx, downloadClient)
+	d.fromDownloadClient(genericDownloadClient)
 }
 
 func (d *DownloadClientDeluge) read(ctx context.Context) *lidarr.DownloadClientResource {
-	tags := make([]*int32, len(d.Tags.Elements()))
-	tfsdk.ValueAs(ctx, d.Tags, &tags)
-
-	client := lidarr.NewDownloadClientResource()
-	client.SetEnable(d.Enable.ValueBool())
-	client.SetRemoveCompletedDownloads(d.RemoveCompletedDownloads.ValueBool())
-	client.SetRemoveFailedDownloads(d.RemoveFailedDownloads.ValueBool())
-	client.SetPriority(int32(d.Priority.ValueInt64()))
-	client.SetId(int32(d.ID.ValueInt64()))
-	client.SetConfigContract(downloadClientDelugeConfigContract)
-	client.SetImplementation(downloadClientDelugeImplementation)
-	client.SetName(d.Name.ValueString())
-	client.SetProtocol(downloadClientDelugeProtocol)
-	client.SetTags(tags)
-	client.SetFields(d.toDownloadClient().readFields(ctx))
-
-	return client
+	return d.toDownloadClient().read(ctx)
 }

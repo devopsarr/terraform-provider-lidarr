@@ -38,7 +38,6 @@ resource "lidarr_download_client_deluge" "example" {
 - `enable` (Boolean) Enable flag.
 - `host` (String) host.
 - `music_category` (String) Music category.
-- `music_directory` (String) Music directory.
 - `music_imported_category` (String) Music imported category.
 - `older_music_priority` (Number) Older Music priority. `0` Last, `1` First.
 - `password` (String, Sensitive) Password.
@@ -50,7 +49,6 @@ resource "lidarr_download_client_deluge" "example" {
 - `tags` (Set of Number) List of associated tags.
 - `url_base` (String) Base URL.
 - `use_ssl` (Boolean) Use SSL flag.
-- `username` (String) Username.
 
 ### Read-Only
 

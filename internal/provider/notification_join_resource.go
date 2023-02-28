@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -69,6 +68,8 @@ func (n NotificationJoin) toNotification() *Notification {
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
 		OnUpgrade:             n.OnUpgrade,
+		Implementation:        types.StringValue(notificationJoinImplementation),
+		ConfigContract:        types.StringValue(notificationJoinConfigContract),
 	}
 }
 
@@ -267,38 +268,11 @@ func (r *NotificationJoinResource) ImportState(ctx context.Context, req resource
 }
 
 func (n *NotificationJoin) write(ctx context.Context, notification *lidarr.NotificationResource) {
-	genericNotification := Notification{
-		OnGrab:                types.BoolValue(notification.GetOnGrab()),
-		OnUpgrade:             types.BoolValue(notification.GetOnUpgrade()),
-		OnReleaseImport:       types.BoolValue(notification.GetOnReleaseImport()),
-		OnHealthIssue:         types.BoolValue(notification.GetOnHealthIssue()),
-		OnApplicationUpdate:   types.BoolValue(notification.GetOnApplicationUpdate()),
-		IncludeHealthWarnings: types.BoolValue(notification.GetIncludeHealthWarnings()),
-		ID:                    types.Int64Value(int64(notification.GetId())),
-		Name:                  types.StringValue(notification.GetName()),
-	}
-	genericNotification.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, notification.Tags)
-	genericNotification.writeFields(ctx, notification.Fields)
-	n.fromNotification(&genericNotification)
+	genericNotification := n.toNotification()
+	genericNotification.write(ctx, notification)
+	n.fromNotification(genericNotification)
 }
 
 func (n *NotificationJoin) read(ctx context.Context) *lidarr.NotificationResource {
-	tags := make([]*int32, len(n.Tags.Elements()))
-	tfsdk.ValueAs(ctx, n.Tags, &tags)
-
-	notification := lidarr.NewNotificationResource()
-	notification.SetOnGrab(n.OnGrab.ValueBool())
-	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
-	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
-	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
-	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
-	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
-	notification.SetConfigContract(notificationJoinConfigContract)
-	notification.SetImplementation(notificationJoinImplementation)
-	notification.SetId(int32(n.ID.ValueInt64()))
-	notification.SetName(n.Name.ValueString())
-	notification.SetTags(tags)
-	notification.SetFields(n.toNotification().readFields(ctx))
-
-	return notification
+	return n.toNotification().read(ctx)
 }

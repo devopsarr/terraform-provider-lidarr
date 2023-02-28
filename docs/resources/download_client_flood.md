@@ -38,19 +38,15 @@ resource "lidarr_download_client_flood" "example" {
 ### Optional
 
 - `add_paused` (Boolean) Add paused flag.
-- `additional_tags` (Set of Number) Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.
+- `additional_tags` (Set of Number) Additional tags, `0` Artist, `1` Quality, `2` ReleaseGroup, `3` Year, `4` Indexer.
 - `destination` (String) Destination.
 - `enable` (Boolean) Enable flag.
 - `field_tags` (Set of String) Field tags.
 - `host` (String) host.
-- `music_category` (String) Music category.
-- `music_directory` (String) Music directory.
-- `older_music_priority` (Number) Older Music priority. `0` Last, `1` First.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
-- `recent_music_priority` (Number) Recent Music priority. `0` Last, `1` First.
 - `remove_completed_downloads` (Boolean) Remove completed downloads flag.
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.

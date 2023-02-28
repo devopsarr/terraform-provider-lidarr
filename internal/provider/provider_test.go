@@ -36,3 +36,10 @@ func testAccAPIClient() *lidarr.APIClient {
 
 	return lidarr.NewAPIClient(config)
 }
+
+const testUnauthorizedProvider = `
+provider "lidarr" {
+	url = "http://localhost:8686"
+	api_key = "ErrorAPIKey"
+  }
+`

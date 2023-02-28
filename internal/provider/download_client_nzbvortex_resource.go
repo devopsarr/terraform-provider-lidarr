@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -48,12 +47,11 @@ type DownloadClientNzbvortex struct {
 	URLBase                  types.String `tfsdk:"url_base"`
 	APIKey                   types.String `tfsdk:"api_key"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
-	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
 	Enable                   types.Bool   `tfsdk:"enable"`
 	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
 	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
@@ -67,15 +65,17 @@ func (d DownloadClientNzbvortex) toDownloadClient() *DownloadClient {
 		URLBase:                  d.URLBase,
 		APIKey:                   d.APIKey,
 		MusicCategory:            d.MusicCategory,
-		RecentMusicPriority:      d.RecentMusicPriority,
-		OlderMusicPriority:       d.OlderMusicPriority,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
-		UseSsl:                   d.UseSsl,
 		Enable:                   d.Enable,
 		RemoveFailedDownloads:    d.RemoveFailedDownloads,
 		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientNzbvortexImplementation),
+		ConfigContract:           types.StringValue(downloadClientNzbvortexConfigContract),
+		Protocol:                 types.StringValue(downloadClientNzbvortexProtocol),
 	}
 }
 
@@ -86,12 +86,11 @@ func (d *DownloadClientNzbvortex) fromDownloadClient(client *DownloadClient) {
 	d.URLBase = client.URLBase
 	d.APIKey = client.APIKey
 	d.MusicCategory = client.MusicCategory
-	d.RecentMusicPriority = client.RecentMusicPriority
-	d.OlderMusicPriority = client.OlderMusicPriority
+	d.RecentTVPriority = client.RecentTVPriority
+	d.OlderTVPriority = client.OlderTVPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
-	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
 	d.RemoveFailedDownloads = client.RemoveFailedDownloads
 	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
@@ -143,11 +142,6 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 				},
 			},
 			// Field values
-			"use_ssl": schema.BoolAttribute{
-				MarkdownDescription: "Use SSL flag.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"port": schema.Int64Attribute{
 				MarkdownDescription: "Port.",
 				Optional:            true,
@@ -301,35 +295,11 @@ func (r *DownloadClientNzbvortexResource) ImportState(ctx context.Context, req r
 }
 
 func (d *DownloadClientNzbvortex) write(ctx context.Context, downloadClient *lidarr.DownloadClientResource) {
-	genericDownloadClient := DownloadClient{
-		Enable:                   types.BoolValue(downloadClient.GetEnable()),
-		RemoveCompletedDownloads: types.BoolValue(downloadClient.GetRemoveCompletedDownloads()),
-		RemoveFailedDownloads:    types.BoolValue(downloadClient.GetRemoveFailedDownloads()),
-		Priority:                 types.Int64Value(int64(downloadClient.GetPriority())),
-		ID:                       types.Int64Value(int64(downloadClient.GetId())),
-		Name:                     types.StringValue(downloadClient.GetName()),
-	}
-	genericDownloadClient.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, downloadClient.Tags)
-	genericDownloadClient.writeFields(ctx, downloadClient.Fields)
-	d.fromDownloadClient(&genericDownloadClient)
+	genericDownloadClient := d.toDownloadClient()
+	genericDownloadClient.write(ctx, downloadClient)
+	d.fromDownloadClient(genericDownloadClient)
 }
 
 func (d *DownloadClientNzbvortex) read(ctx context.Context) *lidarr.DownloadClientResource {
-	tags := make([]*int32, len(d.Tags.Elements()))
-	tfsdk.ValueAs(ctx, d.Tags, &tags)
-
-	client := lidarr.NewDownloadClientResource()
-	client.SetEnable(d.Enable.ValueBool())
-	client.SetRemoveCompletedDownloads(d.RemoveCompletedDownloads.ValueBool())
-	client.SetRemoveFailedDownloads(d.RemoveFailedDownloads.ValueBool())
-	client.SetPriority(int32(d.Priority.ValueInt64()))
-	client.SetId(int32(d.ID.ValueInt64()))
-	client.SetConfigContract(downloadClientNzbvortexConfigContract)
-	client.SetImplementation(downloadClientNzbvortexImplementation)
-	client.SetName(d.Name.ValueString())
-	client.SetProtocol(downloadClientNzbvortexProtocol)
-	client.SetTags(tags)
-	client.SetFields(d.toDownloadClient().readFields(ctx))
-
-	return client
+	return d.toDownloadClient().read(ctx)
 }

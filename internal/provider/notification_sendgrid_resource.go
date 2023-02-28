@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -71,6 +70,8 @@ func (n NotificationSendgrid) toNotification() *Notification {
 		OnDownloadFailure:     n.OnDownloadFailure,
 		OnUpgrade:             n.OnUpgrade,
 		OnImportFailure:       n.OnImportFailure,
+		Implementation:        types.StringValue(notificationSendgridImplementation),
+		ConfigContract:        types.StringValue(notificationSendgridConfigContract),
 	}
 }
 
@@ -277,42 +278,11 @@ func (r *NotificationSendgridResource) ImportState(ctx context.Context, req reso
 }
 
 func (n *NotificationSendgrid) write(ctx context.Context, notification *lidarr.NotificationResource) {
-	genericNotification := Notification{
-		OnGrab:                types.BoolValue(notification.GetOnGrab()),
-		OnImportFailure:       types.BoolValue(notification.GetOnImportFailure()),
-		OnUpgrade:             types.BoolValue(notification.GetOnUpgrade()),
-		OnDownloadFailure:     types.BoolValue(notification.GetOnDownloadFailure()),
-		OnReleaseImport:       types.BoolValue(notification.GetOnReleaseImport()),
-		OnHealthIssue:         types.BoolValue(notification.GetOnHealthIssue()),
-		OnApplicationUpdate:   types.BoolValue(notification.GetOnApplicationUpdate()),
-		IncludeHealthWarnings: types.BoolValue(notification.GetIncludeHealthWarnings()),
-		ID:                    types.Int64Value(int64(notification.GetId())),
-		Name:                  types.StringValue(notification.GetName()),
-	}
-	genericNotification.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, notification.Tags)
-	genericNotification.writeFields(ctx, notification.Fields)
-	n.fromNotification(&genericNotification)
+	genericNotification := n.toNotification()
+	genericNotification.write(ctx, notification)
+	n.fromNotification(genericNotification)
 }
 
 func (n *NotificationSendgrid) read(ctx context.Context) *lidarr.NotificationResource {
-	tags := make([]*int32, len(n.Tags.Elements()))
-	tfsdk.ValueAs(ctx, n.Tags, &tags)
-
-	notification := lidarr.NewNotificationResource()
-	notification.SetOnGrab(n.OnGrab.ValueBool())
-	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
-	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
-	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
-	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
-	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
-	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
-	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
-	notification.SetConfigContract(notificationSendgridConfigContract)
-	notification.SetImplementation(notificationSendgridImplementation)
-	notification.SetId(int32(n.ID.ValueInt64()))
-	notification.SetName(n.Name.ValueString())
-	notification.SetTags(tags)
-	notification.SetFields(n.toNotification().readFields(ctx))
-
-	return notification
+	return n.toNotification().read(ctx)
 }

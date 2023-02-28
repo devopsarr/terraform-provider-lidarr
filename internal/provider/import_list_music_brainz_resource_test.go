@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccImportListMusicBrainzResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccImportListMusicBrainzResourceConfig("resourceMusicBrainzTest", "entireArtist") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				PreConfig: rootFolderDSInit,
@@ -22,6 +28,11 @@ func TestAccImportListMusicBrainzResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_import_list_music_brainz.test", "should_monitor", "entireArtist"),
 					resource.TestCheckResourceAttrSet("lidarr_import_list_music_brainz.test", "id"),
 				),
+			},
+			// Unauthorized Read
+			{
+				Config:      testAccImportListMusicBrainzResourceConfig("resourceMusicBrainzTest", "entireArtist") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

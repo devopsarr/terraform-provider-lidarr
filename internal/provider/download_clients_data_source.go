@@ -181,6 +181,12 @@ func (d *DownloadClientsDataSource) Schema(ctx context.Context, req datasource.S
 							MarkdownDescription: "Music imported category.",
 							Computed:            true,
 						},
+						// needed to manage difference from tvDirectory and musicDirectory.
+						"musicdirectory": schema.StringAttribute{
+							MarkdownDescription: "Music directory.",
+							Optional:            true,
+							Computed:            true,
+						},
 						"music_directory": schema.StringAttribute{
 							MarkdownDescription: "Music directory.",
 							Computed:            true,
@@ -244,7 +250,7 @@ func (d *DownloadClientsDataSource) Configure(ctx context.Context, req datasourc
 func (d *DownloadClientsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data *DownloadClients
 
-	resp.Diagnostics.Append(resp.State.Get(ctx, &data)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return

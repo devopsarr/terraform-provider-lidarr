@@ -13,9 +13,9 @@ func TestAccIndexersDataSource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Create a delay profile to have a value to check
+			// Create a resource to have a value to check
 			{
-				Config: testAccIndexerResourceConfig("datasourceTest", "25"),
+				Config: testAccIndexerResourceConfig("datasourceTest", 25),
 			},
 			// Read testing
 			{

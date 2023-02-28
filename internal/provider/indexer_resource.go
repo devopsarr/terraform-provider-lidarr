@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"golang.org/x/exp/slices"
 )
 
 const indexerResourceName = "indexer"
@@ -27,13 +26,15 @@ var (
 	_ resource.ResourceWithImportState = &IndexerResource{}
 )
 
-var (
-	indexerIntSliceFields = []string{"categories"}
-	indexerBoolFields     = []string{"useFreeleechToken", "rankedOnly", "allowZeroSize"}
-	indexerIntFields      = []string{"earlyReleaseLimit", "delay", "minimumSeeders", "seedTime", "discographySeedTime"}
-	indexerStringFields   = []string{"apiKey", "apiPath", "baseUrl", "username", "passkey", "passKey", "password", "additionalParameters", "captchaToken", "cookie", "userId", "rssPasskey"}
-	indexerFloatFields    = []string{"seedRatio"}
-)
+var indexerFields = helpers.Fields{
+	IntSlices:        []string{"categories"},
+	Bools:            []string{"useFreeleechToken", "rankedOnly", "allowZeroSize"},
+	Ints:             []string{"earlyReleaseLimit", "delay", "minimumSeeders", "seedTime", "discographySeedTime"},
+	IntsExceptions:   []string{"seedCriteria.seedTime", "seedCriteria.discographySeedTime"},
+	Strings:          []string{"apiKey", "apiPath", "baseUrl", "username", "passkey", "passKey", "password", "additionalParameters", "captchaToken", "cookie", "userId", "rssPasskey"},
+	Floats:           []string{"seedRatio"},
+	FloatsExceptions: []string{"seedCriteria.seedRatio"},
+}
 
 func NewIndexerResource() resource.Resource {
 	return &IndexerResource{}
@@ -376,6 +377,7 @@ func (r *IndexerResource) ImportState(ctx context.Context, req resource.ImportSt
 }
 
 func (i *Indexer) write(ctx context.Context, indexer *lidarr.IndexerResource) {
+	i.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, indexer.Tags)
 	i.EnableAutomaticSearch = types.BoolValue(indexer.GetEnableAutomaticSearch())
 	i.EnableInteractiveSearch = types.BoolValue(indexer.GetEnableInteractiveSearch())
 	i.EnableRss = types.BoolValue(indexer.GetEnableRss())
@@ -385,46 +387,8 @@ func (i *Indexer) write(ctx context.Context, indexer *lidarr.IndexerResource) {
 	i.Implementation = types.StringValue(indexer.GetImplementation())
 	i.Name = types.StringValue(indexer.GetName())
 	i.Protocol = types.StringValue(string(indexer.GetProtocol()))
-	i.Tags = types.SetValueMust(types.Int64Type, nil)
 	i.Categories = types.SetValueMust(types.Int64Type, nil)
-	tfsdk.ValueFrom(ctx, indexer.Tags, i.Tags.Type(ctx), &i.Tags)
-	i.writeFields(ctx, indexer.Fields)
-}
-
-func (i *Indexer) writeFields(ctx context.Context, fields []*lidarr.Field) {
-	for _, f := range fields {
-		if f.Value == nil {
-			continue
-		}
-
-		if slices.Contains(indexerStringFields, f.GetName()) {
-			helpers.WriteStringField(f, i)
-
-			continue
-		}
-
-		if slices.Contains(indexerBoolFields, f.GetName()) {
-			helpers.WriteBoolField(f, i)
-
-			continue
-		}
-
-		if slices.Contains(indexerIntFields, f.GetName()) {
-			helpers.WriteIntField(f, i)
-
-			continue
-		}
-
-		if slices.Contains(indexerFloatFields, f.GetName()) {
-			helpers.WriteFloatField(f, i)
-
-			continue
-		}
-
-		if slices.Contains(indexerIntSliceFields, f.GetName()) {
-			helpers.WriteIntSliceField(ctx, f, i)
-		}
-	}
+	helpers.WriteFields(ctx, i, indexer.GetFields(), indexerFields)
 }
 
 func (i *Indexer) read(ctx context.Context) *lidarr.IndexerResource {
@@ -442,43 +406,7 @@ func (i *Indexer) read(ctx context.Context) *lidarr.IndexerResource {
 	indexer.SetName(i.Name.ValueString())
 	indexer.SetProtocol(lidarr.DownloadProtocol(i.Protocol.ValueString()))
 	indexer.SetTags(tags)
-	indexer.SetFields(i.readFields(ctx))
+	indexer.SetFields(helpers.ReadFields(ctx, i, indexerFields))
 
 	return indexer
-}
-
-func (i *Indexer) readFields(ctx context.Context) []*lidarr.Field {
-	var output []*lidarr.Field
-
-	for _, b := range indexerBoolFields {
-		if field := helpers.ReadBoolField(b, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, n := range indexerIntFields {
-		if field := helpers.ReadIntField(n, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, f := range indexerFloatFields {
-		if field := helpers.ReadFloatField(f, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range indexerStringFields {
-		if field := helpers.ReadStringField(s, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	for _, s := range indexerIntSliceFields {
-		if field := helpers.ReadIntSliceField(ctx, s, i); field != nil {
-			output = append(output, field)
-		}
-	}
-
-	return output
 }

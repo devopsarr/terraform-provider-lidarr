@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccRootFolderResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccRootFolderResourceConfig("all", "/error") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				Config: testAccRootFolderResourceConfig("all", "/config/asp"),
@@ -22,6 +28,11 @@ func TestAccRootFolderResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_root_folder.test", "tags.#", "0"),
 					resource.TestCheckResourceAttrSet("lidarr_root_folder.test", "id"),
 				),
+			},
+			// Unauthorized Read
+			{
+				Config:      testAccRootFolderResourceConfig("all", "/error") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

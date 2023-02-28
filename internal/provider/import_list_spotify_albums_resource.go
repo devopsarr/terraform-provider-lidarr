@@ -13,16 +13,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 const (
-	ImportListSpotifyAlbumsResourceName   = "import_list_spotify_albums"
-	ImportListSpotifyAlbumsImplementation = "SpotifySavedAlbums"
-	ImportListSpotifyAlbumsConfigContract = "SpotifySavedAlbumsSettings"
-	ImportListSpotifyAlbumsType           = "spotify"
+	importListSpotifyAlbumsResourceName   = "import_list_spotify_albums"
+	importListSpotifyAlbumsImplementation = "SpotifySavedAlbums"
+	importListSpotifyAlbumsConfigContract = "SpotifySavedAlbumsSettings"
+	importListSpotifyAlbumsType           = "spotify"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -76,6 +75,9 @@ func (i ImportListSpotifyAlbums) toImportList() *ImportList {
 		EnableAutomaticAdd:    i.EnableAutomaticAdd,
 		ShouldMonitorExisting: i.ShouldMonitorExisting,
 		ShouldSearch:          i.ShouldSearch,
+		Implementation:        types.StringValue(importListSpotifyAlbumsImplementation),
+		ConfigContract:        types.StringValue(importListSpotifyAlbumsConfigContract),
+		ListType:              types.StringValue(importListSpotifyAlbumsType),
 	}
 }
 
@@ -98,7 +100,7 @@ func (i *ImportListSpotifyAlbums) fromImportList(importList *ImportList) {
 }
 
 func (r *ImportListSpotifyAlbumsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + ImportListSpotifyAlbumsResourceName
+	resp.TypeName = req.ProviderTypeName + "_" + importListSpotifyAlbumsResourceName
 }
 
 func (r *ImportListSpotifyAlbumsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
@@ -213,12 +215,12 @@ func (r *ImportListSpotifyAlbumsResource) Create(ctx context.Context, req resour
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListSpotifyAlbumsResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+importListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
@@ -237,12 +239,12 @@ func (r *ImportListSpotifyAlbumsResource) Read(ctx context.Context, req resource
 	// Get ImportListSpotifyAlbums current value
 	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListSpotifyAlbumsResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+importListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
@@ -263,12 +265,12 @@ func (r *ImportListSpotifyAlbumsResource) Update(ctx context.Context, req resour
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListSpotifyAlbumsResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+importListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	importList.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
@@ -286,60 +288,26 @@ func (r *ImportListSpotifyAlbumsResource) Delete(ctx context.Context, req resour
 	// Delete ImportListSpotifyAlbums current value
 	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, ImportListSpotifyAlbumsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListSpotifyAlbumsResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+ImportListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListSpotifyAlbumsResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
 func (r *ImportListSpotifyAlbumsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+ImportListSpotifyAlbumsResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+importListSpotifyAlbumsResourceName+": "+req.ID)
 }
 
 func (i *ImportListSpotifyAlbums) write(ctx context.Context, importList *lidarr.ImportListResource) {
-	genericImportList := ImportList{
-		Name:                  types.StringValue(importList.GetName()),
-		ShouldMonitor:         types.StringValue(string(importList.GetShouldMonitor())),
-		MonitorNewItems:       types.StringValue(string(importList.GetMonitorNewItems())),
-		RootFolderPath:        types.StringValue(importList.GetRootFolderPath()),
-		QualityProfileID:      types.Int64Value(int64(importList.GetQualityProfileId())),
-		MetadataProfileID:     types.Int64Value(int64(importList.GetMetadataProfileId())),
-		ID:                    types.Int64Value(int64(importList.GetId())),
-		ListOrder:             types.Int64Value(int64(importList.GetListOrder())),
-		EnableAutomaticAdd:    types.BoolValue(importList.GetEnableAutomaticAdd()),
-		ShouldMonitorExisting: types.BoolValue(importList.GetShouldMonitorExisting()),
-		ShouldSearch:          types.BoolValue(importList.GetShouldSearch()),
-	}
-	genericImportList.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, importList.Tags)
-	genericImportList.writeFields(ctx, importList.Fields)
-	i.fromImportList(&genericImportList)
+	genericImportList := i.toImportList()
+	genericImportList.write(ctx, importList)
+	i.fromImportList(genericImportList)
 }
 
 func (i *ImportListSpotifyAlbums) read(ctx context.Context) *lidarr.ImportListResource {
-	tags := make([]*int32, len(i.Tags.Elements()))
-	tfsdk.ValueAs(ctx, i.Tags, &tags)
-
-	list := lidarr.NewImportListResource()
-	list.SetShouldMonitor(lidarr.ImportListMonitorType(i.ShouldMonitor.ValueString()))
-	list.SetMonitorNewItems(lidarr.NewItemMonitorTypes(i.MonitorNewItems.ValueString()))
-	list.SetRootFolderPath(i.RootFolderPath.ValueString())
-	list.SetQualityProfileId(int32(i.QualityProfileID.ValueInt64()))
-	list.SetMetadataProfileId(int32(i.MetadataProfileID.ValueInt64()))
-	list.SetListOrder(int32(i.ListOrder.ValueInt64()))
-	list.SetEnableAutomaticAdd(i.EnableAutomaticAdd.ValueBool())
-	list.SetShouldMonitorExisting(i.ShouldMonitorExisting.ValueBool())
-	list.SetShouldSearch(i.ShouldSearch.ValueBool())
-	list.SetListType(ImportListSpotifyAlbumsType)
-	list.SetConfigContract(ImportListSpotifyAlbumsConfigContract)
-	list.SetImplementation(ImportListSpotifyAlbumsImplementation)
-	list.SetId(int32(i.ID.ValueInt64()))
-	list.SetName(i.Name.ValueString())
-	list.SetTags(tags)
-	list.SetFields(i.toImportList().readFields(ctx))
-
-	return list
+	return i.toImportList().read(ctx)
 }

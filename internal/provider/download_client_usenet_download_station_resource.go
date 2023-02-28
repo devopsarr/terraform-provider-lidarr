@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -46,7 +45,7 @@ type DownloadClientUsenetDownloadStation struct {
 	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	MusicDirectory           types.String `tfsdk:"music_directory"`
+	TVDirectory              types.String `tfsdk:"music_directory"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -64,7 +63,7 @@ func (d DownloadClientUsenetDownloadStation) toDownloadClient() *DownloadClient 
 		Username:                 d.Username,
 		Password:                 d.Password,
 		MusicCategory:            d.MusicCategory,
-		MusicDirectory:           d.MusicDirectory,
+		TVDirectory:              d.TVDirectory,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -72,6 +71,9 @@ func (d DownloadClientUsenetDownloadStation) toDownloadClient() *DownloadClient 
 		Enable:                   d.Enable,
 		RemoveFailedDownloads:    d.RemoveFailedDownloads,
 		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
+		Implementation:           types.StringValue(downloadClientUsenetDownloadStationImplementation),
+		ConfigContract:           types.StringValue(downloadClientUsenetDownloadStationConfigContract),
+		Protocol:                 types.StringValue(downloadClientUsenetDownloadStationProtocol),
 	}
 }
 
@@ -82,7 +84,7 @@ func (d *DownloadClientUsenetDownloadStation) fromDownloadClient(client *Downloa
 	d.Username = client.Username
 	d.Password = client.Password
 	d.MusicCategory = client.MusicCategory
-	d.MusicDirectory = client.MusicDirectory
+	d.TVDirectory = client.TVDirectory
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
@@ -287,35 +289,11 @@ func (r *DownloadClientUsenetDownloadStationResource) ImportState(ctx context.Co
 }
 
 func (d *DownloadClientUsenetDownloadStation) write(ctx context.Context, downloadClient *lidarr.DownloadClientResource) {
-	genericDownloadClient := DownloadClient{
-		Enable:                   types.BoolValue(downloadClient.GetEnable()),
-		RemoveCompletedDownloads: types.BoolValue(downloadClient.GetRemoveCompletedDownloads()),
-		RemoveFailedDownloads:    types.BoolValue(downloadClient.GetRemoveFailedDownloads()),
-		Priority:                 types.Int64Value(int64(downloadClient.GetPriority())),
-		ID:                       types.Int64Value(int64(downloadClient.GetId())),
-		Name:                     types.StringValue(downloadClient.GetName()),
-	}
-	genericDownloadClient.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, downloadClient.Tags)
-	genericDownloadClient.writeFields(ctx, downloadClient.Fields)
-	d.fromDownloadClient(&genericDownloadClient)
+	genericDownloadClient := d.toDownloadClient()
+	genericDownloadClient.write(ctx, downloadClient)
+	d.fromDownloadClient(genericDownloadClient)
 }
 
 func (d *DownloadClientUsenetDownloadStation) read(ctx context.Context) *lidarr.DownloadClientResource {
-	tags := make([]*int32, len(d.Tags.Elements()))
-	tfsdk.ValueAs(ctx, d.Tags, &tags)
-
-	client := lidarr.NewDownloadClientResource()
-	client.SetEnable(d.Enable.ValueBool())
-	client.SetRemoveCompletedDownloads(d.RemoveCompletedDownloads.ValueBool())
-	client.SetRemoveFailedDownloads(d.RemoveFailedDownloads.ValueBool())
-	client.SetPriority(int32(d.Priority.ValueInt64()))
-	client.SetId(int32(d.ID.ValueInt64()))
-	client.SetConfigContract(downloadClientUsenetDownloadStationConfigContract)
-	client.SetImplementation(downloadClientUsenetDownloadStationImplementation)
-	client.SetName(d.Name.ValueString())
-	client.SetProtocol(downloadClientUsenetDownloadStationProtocol)
-	client.SetTags(tags)
-	client.SetFields(d.toDownloadClient().readFields(ctx))
-
-	return client
+	return d.toDownloadClient().read(ctx)
 }

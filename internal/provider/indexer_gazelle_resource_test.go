@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccIndexerGazelleResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccIndexerGazelleResourceConfig("gazelleResourceTest", "User1") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				Config: testAccIndexerGazelleResourceConfig("gazelleResourceTest", "User1"),
@@ -22,6 +28,11 @@ func TestAccIndexerGazelleResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_indexer_gazelle.test", "base_url", "https://orpheus.network"),
 					resource.TestCheckResourceAttrSet("lidarr_indexer_gazelle.test", "id"),
 				),
+			},
+			// Unauthorized Create
+			{
+				Config:      testAccIndexerGazelleResourceConfig("gazelleResourceTest", "User1") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

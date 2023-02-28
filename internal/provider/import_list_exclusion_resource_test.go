@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccImportListExclusionResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccImportListExclusionResourceConfig("test", "b1a9c0e9-d987-4042-ae91-78d6a3267d69") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				Config: testAccImportListExclusionResourceConfig("test", "b1a9c0e9-d987-4042-ae91-78d6a3267d69"),
@@ -21,6 +27,11 @@ func TestAccImportListExclusionResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_import_list_exclusion.test", "foreign_id", "b1a9c0e9-d987-4042-ae91-78d6a3267d69"),
 					resource.TestCheckResourceAttrSet("lidarr_import_list_exclusion.test", "id"),
 				),
+			},
+			// Unauthorized Read
+			{
+				Config:      testAccImportListExclusionResourceConfig("test", "b1a9c0e9-d987-4042-ae91-78d6a3267d69") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

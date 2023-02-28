@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -79,6 +78,8 @@ func (n NotificationWebhook) toNotification() *Notification {
 		OnRename:              n.OnRename,
 		OnUpgrade:             n.OnUpgrade,
 		OnTrackRetag:          n.OnTrackRetag,
+		Implementation:        types.StringValue(notificationWebhookImplementation),
+		ConfigContract:        types.StringValue(notificationWebhookConfigContract),
 	}
 }
 
@@ -302,47 +303,11 @@ func (r *NotificationWebhookResource) ImportState(ctx context.Context, req resou
 }
 
 func (n *NotificationWebhook) write(ctx context.Context, notification *lidarr.NotificationResource) {
-	genericNotification := Notification{
-		OnGrab:                types.BoolValue(notification.GetOnGrab()),
-		OnReleaseImport:       types.BoolValue(notification.GetOnReleaseImport()),
-		OnUpgrade:             types.BoolValue(notification.GetOnUpgrade()),
-		OnRename:              types.BoolValue(notification.GetOnRename()),
-		OnDownloadFailure:     types.BoolValue(notification.GetOnDownloadFailure()),
-		OnImportFailure:       types.BoolValue(notification.GetOnImportFailure()),
-		OnTrackRetag:          types.BoolValue(notification.GetOnTrackRetag()),
-		OnHealthIssue:         types.BoolValue(notification.GetOnHealthIssue()),
-		OnApplicationUpdate:   types.BoolValue(notification.GetOnApplicationUpdate()),
-		IncludeHealthWarnings: types.BoolValue(notification.GetIncludeHealthWarnings()),
-		ID:                    types.Int64Value(int64(notification.GetId())),
-		Name:                  types.StringValue(notification.GetName()),
-		Tags:                  types.SetValueMust(types.Int64Type, nil),
-	}
-	tfsdk.ValueFrom(ctx, notification.Tags, genericNotification.Tags.Type(ctx), &genericNotification.Tags)
-	genericNotification.writeFields(ctx, notification.Fields)
-	n.fromNotification(&genericNotification)
+	genericNotification := n.toNotification()
+	genericNotification.write(ctx, notification)
+	n.fromNotification(genericNotification)
 }
 
 func (n *NotificationWebhook) read(ctx context.Context) *lidarr.NotificationResource {
-	tags := make([]*int32, len(n.Tags.Elements()))
-	tfsdk.ValueAs(ctx, n.Tags, &tags)
-
-	notification := lidarr.NewNotificationResource()
-	notification.SetOnGrab(n.OnGrab.ValueBool())
-	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
-	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
-	notification.SetOnRename(n.OnRename.ValueBool())
-	notification.SetOnTrackRetag(n.OnTrackRetag.ValueBool())
-	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
-	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
-	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
-	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
-	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
-	notification.SetConfigContract(notificationWebhookConfigContract)
-	notification.SetImplementation(notificationWebhookImplementation)
-	notification.SetId(int32(n.ID.ValueInt64()))
-	notification.SetName(n.Name.ValueString())
-	notification.SetTags(tags)
-	notification.SetFields(n.toNotification().readFields(ctx))
-
-	return notification
+	return n.toNotification().read(ctx)
 }
