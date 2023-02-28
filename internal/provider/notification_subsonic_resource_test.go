@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccNotificationSubsonicResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccNotificationSubsonicResourceConfig("resourceSubsonicTest", "pass1") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				Config: testAccNotificationSubsonicResourceConfig("resourceSubsonicTest", "pass1"),
@@ -21,6 +27,11 @@ func TestAccNotificationSubsonicResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_notification_subsonic.test", "password", "pass1"),
 					resource.TestCheckResourceAttrSet("lidarr_notification_subsonic.test", "id"),
 				),
+			},
+			// Unauthorized Read
+			{
+				Config:      testAccNotificationSubsonicResourceConfig("resourceSubsonicTest", "pass1") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

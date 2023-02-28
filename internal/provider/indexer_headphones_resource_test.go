@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccIndexerHeadphonesResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccIndexerHeadphonesResourceConfig("headphonesResourceTest", "User1") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				Config: testAccIndexerHeadphonesResourceConfig("headphonesResourceTest", "User1"),
@@ -21,6 +27,11 @@ func TestAccIndexerHeadphonesResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_indexer_headphones.test", "username", "User1"),
 					resource.TestCheckResourceAttrSet("lidarr_indexer_headphones.test", "id"),
 				),
+			},
+			// Unauthorized Read
+			{
+				Config:      testAccIndexerHeadphonesResourceConfig("headphonesResourceTest", "User1") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

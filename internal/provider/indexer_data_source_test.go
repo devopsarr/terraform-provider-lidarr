@@ -1,6 +1,8 @@
 package provider
 
 import (
+	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -13,9 +15,19 @@ func TestAccIndexerDataSource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized
+			{
+				Config:      testAccIndexerDataSourceConfig("\"Error\"") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
+			// Not found testing
+			{
+				Config:      testAccIndexerDataSourceConfig("\"Error\""),
+				ExpectError: regexp.MustCompile("Unable to find indexer"),
+			},
 			// Read testing
 			{
-				Config: testAccIndexerDataSourceConfig,
+				Config: testAccIndexerResourceConfig("indexerdata", 20) + testAccIndexerDataSourceConfig("lidarr_indexer.test.name"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.lidarr_indexer.test", "id"),
 					resource.TestCheckResourceAttr("data.lidarr_indexer.test", "protocol", "usenet")),
@@ -24,19 +36,10 @@ func TestAccIndexerDataSource(t *testing.T) {
 	})
 }
 
-const testAccIndexerDataSourceConfig = `
-resource "lidarr_indexer" "test" {
-	enable_automatic_search = false
-	name = "indexerdata"
-	implementation = "Newznab"
-	protocol = "usenet"
-	config_contract = "NewznabSettings"
-	base_url = "https://lolo.sickbeard.com"
-	api_path = "/api"
-	categories = [5030, 5040]
+func testAccIndexerDataSourceConfig(name string) string {
+	return fmt.Sprintf(`
+	data "lidarr_indexer" "test" {
+		name = %s
+	}
+	`, name)
 }
-
-data "lidarr_indexer" "test" {
-	name = lidarr_indexer.test.name
-}
-`

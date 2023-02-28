@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,18 +15,28 @@ func TestAccIndexerResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccIndexerResourceConfig("resourceTest", 25) + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
-				Config: testAccIndexerResourceConfig("resourceTest", "25"),
+				Config: testAccIndexerResourceConfig("resourceTest", 25),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("lidarr_indexer.test", "priority", "25"),
 					resource.TestCheckResourceAttr("lidarr_indexer.test", "base_url", "https://lolo.sickbeard.com"),
 					resource.TestCheckResourceAttrSet("lidarr_indexer.test", "id"),
 				),
 			},
+			// Unauthorized Read
+			{
+				Config:      testAccIndexerResourceConfig("resourceTest", 25) + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Update and Read testing
 			{
-				Config: testAccIndexerResourceConfig("resourceTest", "30"),
+				Config: testAccIndexerResourceConfig("resourceTest", 30),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("lidarr_indexer.test", "priority", "30"),
 				),
@@ -41,10 +52,10 @@ func TestAccIndexerResource(t *testing.T) {
 	})
 }
 
-func testAccIndexerResourceConfig(name, aSearch string) string {
+func testAccIndexerResourceConfig(name string, priority int) string {
 	return fmt.Sprintf(`
 	resource "lidarr_indexer" "test" {
-		priority = %s
+		priority = %d
 		name = "%s"
 		implementation = "Newznab"
 		protocol = "usenet"
@@ -52,5 +63,5 @@ func testAccIndexerResourceConfig(name, aSearch string) string {
 		base_url = "https://lolo.sickbeard.com"
 		api_path = "/api"
 		categories = [8000, 5000]
-	}`, aSearch, name)
+	}`, priority, name)
 }

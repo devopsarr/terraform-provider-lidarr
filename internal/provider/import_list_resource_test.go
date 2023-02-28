@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,6 +15,11 @@ func TestAccImportListResource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized Create
+			{
+				Config:      testAccImportListResourceConfig("importListResourceTest", "entireArtist") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Create and Read testing
 			{
 				PreConfig: rootFolderDSInit,
@@ -22,6 +28,11 @@ func TestAccImportListResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_import_list.test", "should_monitor", "entireArtist"),
 					resource.TestCheckResourceAttrSet("lidarr_import_list.test", "id"),
 				),
+			},
+			// Unauthorized Read
+			{
+				Config:      testAccImportListResourceConfig("importListResourceTest", "entireArtist") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Update and Read testing
 			{

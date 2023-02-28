@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -13,7 +14,12 @@ func TestAccImportListExclusionsDataSource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
-			// Create a import_list_exclusion to have a value to check
+			// Unauthorized
+			{
+				Config:      testAccImportListExclusionsDataSourceConfig + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
+			// Create a resource to have a value to check
 			{
 				Config: testAccImportListExclusionResourceConfig("testList", "53b106e7-0cc6-42cc-ac95-ed8d30a3a98e"),
 			},

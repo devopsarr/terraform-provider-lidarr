@@ -2,6 +2,8 @@ package provider
 
 import (
 	"context"
+	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
@@ -15,10 +17,20 @@ func TestAccRootFolderDataSource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized
+			{
+				Config:      testAccRootFolderDataSourceConfig("/error") + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
+			// Not found testing
+			{
+				Config:      testAccRootFolderDataSourceConfig("/error"),
+				ExpectError: regexp.MustCompile("Unable to find root_folder"),
+			},
 			// Read testing
 			{
 				PreConfig: rootFolderDSInit,
-				Config:    testAccRootFolderDataSourceConfig,
+				Config:    testAccRootFolderDataSourceConfig("/config"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.lidarr_root_folder.test", "id"),
 					resource.TestCheckResourceAttr("data.lidarr_root_folder.test", "path", "/config")),
@@ -27,11 +39,13 @@ func TestAccRootFolderDataSource(t *testing.T) {
 	})
 }
 
-const testAccRootFolderDataSourceConfig = `
-data "lidarr_root_folder" "test" {
-	path = "/config"
+func testAccRootFolderDataSourceConfig(path string) string {
+	return fmt.Sprintf(`
+	data "lidarr_root_folder" "test" {
+  			path = "%s"
+		}
+	`, path)
 }
-`
 
 func rootFolderDSInit() {
 	// ensure a /config root path is configured
