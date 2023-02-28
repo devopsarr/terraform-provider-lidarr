@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.1](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.5.0...v1.5.1) (2023-02-28)
+
+
+### Bug Fixes
+
+* data source read from config instead of state ([95b3fd7](https://github.com/devopsarr/terraform-provider-lidarr/commit/95b3fd7463094db838baaf9515f4aefc1447735b))
+* manage not working tv related api fields on download clients ([2a32dc6](https://github.com/devopsarr/terraform-provider-lidarr/commit/2a32dc6d76c07c759bd2375aad9912a64b91550f))
+* notification discografy seed time ([62232c2](https://github.com/devopsarr/terraform-provider-lidarr/commit/62232c2a4dba1ac4372c51119ae01c87fb7e1efd))
+* notification ssl flag ([0d41d42](https://github.com/devopsarr/terraform-provider-lidarr/commit/0d41d429f793bf7e48ead611b0acc9227cd64877))
+* notification subsonic wrong implementation ([c8c9e91](https://github.com/devopsarr/terraform-provider-lidarr/commit/c8c9e914c8bc10877512db8c90a1d86301dfc9c7))
+* pass import list type ([bc208ea](https://github.com/devopsarr/terraform-provider-lidarr/commit/bc208eabddfb8b7061a7ad222e4ccce278e8d6f2))
+
 ## [1.5.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.4.0...v1.5.0) (2023-01-25)
 
 
