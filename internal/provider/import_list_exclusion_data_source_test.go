@@ -27,7 +27,7 @@ func TestAccImportListExclusionDataSource(t *testing.T) {
 			},
 			// Read testing
 			{
-				Config: testAccImportListExclusionResourceConfig("test", "0383dadf-2a4e-4d10-a46a-e9e041da8eb3") + testAccImportListExclusionDataSourceConfig("lidarr_import_list_exclusion.test.foreign_id"),
+				Config: testAccImportListExclusionResourceConfig("test", "810068af-2b3c-3e9c-b2ab-68a3f3e3787d") + testAccImportListExclusionDataSourceConfig("lidarr_import_list_exclusion.test.foreign_id"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.lidarr_import_list_exclusion.test", "id"),
 					resource.TestCheckResourceAttr("data.lidarr_import_list_exclusion.test", "artist_name", "Queen"),
