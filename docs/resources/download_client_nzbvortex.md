@@ -46,7 +46,6 @@ resource "lidarr_download_client_nzbvortex" "example" {
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `tags` (Set of Number) List of associated tags.
 - `url_base` (String) Base URL.
-- `use_ssl` (Boolean) Use SSL flag.
 
 ### Read-Only
 

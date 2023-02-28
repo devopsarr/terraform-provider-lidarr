@@ -29,8 +29,8 @@ var (
 
 var downloadClientFields = helpers.Fields{
 	Bools:                  []string{"addPaused", "useSsl", "startOnAdd", "sequentialOrder", "firstAndLast", "addStopped", "saveMagnetFiles", "readOnly"},
-	Ints:                   []string{"port", "recentMusicPriority", "recentMusicPriority", "initialState", "intialState"},
-	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "musicCategory", "musicImportedCategory", "musicDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension", "watchFolder"},
+	Ints:                   []string{"port", "recentTvPriority", "olderTvPriority", "initialState", "intialState"},
+	Strings:                []string{"host", "apiKey", "urlBase", "rpcPath", "secretToken", "password", "username", "musicCategory", "musicImportedCategory", "musicDirectory", "destination", "category", "nzbFolder", "strmFolder", "torrentFolder", "magnetFileExtension", "watchFolder", "tvDirectory"},
 	StringSlices:           []string{"fieldTags", "postImportTags"},
 	StringSlicesExceptions: []string{"tags"},
 	IntSlices:              []string{"additionalTags"},
@@ -62,7 +62,8 @@ type DownloadClient struct {
 	Host                     types.String `tfsdk:"host"`
 	ConfigContract           types.String `tfsdk:"config_contract"`
 	Destination              types.String `tfsdk:"destination"`
-	MusicDirectory           types.String `tfsdk:"music_directory"`
+	MusicDirectory           types.String `tfsdk:"musicdirectory"`
+	TVDirectory              types.String `tfsdk:"music_directory"`
 	Username                 types.String `tfsdk:"username"`
 	MusicImportedCategory    types.String `tfsdk:"music_imported_category"`
 	MusicCategory            types.String `tfsdk:"music_category"`
@@ -72,10 +73,10 @@ type DownloadClient struct {
 	URLBase                  types.String `tfsdk:"url_base"`
 	APIKey                   types.String `tfsdk:"api_key"`
 	WatchFolder              types.String `tfsdk:"watch_folder"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
 	IntialState              types.Int64  `tfsdk:"intial_state"`
 	InitialState             types.Int64  `tfsdk:"initial_state"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -269,6 +270,12 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 			},
 			"music_imported_category": schema.StringAttribute{
 				MarkdownDescription: "Music imported category.",
+				Optional:            true,
+				Computed:            true,
+			},
+			// needed to manage both musicDirectory and tvDirectory.
+			"musicdirectory": schema.StringAttribute{
+				MarkdownDescription: "Music directory.",
 				Optional:            true,
 				Computed:            true,
 			},

@@ -6,13 +6,11 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -51,10 +49,6 @@ type DownloadClientFlood struct {
 	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
 	Destination              types.String `tfsdk:"destination"`
-	MusicCategory            types.String `tfsdk:"music_category"`
-	MusicDirectory           types.String `tfsdk:"music_directory"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -77,10 +71,6 @@ func (d DownloadClientFlood) toDownloadClient() *DownloadClient {
 		Username:                 d.Username,
 		Password:                 d.Password,
 		Destination:              d.Destination,
-		MusicCategory:            d.MusicCategory,
-		MusicDirectory:           d.MusicDirectory,
-		RecentMusicPriority:      d.RecentMusicPriority,
-		OlderMusicPriority:       d.OlderMusicPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -106,10 +96,6 @@ func (d *DownloadClientFlood) fromDownloadClient(client *DownloadClient) {
 	d.Username = client.Username
 	d.Password = client.Password
 	d.Destination = client.Destination
-	d.MusicCategory = client.MusicCategory
-	d.MusicDirectory = client.MusicDirectory
-	d.RecentMusicPriority = client.RecentMusicPriority
-	d.OlderMusicPriority = client.OlderMusicPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
@@ -181,22 +167,6 @@ func (r *DownloadClientFloodResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 				Computed:            true,
 			},
-			"recent_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Recent Music priority. `0` Last, `1` First.",
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(0, 1),
-				},
-			},
-			"older_music_priority": schema.Int64Attribute{
-				MarkdownDescription: "Older Music priority. `0` Last, `1` First.",
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.OneOf(0, 1),
-				},
-			},
 			"host": schema.StringAttribute{
 				MarkdownDescription: "host.",
 				Optional:            true,
@@ -223,16 +193,6 @@ func (r *DownloadClientFloodResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 				Computed:            true,
 			},
-			"music_category": schema.StringAttribute{
-				MarkdownDescription: "Music category.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"field_tags": schema.SetAttribute{
 				MarkdownDescription: "Field tags.",
 				Optional:            true,
@@ -240,7 +200,7 @@ func (r *DownloadClientFloodResource) Schema(ctx context.Context, req resource.S
 				ElementType:         types.StringType,
 			},
 			"additional_tags": schema.SetAttribute{
-				MarkdownDescription: "Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.",
+				MarkdownDescription: "Additional tags, `0` Artist, `1` Quality, `2` ReleaseGroup, `3` Year, `4` Indexer.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.Int64Type,

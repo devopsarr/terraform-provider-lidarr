@@ -48,9 +48,9 @@ type DownloadClientTransmission struct {
 	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	MusicDirectory           types.String `tfsdk:"music_directory"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
+	TVDirectory              types.String `tfsdk:"music_directory"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -70,9 +70,9 @@ func (d DownloadClientTransmission) toDownloadClient() *DownloadClient {
 		Username:                 d.Username,
 		Password:                 d.Password,
 		MusicCategory:            d.MusicCategory,
-		MusicDirectory:           d.MusicDirectory,
-		RecentMusicPriority:      d.RecentMusicPriority,
-		OlderMusicPriority:       d.OlderMusicPriority,
+		TVDirectory:              d.TVDirectory,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -95,9 +95,9 @@ func (d *DownloadClientTransmission) fromDownloadClient(client *DownloadClient) 
 	d.Username = client.Username
 	d.Password = client.Password
 	d.MusicCategory = client.MusicCategory
-	d.MusicDirectory = client.MusicDirectory
-	d.RecentMusicPriority = client.RecentMusicPriority
-	d.OlderMusicPriority = client.OlderMusicPriority
+	d.TVDirectory = client.TVDirectory
+	d.RecentTVPriority = client.RecentTVPriority
+	d.OlderTVPriority = client.OlderTVPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID

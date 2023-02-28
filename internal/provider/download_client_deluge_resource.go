@@ -45,13 +45,11 @@ type DownloadClientDeluge struct {
 	Name                     types.String `tfsdk:"name"`
 	Host                     types.String `tfsdk:"host"`
 	URLBase                  types.String `tfsdk:"url_base"`
-	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	MusicDirectory           types.String `tfsdk:"music_directory"`
 	MusicImportedCategory    types.String `tfsdk:"music_imported_category"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -68,13 +66,11 @@ func (d DownloadClientDeluge) toDownloadClient() *DownloadClient {
 		Name:                     d.Name,
 		Host:                     d.Host,
 		URLBase:                  d.URLBase,
-		Username:                 d.Username,
 		Password:                 d.Password,
 		MusicCategory:            d.MusicCategory,
-		MusicDirectory:           d.MusicDirectory,
 		MusicImportedCategory:    d.MusicImportedCategory,
-		RecentMusicPriority:      d.RecentMusicPriority,
-		OlderMusicPriority:       d.OlderMusicPriority,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -94,13 +90,11 @@ func (d *DownloadClientDeluge) fromDownloadClient(client *DownloadClient) {
 	d.Name = client.Name
 	d.Host = client.Host
 	d.URLBase = client.URLBase
-	d.Username = client.Username
 	d.Password = client.Password
 	d.MusicCategory = client.MusicCategory
-	d.MusicDirectory = client.MusicDirectory
 	d.MusicImportedCategory = client.MusicImportedCategory
-	d.RecentMusicPriority = client.RecentMusicPriority
-	d.OlderMusicPriority = client.OlderMusicPriority
+	d.RecentTVPriority = client.RecentTVPriority
+	d.OlderTVPriority = client.OlderTVPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
@@ -198,11 +192,6 @@ func (r *DownloadClientDelugeResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 				Computed:            true,
 			},
-			"username": schema.StringAttribute{
-				MarkdownDescription: "Username.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"password": schema.StringAttribute{
 				MarkdownDescription: "Password.",
 				Optional:            true,
@@ -211,11 +200,6 @@ func (r *DownloadClientDelugeResource) Schema(ctx context.Context, req resource.
 			},
 			"music_category": schema.StringAttribute{
 				MarkdownDescription: "Music category.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"music_directory": schema.StringAttribute{
-				MarkdownDescription: "Music directory.",
 				Optional:            true,
 				Computed:            true,
 			},

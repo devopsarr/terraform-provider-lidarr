@@ -47,12 +47,11 @@ type DownloadClientNzbvortex struct {
 	URLBase                  types.String `tfsdk:"url_base"`
 	APIKey                   types.String `tfsdk:"api_key"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
-	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
+	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
+	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
-	UseSsl                   types.Bool   `tfsdk:"use_ssl"`
 	Enable                   types.Bool   `tfsdk:"enable"`
 	RemoveFailedDownloads    types.Bool   `tfsdk:"remove_failed_downloads"`
 	RemoveCompletedDownloads types.Bool   `tfsdk:"remove_completed_downloads"`
@@ -66,12 +65,11 @@ func (d DownloadClientNzbvortex) toDownloadClient() *DownloadClient {
 		URLBase:                  d.URLBase,
 		APIKey:                   d.APIKey,
 		MusicCategory:            d.MusicCategory,
-		RecentMusicPriority:      d.RecentMusicPriority,
-		OlderMusicPriority:       d.OlderMusicPriority,
+		RecentTVPriority:         d.RecentTVPriority,
+		OlderTVPriority:          d.OlderTVPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
-		UseSsl:                   d.UseSsl,
 		Enable:                   d.Enable,
 		RemoveFailedDownloads:    d.RemoveFailedDownloads,
 		RemoveCompletedDownloads: d.RemoveCompletedDownloads,
@@ -88,12 +86,11 @@ func (d *DownloadClientNzbvortex) fromDownloadClient(client *DownloadClient) {
 	d.URLBase = client.URLBase
 	d.APIKey = client.APIKey
 	d.MusicCategory = client.MusicCategory
-	d.RecentMusicPriority = client.RecentMusicPriority
-	d.OlderMusicPriority = client.OlderMusicPriority
+	d.RecentTVPriority = client.RecentTVPriority
+	d.OlderTVPriority = client.OlderTVPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
-	d.UseSsl = client.UseSsl
 	d.Enable = client.Enable
 	d.RemoveFailedDownloads = client.RemoveFailedDownloads
 	d.RemoveCompletedDownloads = client.RemoveCompletedDownloads
@@ -145,11 +142,6 @@ func (r *DownloadClientNzbvortexResource) Schema(ctx context.Context, req resour
 				},
 			},
 			// Field values
-			"use_ssl": schema.BoolAttribute{
-				MarkdownDescription: "Use SSL flag.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"port": schema.Int64Attribute{
 				MarkdownDescription: "Port.",
 				Optional:            true,
