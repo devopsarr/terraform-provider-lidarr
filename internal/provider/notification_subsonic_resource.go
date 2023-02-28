@@ -17,8 +17,8 @@ import (
 
 const (
 	notificationSubsonicResourceName   = "notification_subsonic"
-	notificationSubsonicImplementation = "Xbmc"
-	notificationSubsonicConfigContract = "XbmcSettings"
+	notificationSubsonicImplementation = "Subsonic"
+	notificationSubsonicConfigContract = "SubsonicSettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
