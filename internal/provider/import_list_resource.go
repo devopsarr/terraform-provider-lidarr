@@ -379,7 +379,7 @@ func (i *ImportList) write(ctx context.Context, importList *lidarr.ImportListRes
 	i.ProfileIds = types.SetValueMust(types.Int64Type, nil)
 	i.TagIds = types.SetValueMust(types.Int64Type, nil)
 	i.PlaylistIds = types.SetValueMust(types.StringType, nil)
-	i.writeFields(ctx, importList.Fields)
+	i.writeFields(ctx, importList.GetFields())
 }
 
 func (i *ImportList) writeFields(ctx context.Context, fields []*lidarr.Field) {

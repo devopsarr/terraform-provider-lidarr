@@ -466,7 +466,7 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *lidarr.Downl
 	d.FieldTags = types.SetValueMust(types.StringType, nil)
 	d.PostImportTags = types.SetValueMust(types.StringType, nil)
 	tfsdk.ValueFrom(ctx, downloadClient.Tags, d.Tags.Type(ctx), &d.Tags)
-	d.writeFields(ctx, downloadClient.Fields)
+	d.writeFields(ctx, downloadClient.GetFields())
 }
 
 func (d *DownloadClient) writeFields(ctx context.Context, fields []*lidarr.Field) {

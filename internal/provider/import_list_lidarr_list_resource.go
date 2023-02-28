@@ -299,7 +299,7 @@ func (i *ImportListLidarrList) write(ctx context.Context, importList *lidarr.Imp
 		ShouldSearch:          types.BoolValue(importList.GetShouldSearch()),
 	}
 	genericImportList.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, importList.Tags)
-	genericImportList.writeFields(ctx, importList.Fields)
+	genericImportList.writeFields(ctx, importList.GetFields())
 	i.fromImportList(&genericImportList)
 }
 

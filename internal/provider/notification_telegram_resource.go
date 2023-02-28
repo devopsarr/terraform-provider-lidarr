@@ -289,7 +289,7 @@ func (n *NotificationTelegram) write(ctx context.Context, notification *lidarr.N
 		Name:                  types.StringValue(notification.GetName()),
 	}
 	genericNotification.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, notification.Tags)
-	genericNotification.writeFields(ctx, notification.Fields)
+	genericNotification.writeFields(ctx, notification.GetFields())
 	n.fromNotification(&genericNotification)
 }
 
