@@ -73,6 +73,7 @@ func (i ImportListMusicBrainz) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListMusicBrainzImplementation),
 		ConfigContract:        types.StringValue(importListMusicBrainzConfigContract),
+		ListType:              types.StringValue(importListMusicBrainzType),
 	}
 }
 

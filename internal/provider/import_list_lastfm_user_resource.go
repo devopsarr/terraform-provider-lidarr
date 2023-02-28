@@ -21,6 +21,7 @@ const (
 	importListLastFMUserResourceName   = "import_list_lastfm_user"
 	importListLastFMUserImplementation = "LastFMUser"
 	importListLastFMUserConfigContract = "LastFMUserSettings"
+	importListLastFMUserType           = "lastFm"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -74,6 +75,7 @@ func (i ImportListLastFMUser) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListLastFMUserImplementation),
 		ConfigContract:        types.StringValue(importListLastFMUserConfigContract),
+		ListType:              types.StringValue(importListLastFMUserType),
 	}
 }
 

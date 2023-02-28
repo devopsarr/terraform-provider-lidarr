@@ -79,6 +79,7 @@ func (i ImportListLidarr) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListLidarrImplementation),
 		ConfigContract:        types.StringValue(importListLidarrConfigContract),
+		ListType:              types.StringValue(importListLidarrType),
 	}
 }
 

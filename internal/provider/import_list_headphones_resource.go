@@ -21,6 +21,7 @@ const (
 	importListHeadphonesResourceName   = "import_list_headphones"
 	importListHeadphonesImplementation = "HeadphonesImport"
 	importListHeadphonesConfigContract = "HeadphonesImportSettings"
+	importListHeadphonesType           = "other"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -74,6 +75,7 @@ func (i ImportListHeadphones) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListHeadphonesImplementation),
 		ConfigContract:        types.StringValue(importListHeadphonesConfigContract),
+		ListType:              types.StringValue(importListHeadphonesType),
 	}
 }
 

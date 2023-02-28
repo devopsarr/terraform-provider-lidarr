@@ -21,6 +21,7 @@ const (
 	importListLastFMTagResourceName   = "import_list_lastfm_tag"
 	importListLastFMTagImplementation = "LastFmTag"
 	importListLastFMTagConfigContract = "LastFmTagSettings"
+	importListLastFMTagType           = "lastFm"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -74,6 +75,7 @@ func (i ImportListLastFMTag) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListLastFMTagImplementation),
 		ConfigContract:        types.StringValue(importListLastFMTagConfigContract),
+		ListType:              types.StringValue(importListLastFMTagType),
 	}
 }
 

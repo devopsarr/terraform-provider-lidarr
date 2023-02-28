@@ -21,6 +21,7 @@ const (
 	importListSpotifyArtistsResourceName   = "import_list_spotify_artists"
 	importListSpotifyArtistsImplementation = "SpotifyFollowedArtists"
 	importListSpotifyArtistsConfigContract = "SpotifyFollowedArtistsSettings"
+	importListSpotifyArtistsType           = "spotify"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -76,6 +77,7 @@ func (i ImportListSpotifyArtists) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListSpotifyArtistsImplementation),
 		ConfigContract:        types.StringValue(importListSpotifyArtistsConfigContract),
+		ListType:              types.StringValue(importListSpotifyArtistsType),
 	}
 }
 

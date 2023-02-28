@@ -21,6 +21,7 @@ const (
 	importListLidarrListResourceName   = "import_list_lidarr_list"
 	importListLidarrListImplementation = "LidarrLists"
 	importListLidarrListConfigContract = "LidarrListsSettings"
+	importListLidarrListType           = "other"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
@@ -72,6 +73,7 @@ func (i ImportListLidarrList) toImportList() *ImportList {
 		ShouldSearch:          i.ShouldSearch,
 		Implementation:        types.StringValue(importListLidarrListImplementation),
 		ConfigContract:        types.StringValue(importListLidarrListConfigContract),
+		ListType:              types.StringValue(importListLidarrListType),
 	}
 }
 
