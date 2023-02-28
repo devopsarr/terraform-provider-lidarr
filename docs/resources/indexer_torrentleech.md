@@ -35,12 +35,12 @@ resource "lidarr_indexer_hdbits" "example" {
 ### Optional
 
 - `base_url` (String) Base URL.
+- `discography_seed_time` (Number) Discography seed time.
 - `enable_automatic_search` (Boolean) Enable automatic search flag.
 - `enable_interactive_search` (Boolean) Enable interactive search flag.
 - `enable_rss` (Boolean) Enable RSS flag.
 - `minimum_seeders` (Number) Minimum seeders.
 - `priority` (Number) Priority.
-- `season_pack_seed_time` (Number) Season seed time.
 - `seed_ratio` (Number) Seed ratio.
 - `seed_time` (Number) Seed time.
 - `tags` (Set of Number) List of associated tags.

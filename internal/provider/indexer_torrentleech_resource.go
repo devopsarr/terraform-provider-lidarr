@@ -47,7 +47,7 @@ type IndexerTorrentleech struct {
 	Priority                types.Int64   `tfsdk:"priority"`
 	ID                      types.Int64   `tfsdk:"id"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
-	DiscographySeedTime     types.Int64   `tfsdk:"season_pack_seed_time"`
+	DiscographySeedTime     types.Int64   `tfsdk:"discography_seed_time"`
 	SeedTime                types.Int64   `tfsdk:"seed_time"`
 	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
@@ -143,8 +143,8 @@ func (r *IndexerTorrentleechResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 				Computed:            true,
 			},
-			"season_pack_seed_time": schema.Int64Attribute{
-				MarkdownDescription: "Season seed time.",
+			"discography_seed_time": schema.Int64Attribute{
+				MarkdownDescription: "Discography seed time.",
 				Optional:            true,
 				Computed:            true,
 			},

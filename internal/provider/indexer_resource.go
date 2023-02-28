@@ -30,7 +30,7 @@ var indexerFields = helpers.Fields{
 	IntSlices:        []string{"categories"},
 	Bools:            []string{"useFreeleechToken", "rankedOnly", "allowZeroSize"},
 	Ints:             []string{"earlyReleaseLimit", "delay", "minimumSeeders", "seedTime", "discographySeedTime"},
-	IntsExceptions:   []string{"seedCriteria.seedTime", "seedCriteria.seasonPackSeedTime"},
+	IntsExceptions:   []string{"seedCriteria.seedTime", "seedCriteria.discographySeedTime"},
 	Strings:          []string{"apiKey", "apiPath", "baseUrl", "username", "passkey", "passKey", "password", "additionalParameters", "captchaToken", "cookie", "userId", "rssPasskey"},
 	Floats:           []string{"seedRatio"},
 	FloatsExceptions: []string{"seedCriteria.seedRatio"},

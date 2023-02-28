@@ -32,8 +32,8 @@ func getFieldExceptions() []fieldException {
 			tfName:  "seedRatio",
 		},
 		{
-			apiName: "seedCriteria.seasonPackSeedTime",
-			tfName:  "seasonPackSeedTime",
+			apiName: "seedCriteria.discographySeedTime",
+			tfName:  "discographySeedTime",
 		},
 	}
 }
