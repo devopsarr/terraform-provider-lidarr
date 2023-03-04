@@ -214,6 +214,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewNotificationWebhookResource,
 
 		// Profiles
+		NewDelayProfileResource,
 
 		// Tags
 		NewTagResource,
