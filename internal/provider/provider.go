@@ -214,6 +214,11 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewNotificationWebhookResource,
 
 		// Profiles
+		NewDelayProfileResource,
+		NewMetadataProfileResource,
+		NewQualityProfileResource,
+		NewQualityDefinitionResource,
+		NewReleaseProfileResource,
 
 		// Tags
 		NewTagResource,
@@ -253,6 +258,25 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		// Notifications
 		NewNotificationDataSource,
 		NewNotificationsDataSource,
+
+		// Profiles
+		NewDelayProfileDataSource,
+		NewDelayProfilesDataSource,
+		NewMetadataProfileDataSource,
+		NewMetadataProfilesDataSource,
+		NewReleaseProfileDataSource,
+		NewReleaseProfilesDataSource,
+		NewQualityProfileDataSource,
+		NewQualityProfilesDataSource,
+		NewQualityDefinitionDataSource,
+		NewQualityDefinitionsDataSource,
+		NewQualityDataSource,
+		NewPrimaryAlbumTypeDataSource,
+		NewPrimaryAlbumTypesDataSource,
+		NewSecondaryAlbumTypeDataSource,
+		NewSecondaryAlbumTypesDataSource,
+		NewReleaseStatusDataSource,
+		NewReleaseStatusesDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,

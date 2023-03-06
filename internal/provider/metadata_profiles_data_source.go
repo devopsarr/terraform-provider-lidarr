@@ -1,0 +1,117 @@
+package provider
+
+import (
+	"context"
+	"strconv"
+
+	"github.com/devopsarr/lidarr-go/lidarr"
+	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+)
+
+const metadataProfilesDataSourceName = "metadata_profiles"
+
+// Ensure provider defined types fully satisfy framework interfaces.
+var _ datasource.DataSource = &MetadataProfilesDataSource{}
+
+func NewMetadataProfilesDataSource() datasource.DataSource {
+	return &MetadataProfilesDataSource{}
+}
+
+// MetadataProfilesDataSource defines the metadata profiles implementation.
+type MetadataProfilesDataSource struct {
+	client *lidarr.APIClient
+}
+
+// MetadataProfiles describes the metadata profiles data model.
+type MetadataProfiles struct {
+	MetadataProfiles types.Set    `tfsdk:"metadata_profiles"`
+	ID               types.String `tfsdk:"id"`
+}
+
+func (d *MetadataProfilesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + metadataProfilesDataSourceName
+}
+
+func (d *MetadataProfilesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		// This description is used by the documentation generator and the metadata server.
+		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Metadata Profiles](../resources/metadata_profile).",
+		Attributes: map[string]schema.Attribute{
+			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
+			"id": schema.StringAttribute{
+				Computed: true,
+			},
+			"metadata_profiles": schema.SetNestedAttribute{
+				MarkdownDescription: "Metadata Profile list.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.Int64Attribute{
+							MarkdownDescription: "Metadata Profile ID.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Metadata Profile host.",
+							Computed:            true,
+						},
+						"primary_album_types": schema.SetAttribute{
+							MarkdownDescription: "Primary album types.",
+							Computed:            true,
+							ElementType:         types.Int64Type,
+						},
+						"secondary_album_types": schema.SetAttribute{
+							MarkdownDescription: "Secondary album types.",
+							Computed:            true,
+							ElementType:         types.Int64Type,
+						},
+						"release_statuses": schema.SetAttribute{
+							MarkdownDescription: "Release statuses.",
+							Computed:            true,
+							ElementType:         types.Int64Type,
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func (d *MetadataProfilesDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+		d.client = client
+	}
+}
+
+func (d *MetadataProfilesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data *MetadataProfiles
+
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+
+	if resp.Diagnostics.HasError() {
+		return
+	}
+	// Get metadataprofiles current value
+	response, _, err := d.client.MetadataProfileApi.ListMetadataProfile(ctx).Execute()
+	if err != nil {
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.List, metadataProfileResourceName, err))
+
+		return
+	}
+
+	tflog.Trace(ctx, "read "+metadataProfileResourceName)
+	// Map response body to resource schema attribute
+	profiles := make([]MetadataProfile, len(response))
+	for i, p := range response {
+		profiles[i].write(ctx, p)
+	}
+
+	tfsdk.ValueFrom(ctx, profiles, data.MetadataProfiles.Type(ctx), &data.MetadataProfiles)
+	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
+	data.ID = types.StringValue(strconv.Itoa(len(response)))
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
