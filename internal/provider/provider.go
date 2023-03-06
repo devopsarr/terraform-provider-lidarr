@@ -260,6 +260,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewDelayProfileDataSource,
 		NewDelayProfilesDataSource,
 		NewMetadataProfileDataSource,
+		NewMetadataProfilesDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
