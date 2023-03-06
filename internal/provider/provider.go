@@ -258,6 +258,9 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewRootFolderDataSource,
 		NewRootFoldersDataSource,
 
+		// Metadata
+		NewMetadataConfigDataSource,
+
 		// Notifications
 		NewNotificationDataSource,
 		NewNotificationsDataSource,
