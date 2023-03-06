@@ -265,6 +265,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewPrimaryAlbumTypesDataSource,
 		NewSecondaryAlbumTypeDataSource,
 		NewSecondaryAlbumTypesDataSource,
+		NewReleaseStatusDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
