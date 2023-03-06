@@ -261,6 +261,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewDelayProfilesDataSource,
 		NewMetadataProfileDataSource,
 		NewMetadataProfilesDataSource,
+		NewQualityDataSource,
 		NewPrimaryAlbumTypeDataSource,
 		NewPrimaryAlbumTypesDataSource,
 		NewSecondaryAlbumTypeDataSource,
