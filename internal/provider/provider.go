@@ -265,6 +265,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewMetadataProfileDataSource,
 		NewMetadataProfilesDataSource,
 		NewReleaseProfileDataSource,
+		NewReleaseProfilesDataSource,
 		NewQualityProfileDataSource,
 		NewQualityProfilesDataSource,
 		NewQualityDefinitionDataSource,
