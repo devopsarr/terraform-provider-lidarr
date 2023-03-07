@@ -189,6 +189,13 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewNamingResource,
 		NewRootFolderResource,
 
+		// Metadata
+		NewMetadataConfigResource,
+		NewMetadataResource,
+		NewMetadataKodiResource,
+		NewMetadataRoksboxResource,
+		NewMetadataWdtvResource,
+
 		// Notifications
 		NewNotificationResource,
 		NewNotificationBoxcarResource,
@@ -254,6 +261,11 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewNamingDataSource,
 		NewRootFolderDataSource,
 		NewRootFoldersDataSource,
+
+		// Metadata
+		NewMetadataConfigDataSource,
+		NewMetadataDataSource,
+		NewMetadataConsumersDataSource,
 
 		// Notifications
 		NewNotificationDataSource,
