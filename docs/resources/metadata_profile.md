@@ -28,7 +28,7 @@ resource "lidarr_metadata_profile" "example" {
 
 ### Required
 
-- `name` (String) Metadata Profile host.
+- `name` (String) Metadata Profile name.
 - `primary_album_types` (Set of Number) Primary album types.
 - `release_statuses` (Set of Number) Release statuses.
 - `secondary_album_types` (Set of Number) Secondary album types.
