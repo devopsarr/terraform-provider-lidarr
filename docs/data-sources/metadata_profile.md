@@ -23,7 +23,7 @@ data "lidarr_metadata_profile" "example" {
 
 ### Required
 
-- `name` (String) Metadata Profile host.
+- `name` (String) Metadata Profile name.
 
 ### Read-Only
 

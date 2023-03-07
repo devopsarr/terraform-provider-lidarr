@@ -31,7 +31,7 @@ data "lidarr_metadata_profiles" "example" {
 Read-Only:
 
 - `id` (Number) Metadata Profile ID.
-- `name` (String) Metadata Profile host.
+- `name` (String) Metadata Profile name.
 - `primary_album_types` (Set of Number) Primary album types.
 - `release_statuses` (Set of Number) Release statuses.
 - `secondary_album_types` (Set of Number) Secondary album types.

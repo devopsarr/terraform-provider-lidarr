@@ -40,7 +40,7 @@ func (d *MetadataProfileDataSource) Schema(ctx context.Context, req datasource.S
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Metadata Profile host.",
+				MarkdownDescription: "Metadata Profile name.",
 				Required:            true,
 			},
 			"primary_album_types": schema.SetAttribute{
