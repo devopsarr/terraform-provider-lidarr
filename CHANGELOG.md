@@ -1,5 +1,44 @@
 # Changelog
 
+## [1.6.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.5.1...v1.6.0) (2023-03-07)
+
+
+### Features
+
+* add artist data source ([f7d5b5b](https://github.com/devopsarr/terraform-provider-lidarr/commit/f7d5b5b9adb12e7cb047fe218374f07c942f0719))
+* add artist resource ([5c788e9](https://github.com/devopsarr/terraform-provider-lidarr/commit/5c788e975047d27410f91ebafacce575295bfca9))
+* add artists data source ([3203a9d](https://github.com/devopsarr/terraform-provider-lidarr/commit/3203a9d8639b55f11b9f24898d2fde2fb8610ddf))
+* add delay profile data source ([47c9dfe](https://github.com/devopsarr/terraform-provider-lidarr/commit/47c9dfe4c3008348c39c11c7500eb93bf641d3fd))
+* add delay profile resource ([125a2d2](https://github.com/devopsarr/terraform-provider-lidarr/commit/125a2d26a5cc0dc80ce7c07a2669aea530ceefc3))
+* add delay profiles data source ([d9f1a24](https://github.com/devopsarr/terraform-provider-lidarr/commit/d9f1a24983713298478a2b6fca7e66baa78e1a39))
+* add metadata config data source ([f4303ed](https://github.com/devopsarr/terraform-provider-lidarr/commit/f4303ed8215f437281f002485ee5e276bcb8c004))
+* add metadata config resource ([396108c](https://github.com/devopsarr/terraform-provider-lidarr/commit/396108c4688b84f4913cd6aaba62cb799051eeca))
+* add metadata consumers data source ([80bc78f](https://github.com/devopsarr/terraform-provider-lidarr/commit/80bc78fca839e4da847acee6c4ed5d8292d81c44))
+* add metadata data source ([2f08de8](https://github.com/devopsarr/terraform-provider-lidarr/commit/2f08de8c6a78fe006efc3e68f7c9ea9de022c952))
+* add metadata kodi resource ([359940a](https://github.com/devopsarr/terraform-provider-lidarr/commit/359940a79f0e14b9371933a6104fad01c1aa271c))
+* add metadata profile data source ([e38c826](https://github.com/devopsarr/terraform-provider-lidarr/commit/e38c826054a87140721ef5363002932543a95cb2))
+* add metadata profile resource ([e71abfa](https://github.com/devopsarr/terraform-provider-lidarr/commit/e71abfa5cb90dfef394799d5f2e50f319afa8404))
+* add metadata profiles data source ([3a17665](https://github.com/devopsarr/terraform-provider-lidarr/commit/3a1766519b996f8687f047dc5317fdbd61725f98))
+* add metadata resource ([a13d275](https://github.com/devopsarr/terraform-provider-lidarr/commit/a13d27520965edd0ca12cb05400830a6313440d9))
+* add metadata roksbox resource ([c1dbeaf](https://github.com/devopsarr/terraform-provider-lidarr/commit/c1dbeaffb8e0ad63093fd5b59a121481270a65f4))
+* add metadata wdtv resource ([3626105](https://github.com/devopsarr/terraform-provider-lidarr/commit/3626105e30cd113282bfe2c3e27766c27955a552))
+* add primary album type data source ([71369e7](https://github.com/devopsarr/terraform-provider-lidarr/commit/71369e7214e70ae30a4c899fff627759ac9a3095))
+* add primary album types data source ([8e8234d](https://github.com/devopsarr/terraform-provider-lidarr/commit/8e8234d60ee670162e13bfabdf9ecd508d56333b))
+* add quality data source ([602c369](https://github.com/devopsarr/terraform-provider-lidarr/commit/602c369cdd8c8cd81a54a0f997d90953be2e7c01))
+* add quality definition data source ([1bfd2b8](https://github.com/devopsarr/terraform-provider-lidarr/commit/1bfd2b848a0440404f9ed56f1af6f8b5c077640d))
+* add quality definition resource ([3b7f8cb](https://github.com/devopsarr/terraform-provider-lidarr/commit/3b7f8cb60d531dea6abdbec38cff042e25279ef3))
+* add quality definitions data source ([f4a5cef](https://github.com/devopsarr/terraform-provider-lidarr/commit/f4a5cef716e30b109db9d9ef97e93d7ab8a98972))
+* add quality profile data source ([9e5db8d](https://github.com/devopsarr/terraform-provider-lidarr/commit/9e5db8d5ddbba6e14090cade08db7ab3a2988f83))
+* add quality profile resource ([2453acf](https://github.com/devopsarr/terraform-provider-lidarr/commit/2453acf0fbc3303edc37a89904872ac1997b043a))
+* add quality profiles data source ([3607d01](https://github.com/devopsarr/terraform-provider-lidarr/commit/3607d01e161de1939f9ce7ad308805b445370f85))
+* add release profile data source ([b725103](https://github.com/devopsarr/terraform-provider-lidarr/commit/b725103ebf2ed8e4a2600cbe84bfc4ad56fc51da))
+* add release profile resource ([47eeb9e](https://github.com/devopsarr/terraform-provider-lidarr/commit/47eeb9e473a67febc6d78f852cfc9620fa162899))
+* add release profiles data source ([c939bce](https://github.com/devopsarr/terraform-provider-lidarr/commit/c939bcecc018334c2bed80178d02d76b24c0aa16))
+* add release status data source ([b2c75a3](https://github.com/devopsarr/terraform-provider-lidarr/commit/b2c75a30b53dd0faf38c5f64ee600fda4e799819))
+* add release statuses data source ([813f67a](https://github.com/devopsarr/terraform-provider-lidarr/commit/813f67a395d6b9c37c0e58d83c80442469b625f2))
+* add secondary album type data source ([19fd445](https://github.com/devopsarr/terraform-provider-lidarr/commit/19fd44549e3d0887f4d98b01dbd4ff71b2f83643))
+* add secondary album types data source ([5657ce6](https://github.com/devopsarr/terraform-provider-lidarr/commit/5657ce69dc0b32a6de2d11f2f6f29fe93b02b7d1))
+
 ## [1.5.1](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.5.0...v1.5.1) (2023-02-28)
 
 
