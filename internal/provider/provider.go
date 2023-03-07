@@ -191,6 +191,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 
 		// Metadata
 		NewMetadataConfigResource,
+		NewMetadataResource,
 
 		// Notifications
 		NewNotificationResource,
