@@ -466,7 +466,7 @@ func (d *DownloadClient) write(ctx context.Context, downloadClient *lidarr.Downl
 	d.Priority = types.Int64Value(int64(downloadClient.GetPriority()))
 	d.ID = types.Int64Value(int64(downloadClient.GetId()))
 	d.ConfigContract = types.StringValue(downloadClient.GetConfigContract())
-	d.Implementation = types.StringValue(downloadClient.GetImplementationName())
+	d.Implementation = types.StringValue(downloadClient.GetImplementation())
 	d.Name = types.StringValue(downloadClient.GetName())
 	d.Protocol = types.StringValue(string(downloadClient.GetProtocol()))
 	d.AdditionalTags = types.SetValueMust(types.Int64Type, nil)

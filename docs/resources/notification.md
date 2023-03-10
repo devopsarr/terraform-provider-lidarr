@@ -3,13 +3,13 @@
 page_title: "lidarr_notification Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
-  Generic >Notification resource. When possible use a specific resource instead.
+  Generic Notification resource. When possible use a specific resource instead.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect.
 ---
 
 # lidarr_notification (Resource)
 
-<!-- subcategory:Notifications -->Generic >Notification resource. When possible use a specific resource instead.
+<!-- subcategory:Notifications -->Generic Notification resource. When possible use a specific resource instead.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect).
 
 ## Example Usage
