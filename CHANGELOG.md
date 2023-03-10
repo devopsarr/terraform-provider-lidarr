@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.6.0...v1.6.1) (2023-03-10)
+
+
+### Bug Fixes
+
+* download client write implementation ([7db6c95](https://github.com/devopsarr/terraform-provider-lidarr/commit/7db6c9541b15a142ca9fa5a1a4ccbfb9c225115b))
+
 ## [1.6.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.5.1...v1.6.0) (2023-03-07)
 
 
