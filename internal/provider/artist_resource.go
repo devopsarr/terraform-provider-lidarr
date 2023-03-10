@@ -249,16 +249,8 @@ func (m *Artist) write(ctx context.Context, artist *lidarr.ArtistResource) {
 	m.Tags = types.SetValueMust(types.Int64Type, nil)
 	tfsdk.ValueFrom(ctx, artist.Tags, m.Tags.Type(ctx), &m.Tags)
 	// Read only values
-	// m.IsAvailable = types.BoolValue(artist.GetIsAvailable())
-	// m.OriginalName = types.StringValue(artist.GetOriginalName())
 	m.Status = types.StringValue(string(artist.GetStatus()))
-	// m.Year = types.Int64Value(int64(artist.GetYear()))
-	// m.YouTubeTrailerID = types.StringValue(artist.GetYouTubeTrailerId())
 	m.Overview = types.StringValue(artist.GetOverview())
-	// m.Website = types.StringValue(artist.GetWebsite())
-	// language := QualityLanguage{}
-	// language.write(artist.OriginalLanguage)
-	// tfsdk.ValueFrom(ctx, language, QualityProfileResource{}.getQualityLanguageSchema().Type(), &m.OriginalLanguage)
 	m.Genres = types.SetValueMust(types.StringType, nil)
 	tfsdk.ValueFrom(ctx, artist.Genres, m.Genres.Type(ctx), &m.Genres)
 }
