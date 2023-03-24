@@ -2,7 +2,7 @@
 version: "3.9"
 services:
   lidarr:
-    image: hotio/lidarr:testing-1.1.2.2935@sha256:debef499be9efaee0bbbcd5579e48b7d158669aadd7bc8de8a9c28dd261b56da
+    image: hotio/lidarr:testing-1.1.3.2982@sha256:866089560c021cc420e859a944482f3dbfac699cefd9403e21f6b2fc2182d3d3
     container_name: lidarr
     depends_on:
       - transmission
