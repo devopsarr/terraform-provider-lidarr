@@ -226,6 +226,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewQualityProfileResource,
 		NewQualityDefinitionResource,
 		NewReleaseProfileResource,
+		NewCustomFormatResource,
 
 		// Tags
 		NewTagResource,
@@ -272,6 +273,8 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewNotificationsDataSource,
 
 		// Profiles
+		NewCustomFormatDataSource,
+		NewCustomFormatsDataSource,
 		NewDelayProfileDataSource,
 		NewDelayProfilesDataSource,
 		NewMetadataProfileDataSource,
@@ -289,6 +292,10 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewSecondaryAlbumTypesDataSource,
 		NewReleaseStatusDataSource,
 		NewReleaseStatusesDataSource,
+		NewCustomFormatConditionDataSource,
+		NewCustomFormatConditionReleaseGroupDataSource,
+		NewCustomFormatConditionReleaseTitleDataSource,
+		NewCustomFormatConditionSizeDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
