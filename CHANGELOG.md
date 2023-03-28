@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.7.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.6.1...v1.7.0) (2023-03-28)
+
+
+### Features
+
+* add custom format condition data source ([536d115](https://github.com/devopsarr/terraform-provider-lidarr/commit/536d115e8dc238921cb784e24bba3fe39a8aa195))
+* add custom format condition release group data source ([adc2c54](https://github.com/devopsarr/terraform-provider-lidarr/commit/adc2c54b688b82f2f784f0505581a392990ee8d4))
+* add custom format condition release title data source ([5d893a1](https://github.com/devopsarr/terraform-provider-lidarr/commit/5d893a13600b8d570d2c2831855d256908c558b1))
+* add custom format condition size data source ([5496e5d](https://github.com/devopsarr/terraform-provider-lidarr/commit/5496e5d24f02604cc78b744bef2f68615af25f73))
+* add custom format data source ([08fdf84](https://github.com/devopsarr/terraform-provider-lidarr/commit/08fdf84597607e7430664c48d734237dc1feaf76))
+* add custom format parameters to quality profile ([021cc3f](https://github.com/devopsarr/terraform-provider-lidarr/commit/021cc3fad2ae1d3e97944cb7c572b7e2a137c6ee))
+* add custom format resource ([25fce23](https://github.com/devopsarr/terraform-provider-lidarr/commit/25fce230424504758677466287d255764156be8d))
+* add custom formats data source ([8a08049](https://github.com/devopsarr/terraform-provider-lidarr/commit/8a0804971b414ce6e05fba9b21c6a315523722c3))
+* align release profile to v1.1.3 field changes ([5ed8049](https://github.com/devopsarr/terraform-provider-lidarr/commit/5ed80491bdbec716853f30715653f1d56f726f7e))
+
 ## [1.6.1](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.6.0...v1.6.1) (2023-03-10)
 
 
