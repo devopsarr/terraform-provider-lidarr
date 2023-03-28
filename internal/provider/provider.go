@@ -295,6 +295,7 @@ func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.Da
 		NewCustomFormatConditionDataSource,
 		NewCustomFormatConditionReleaseGroupDataSource,
 		NewCustomFormatConditionReleaseTitleDataSource,
+		NewCustomFormatConditionSizeDataSource,
 
 		// System Status
 		NewSystemStatusDataSource,
