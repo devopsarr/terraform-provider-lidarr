@@ -17,15 +17,15 @@ func TestAccReleaseProfileDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			// Unauthorized
 			{
-				Config:      testAccReleaseProfileDataSourceConfig("999") + testUnauthorizedProvider,
+				Config:      testAccReleaseProfileDataSourceConfig("\"999\"") + testUnauthorizedProvider,
 				ExpectError: regexp.MustCompile("Client Error"),
 			},
 			// Read testing
 			{
-				Config: testAccReleaseProfileResourceConfig("notreally") + testAccReleaseProfileDataSourceConfig("lidarr_release_profile.test.id"),
+				Config: testAccReleaseProfileResourceConfig("\"notreally\"") + testAccReleaseProfileDataSourceConfig("lidarr_release_profile.test.id"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.lidarr_release_profile.test", "id"),
-					resource.TestCheckResourceAttr("data.lidarr_release_profile.test", "required", "notreally")),
+					resource.TestCheckResourceAttr("data.lidarr_release_profile.test", "required.0", "notreally")),
 			},
 		},
 	})

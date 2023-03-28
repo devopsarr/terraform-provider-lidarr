@@ -21,13 +21,13 @@ func TestAccReleaseProfilesDataSource(t *testing.T) {
 			},
 			// Create a resource to have a value to check
 			{
-				Config: testAccReleaseProfileResourceConfig("sd"),
+				Config: testAccReleaseProfileResourceConfig("\"sd\""),
 			},
 			// Read testing
 			{
 				Config: testAccReleaseProfilesDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckTypeSetElemNestedAttrs("data.lidarr_release_profiles.test", "release_profiles.*", map[string]string{"required": "sd"}),
+					resource.TestCheckTypeSetElemNestedAttrs("data.lidarr_release_profiles.test", "release_profiles.*", map[string]string{"required.0": "sd"}),
 				),
 			},
 		},
