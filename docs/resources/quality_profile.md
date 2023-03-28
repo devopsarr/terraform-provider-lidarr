@@ -50,6 +50,9 @@ resource "lidarr_quality_profile" "example" {
 ### Optional
 
 - `cutoff` (Number) Quality ID to which cutoff.
+- `cutoff_format_score` (Number) Cutoff format score.
+- `format_items` (Attributes Set) Format items. (see [below for nested schema](#nestedatt--format_items))
+- `min_format_score` (Number) Min format score.
 - `upgrade_allowed` (Boolean) Upgrade allowed flag.
 
 ### Read-Only
@@ -75,6 +78,17 @@ Optional:
 
 - `id` (Number) Quality ID.
 - `name` (String) Quality name.
+
+
+
+<a id="nestedatt--format_items"></a>
+### Nested Schema for `format_items`
+
+Optional:
+
+- `format` (Number) Format.
+- `name` (String) Name.
+- `score` (Number) Score.
 
 ## Import
 
