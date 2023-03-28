@@ -226,6 +226,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewQualityProfileResource,
 		NewQualityDefinitionResource,
 		NewReleaseProfileResource,
+		NewCustomFormatResource,
 
 		// Tags
 		NewTagResource,
