@@ -40,24 +40,14 @@ resource "lidarr_release_profile" "example" {
 ### Optional
 
 - `enabled` (Boolean) Enabled.
-- `ignored` (String) Ignored terms. Comma separated list. At least one of `required` and `ignored` must be set.
-- `include_preferred_when_renaming` (Boolean) Include preferred when renaming flag.
-- `indexer_id` (Number) Indexer ID. Set `0` for all.
-- `preferred` (Attributes Set) Preferred terms. (see [below for nested schema](#nestedatt--preferred))
-- `required` (String) Required terms. Comma separated list. At least one of `required` and `ignored` must be set.
+- `ignored` (Set of String) Ignored terms. At least one of `required` and `ignored` must be set.
+- `indexer_id` (Number) Indexer ID. Default to all.
+- `required` (Set of String) Required terms. At least one of `required` and `ignored` must be set.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only
 
 - `id` (Number) Release Profile ID.
-
-<a id="nestedatt--preferred"></a>
-### Nested Schema for `preferred`
-
-Optional:
-
-- `score` (Number) Score.
-- `term` (String) Term.
 
 ## Import
 

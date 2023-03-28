@@ -36,11 +36,14 @@ type QualityProfileResource struct {
 
 // QualityProfile describes the quality profile data model.
 type QualityProfile struct {
-	QualityGroups  types.Set    `tfsdk:"quality_groups"`
-	Name           types.String `tfsdk:"name"`
-	ID             types.Int64  `tfsdk:"id"`
-	Cutoff         types.Int64  `tfsdk:"cutoff"`
-	UpgradeAllowed types.Bool   `tfsdk:"upgrade_allowed"`
+	QualityGroups     types.Set    `tfsdk:"quality_groups"`
+	FormatItems       types.Set    `tfsdk:"format_items"`
+	Name              types.String `tfsdk:"name"`
+	ID                types.Int64  `tfsdk:"id"`
+	Cutoff            types.Int64  `tfsdk:"cutoff"`
+	MinFormatScore    types.Int64  `tfsdk:"min_format_score"`
+	CutoffFormatScore types.Int64  `tfsdk:"cutoff_format_score"`
+	UpgradeAllowed    types.Bool   `tfsdk:"upgrade_allowed"`
 }
 
 // QualityGroup is part of QualityProfile.
@@ -48,6 +51,13 @@ type QualityGroup struct {
 	Qualities types.Set    `tfsdk:"qualities"`
 	Name      types.String `tfsdk:"name"`
 	ID        types.Int64  `tfsdk:"id"`
+}
+
+// FormatItem is part of QualityProfile.
+type FormatItem struct {
+	Name   types.String `tfsdk:"name"`
+	Format types.Int64  `tfsdk:"format"`
+	Score  types.Int64  `tfsdk:"score"`
 }
 
 func (r *QualityProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -79,11 +89,29 @@ func (r *QualityProfileResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
+			"cutoff_format_score": schema.Int64Attribute{
+				MarkdownDescription: "Cutoff format score.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"min_format_score": schema.Int64Attribute{
+				MarkdownDescription: "Min format score.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"quality_groups": schema.SetNestedAttribute{
 				MarkdownDescription: "Quality groups.",
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: r.getQualityGroupSchema().Attributes,
+				},
+			},
+			"format_items": schema.SetNestedAttribute{
+				MarkdownDescription: "Format items.",
+				Optional:            true,
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: r.getFormatItemsSchema().Attributes,
 				},
 			},
 		},
@@ -133,6 +161,28 @@ func (r QualityProfileResource) getQualitySchema() schema.Schema {
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
+			},
+		},
+	}
+}
+
+func (r QualityProfileResource) getFormatItemsSchema() schema.Schema {
+	return schema.Schema{
+		Attributes: map[string]schema.Attribute{
+			"format": schema.Int64Attribute{
+				MarkdownDescription: "Format.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"score": schema.Int64Attribute{
+				MarkdownDescription: "Score.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"name": schema.StringAttribute{
+				MarkdownDescription: "Name.",
+				Optional:            true,
+				Computed:            true,
 			},
 		},
 	}
@@ -253,14 +303,23 @@ func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfi
 	p.ID = types.Int64Value(int64(profile.GetId()))
 	p.Name = types.StringValue(profile.GetName())
 	p.Cutoff = types.Int64Value(int64(profile.GetCutoff()))
+	p.CutoffFormatScore = types.Int64Value(int64(profile.GetCutoffFormatScore()))
+	p.MinFormatScore = types.Int64Value(int64(profile.GetMinFormatScore()))
 	p.QualityGroups = types.SetValueMust(QualityProfileResource{}.getQualityGroupSchema().Type(), nil)
+	p.FormatItems = types.SetValueMust(QualityProfileResource{}.getFormatItemsSchema().Type(), nil)
 
 	qualityGroups := make([]QualityGroup, len(profile.GetItems()))
 	for n, g := range profile.GetItems() {
 		qualityGroups[n].write(ctx, g)
 	}
 
+	formatItems := make([]FormatItem, len(profile.GetFormatItems()))
+	for n, f := range profile.GetFormatItems() {
+		formatItems[n].write(f)
+	}
+
 	tfsdk.ValueFrom(ctx, qualityGroups, p.QualityGroups.Type(ctx), &p.QualityGroups)
+	tfsdk.ValueFrom(ctx, formatItems, p.FormatItems.Type(ctx), &p.FormatItems)
 }
 
 func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQualityItemResource) {
@@ -294,6 +353,12 @@ func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQu
 func (q *Quality) write(quality *lidarr.QualityProfileQualityItemResource) {
 	q.ID = types.Int64Value(int64(quality.Quality.GetId()))
 	q.Name = types.StringValue(quality.Quality.GetName())
+}
+
+func (f *FormatItem) write(format *lidarr.ProfileFormatItemResource) {
+	f.Name = types.StringValue(format.GetName())
+	f.Format = types.Int64Value(int64(format.GetFormat()))
+	f.Score = types.Int64Value(int64(format.GetScore()))
 }
 
 func (p *QualityProfile) read(ctx context.Context) *lidarr.QualityProfileResource {
@@ -332,12 +397,23 @@ func (p *QualityProfile) read(ctx context.Context) *lidarr.QualityProfileResourc
 		qualities[n] = quality
 	}
 
+	formats := make([]FormatItem, len(p.FormatItems.Elements()))
+	tfsdk.ValueAs(ctx, p.FormatItems, &formats)
+	formatItems := make([]*lidarr.ProfileFormatItemResource, len(formats))
+
+	for n, f := range formats {
+		formatItems[n] = f.read()
+	}
+
 	profile := lidarr.NewQualityProfileResource()
 	profile.SetUpgradeAllowed(p.UpgradeAllowed.ValueBool())
 	profile.SetId(int32(p.ID.ValueInt64()))
 	profile.SetCutoff(int32(p.Cutoff.ValueInt64()))
+	profile.SetMinFormatScore(int32(p.MinFormatScore.ValueInt64()))
+	profile.SetCutoffFormatScore(int32(p.CutoffFormatScore.ValueInt64()))
 	profile.SetName(p.Name.ValueString())
 	profile.SetItems(qualities)
+	profile.SetFormatItems(formatItems)
 
 	return profile
 }
@@ -352,4 +428,13 @@ func (q *Quality) read() *lidarr.QualityProfileQualityItemResource {
 	item.SetQuality(*quality)
 
 	return item
+}
+
+func (f *FormatItem) read() *lidarr.ProfileFormatItemResource {
+	formatItem := lidarr.NewProfileFormatItemResource()
+	formatItem.SetFormat(int32(f.Format.ValueInt64()))
+	formatItem.SetName(f.Name.ValueString())
+	formatItem.SetScore(int32(f.Score.ValueInt64()))
+
+	return formatItem
 }

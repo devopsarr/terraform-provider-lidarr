@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
@@ -35,14 +36,12 @@ type ReleaseProfileResource struct {
 
 // ReleaseProfile describes the release profile data model.
 type ReleaseProfile struct {
-	Preferred                    types.Set    `tfsdk:"preferred"`
-	Tags                         types.Set    `tfsdk:"tags"`
-	Ignored                      types.String `tfsdk:"ignored"`
-	Required                     types.String `tfsdk:"required"`
-	ID                           types.Int64  `tfsdk:"id"`
-	IndexerID                    types.Int64  `tfsdk:"indexer_id"`
-	Enabled                      types.Bool   `tfsdk:"enabled"`
-	IncludePreferredWhenRenaming types.Bool   `tfsdk:"include_preferred_when_renaming"`
+	Tags      types.Set   `tfsdk:"tags"`
+	Ignored   types.Set   `tfsdk:"ignored"`
+	Required  types.Set   `tfsdk:"required"`
+	ID        types.Int64 `tfsdk:"id"`
+	IndexerID types.Int64 `tfsdk:"indexer_id"`
+	Enabled   types.Bool  `tfsdk:"enabled"`
 }
 
 // PreferredRelease is part of ReleaseProfile.
@@ -71,56 +70,29 @@ func (r *ReleaseProfileResource) Schema(ctx context.Context, req resource.Schema
 				Optional:            true,
 				Computed:            true,
 			},
-			"include_preferred_when_renaming": schema.BoolAttribute{
-				MarkdownDescription: "Include preferred when renaming flag.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"indexer_id": schema.Int64Attribute{
-				MarkdownDescription: "Indexer ID. Set `0` for all.",
+				MarkdownDescription: "Indexer ID. Default to all.",
 				Optional:            true,
 				Computed:            true,
+				Default:             int64default.StaticInt64(0),
 			},
-			"required": schema.StringAttribute{
-				MarkdownDescription: "Required terms. Comma separated list. At least one of `required` and `ignored` must be set.",
+			"required": schema.SetAttribute{
+				MarkdownDescription: "Required terms. At least one of `required` and `ignored` must be set.",
 				Optional:            true,
 				Computed:            true,
+				ElementType:         types.StringType,
 			},
-			"ignored": schema.StringAttribute{
-				MarkdownDescription: "Ignored terms. Comma separated list. At least one of `required` and `ignored` must be set.",
+			"ignored": schema.SetAttribute{
+				MarkdownDescription: "Ignored terms. At least one of `required` and `ignored` must be set.",
 				Optional:            true,
 				Computed:            true,
-			},
-			"preferred": schema.SetNestedAttribute{
-				MarkdownDescription: "Preferred terms.",
-				Optional:            true,
-				Computed:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: r.getPreferredSchema().Attributes,
-				},
+				ElementType:         types.StringType,
 			},
 			"tags": schema.SetAttribute{
 				MarkdownDescription: "List of associated tags.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.Int64Type,
-			},
-		},
-	}
-}
-
-func (r ReleaseProfileResource) getPreferredSchema() schema.Schema {
-	return schema.Schema{
-		Attributes: map[string]schema.Attribute{
-			"score": schema.Int64Attribute{
-				MarkdownDescription: "Score.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"term": schema.StringAttribute{
-				MarkdownDescription: "Term.",
-				Optional:            true,
-				Computed:            true,
 			},
 		},
 	}
@@ -239,44 +211,29 @@ func (r *ReleaseProfileResource) ImportState(ctx context.Context, req resource.I
 func (p *ReleaseProfile) write(ctx context.Context, profile *lidarr.ReleaseProfileResource) {
 	p.ID = types.Int64Value(int64(profile.GetId()))
 	p.Enabled = types.BoolValue(profile.GetEnabled())
-	p.IncludePreferredWhenRenaming = types.BoolValue(profile.GetIncludePreferredWhenRenaming())
 	p.IndexerID = types.Int64Value(int64(profile.GetIndexerId()))
-	p.Required = types.StringValue(profile.GetRequired())
-	p.Ignored = types.StringValue(profile.GetIgnored())
-
-	preferred := make([]PreferredRelease, len(profile.GetPreferred()))
-	for i, r := range profile.GetPreferred() {
-		preferred[i].Score = types.Int64Value(int64(r.GetValue()))
-		preferred[i].Term = types.StringValue(r.GetKey())
-	}
-
-	p.Preferred, _ = types.SetValueFrom(ctx, ReleaseProfileResource{}.getPreferredSchema().Type(), preferred)
-	p.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, profile.Tags)
+	p.Required, _ = types.SetValueFrom(ctx, types.StringType, profile.GetRequired())
+	p.Ignored, _ = types.SetValueFrom(ctx, types.StringType, profile.GetIgnored())
+	p.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, profile.GetTags())
 }
 
 func (p *ReleaseProfile) read(ctx context.Context) *lidarr.ReleaseProfileResource {
 	tags := make([]*int32, len(p.Tags.Elements()))
 	tfsdk.ValueAs(ctx, p.Tags, &tags)
 
-	prefRelease := make([]PreferredRelease, len(p.Preferred.Elements()))
-	tfsdk.ValueAs(ctx, p.Preferred, &prefRelease)
+	required := make([]*string, len(p.Required.Elements()))
+	tfsdk.ValueAs(ctx, p.Required, &required)
 
-	preferred := make([]*lidarr.StringInt32KeyValuePair, len(prefRelease))
-	for i, r := range prefRelease {
-		preferred[i] = lidarr.NewStringInt32KeyValuePair()
-		preferred[i].SetKey(r.Term.ValueString())
-		preferred[i].SetValue(int32(r.Score.ValueInt64()))
-	}
+	ignored := make([]*string, len(p.Ignored.Elements()))
+	tfsdk.ValueAs(ctx, p.Ignored, &ignored)
 
 	profile := lidarr.NewReleaseProfileResource()
 	profile.SetEnabled(p.Enabled.ValueBool())
-	profile.SetIncludePreferredWhenRenaming(p.IncludePreferredWhenRenaming.ValueBool())
 	profile.SetId(int32(p.ID.ValueInt64()))
-	profile.SetIgnored(p.Ignored.ValueString())
 	profile.SetIndexerId(int32(p.IndexerID.ValueInt64()))
-	profile.SetRequired(p.Required.ValueString())
+	profile.SetIgnored(ignored)
+	profile.SetRequired(required)
 	profile.SetTags(tags)
-	profile.SetPreferred(preferred)
 
 	return profile
 }

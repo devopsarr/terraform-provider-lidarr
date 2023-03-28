@@ -44,37 +44,19 @@ func (d *ReleaseProfileDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Enabled.",
 				Computed:            true,
 			},
-			"include_preferred_when_renaming": schema.BoolAttribute{
-				MarkdownDescription: "Include preferred when renaming flag.",
-				Computed:            true,
-			},
 			"indexer_id": schema.Int64Attribute{
-				MarkdownDescription: "Indexer ID. Set `0` for all.",
+				MarkdownDescription: "Indexer ID.",
 				Computed:            true,
 			},
-			"required": schema.StringAttribute{
-				MarkdownDescription: "Required terms. Comma separated list. At least one of `required` and `ignored` must be set.",
+			"required": schema.SetAttribute{
+				MarkdownDescription: "Required terms. At least one of `required` and `ignored` must be set.",
 				Computed:            true,
+				ElementType:         types.StringType,
 			},
-			"ignored": schema.StringAttribute{
-				MarkdownDescription: "Ignored terms. Comma separated list. At least one of `required` and `ignored` must be set.",
+			"ignored": schema.SetAttribute{
+				MarkdownDescription: "Ignored terms. At least one of `required` and `ignored` must be set.",
 				Computed:            true,
-			},
-			"preferred": schema.SetNestedAttribute{
-				MarkdownDescription: "Preferred terms.",
-				Computed:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"score": schema.Int64Attribute{
-							MarkdownDescription: "Score.",
-							Computed:            true,
-						},
-						"term": schema.StringAttribute{
-							MarkdownDescription: "Term.",
-							Computed:            true,
-						},
-					},
-				},
+				ElementType:         types.StringType,
 			},
 			"tags": schema.SetAttribute{
 				MarkdownDescription: "List of associated tags.",
