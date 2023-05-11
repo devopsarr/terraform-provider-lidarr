@@ -220,6 +220,7 @@ func (r *RootFolderResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 func (r *RootFolder) write(ctx context.Context, rootFolder *lidarr.RootFolderResource) {
+	r.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, rootFolder.GetDefaultTags())
 	r.Accessible = types.BoolValue(rootFolder.GetAccessible())
 	r.ID = types.Int64Value(int64(rootFolder.GetId()))
 	r.Path = types.StringValue(rootFolder.GetPath())
@@ -228,8 +229,6 @@ func (r *RootFolder) write(ctx context.Context, rootFolder *lidarr.RootFolderRes
 	r.Name = types.StringValue(rootFolder.GetName())
 	r.MonitorOption = types.StringValue(string(rootFolder.GetDefaultMonitorOption()))
 	r.NewItemMonitorOption = types.StringValue(string(rootFolder.GetDefaultNewItemMonitorOption()))
-	r.Tags = types.SetValueMust(types.Int64Type, nil)
-	tfsdk.ValueFrom(ctx, rootFolder.GetDefaultTags(), r.Tags.Type(ctx), &r.Tags)
 }
 
 func (r *RootFolder) read(ctx context.Context) *lidarr.RootFolderResource {
