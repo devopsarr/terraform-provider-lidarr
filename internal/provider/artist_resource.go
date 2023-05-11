@@ -239,6 +239,8 @@ func (r *ArtistResource) ImportState(ctx context.Context, req resource.ImportSta
 }
 
 func (m *Artist) write(ctx context.Context, artist *lidarr.ArtistResource) {
+	m.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, artist.GetTags())
+	m.Genres, _ = types.SetValueFrom(ctx, types.StringType, artist.GetGenres())
 	m.Monitored = types.BoolValue(artist.GetMonitored())
 	m.ID = types.Int64Value(int64(artist.GetId()))
 	m.ArtistName = types.StringValue(artist.GetArtistName())
@@ -246,13 +248,9 @@ func (m *Artist) write(ctx context.Context, artist *lidarr.ArtistResource) {
 	m.QualityProfileID = types.Int64Value(int64(artist.GetQualityProfileId()))
 	m.MetadataProfileID = types.Int64Value(int64(artist.GetMetadataProfileId()))
 	m.ForeignArtistID = types.StringValue(artist.GetForeignArtistId())
-	m.Tags = types.SetValueMust(types.Int64Type, nil)
-	tfsdk.ValueFrom(ctx, artist.Tags, m.Tags.Type(ctx), &m.Tags)
 	// Read only values
 	m.Status = types.StringValue(string(artist.GetStatus()))
 	m.Overview = types.StringValue(artist.GetOverview())
-	m.Genres = types.SetValueMust(types.StringType, nil)
-	tfsdk.ValueFrom(ctx, artist.Genres, m.Genres.Type(ctx), &m.Genres)
 }
 
 func (m *Artist) read(ctx context.Context) *lidarr.ArtistResource {
