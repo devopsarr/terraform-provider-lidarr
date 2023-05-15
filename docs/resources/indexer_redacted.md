@@ -40,7 +40,6 @@ resource "lidarr_indexer_redacted" "example" {
 - `enable_interactive_search` (Boolean) Enable interactive search flag.
 - `enable_rss` (Boolean) Enable RSS flag.
 - `minimum_seeders` (Number) Minimum seeders.
-- `passkey` (String, Sensitive) passkey.
 - `priority` (Number) Priority.
 - `seed_ratio` (Number) Seed ratio.
 - `seed_time` (Number) Seed time.
