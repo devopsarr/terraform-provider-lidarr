@@ -42,7 +42,6 @@ type IndexerRedactedResource struct {
 type IndexerRedacted struct {
 	Tags                    types.Set     `tfsdk:"tags"`
 	Name                    types.String  `tfsdk:"name"`
-	Passkey                 types.String  `tfsdk:"passkey"`
 	APIKey                  types.String  `tfsdk:"api_key"`
 	Priority                types.Int64   `tfsdk:"priority"`
 	ID                      types.Int64   `tfsdk:"id"`
@@ -71,7 +70,6 @@ func (i IndexerRedacted) toIndexer() *Indexer {
 		SeedTime:                i.SeedTime,
 		DiscographySeedTime:     i.DiscographySeedTime,
 		SeedRatio:               i.SeedRatio,
-		Passkey:                 i.Passkey,
 		APIKey:                  i.APIKey,
 		Tags:                    i.Tags,
 		Implementation:          types.StringValue(indexerRedactedImplementation),
@@ -93,7 +91,6 @@ func (i *IndexerRedacted) fromIndexer(indexer *Indexer) {
 	i.SeedTime = indexer.SeedTime
 	i.DiscographySeedTime = indexer.DiscographySeedTime
 	i.SeedRatio = indexer.SeedRatio
-	i.Passkey = indexer.Passkey
 	i.APIKey = indexer.APIKey
 	i.Tags = indexer.Tags
 }
@@ -177,12 +174,6 @@ func (r *IndexerRedactedResource) Schema(ctx context.Context, req resource.Schem
 			"api_key": schema.StringAttribute{
 				MarkdownDescription: "API key.",
 				Required:            true,
-				Sensitive:           true,
-			},
-			"passkey": schema.StringAttribute{
-				MarkdownDescription: "passkey.",
-				Optional:            true,
-				Computed:            true,
 				Sensitive:           true,
 			},
 		},
