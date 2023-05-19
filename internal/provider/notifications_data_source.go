@@ -173,6 +173,10 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "Priority.", // TODO: add values in description
 							Computed:            true,
 						},
+						"notification_type": schema.Int64Attribute{
+							MarkdownDescription: "Notification type. `0` Info, `1` Success, `2` Warning, `3` Failure.",
+							Computed:            true,
+						},
 						"retry": schema.Int64Attribute{
 							MarkdownDescription: "Retry.",
 							Computed:            true,
@@ -212,6 +216,28 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 						"auth_user": schema.StringAttribute{
 							MarkdownDescription: "Auth user.",
 							Computed:            true,
+						},
+						"server_url": schema.StringAttribute{
+							MarkdownDescription: "Server URL.",
+							Computed:            true,
+						},
+						"stateless_urls": schema.StringAttribute{
+							MarkdownDescription: "Stateless URLs.",
+							Computed:            true,
+						},
+						"configuration_key": schema.StringAttribute{
+							MarkdownDescription: "Configuration key.",
+							Computed:            true,
+							Sensitive:           true,
+						},
+						"auth_username": schema.StringAttribute{
+							MarkdownDescription: "Username.",
+							Computed:            true,
+						},
+						"auth_password": schema.StringAttribute{
+							MarkdownDescription: "Password.",
+							Computed:            true,
+							Sensitive:           true,
 						},
 						"avatar": schema.StringAttribute{
 							MarkdownDescription: "Avatar.",
@@ -338,6 +364,11 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"recipients": schema.SetAttribute{
 							MarkdownDescription: "Recipients.",
+							Computed:            true,
+							ElementType:         types.StringType,
+						},
+						"field_tags": schema.SetAttribute{
+							MarkdownDescription: "Tags and emojis.",
 							Computed:            true,
 							ElementType:         types.StringType,
 						},

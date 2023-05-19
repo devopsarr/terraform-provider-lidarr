@@ -27,11 +27,12 @@ var (
 )
 
 var notificationFields = helpers.Fields{
-	Bools:        []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSsl"},
-	Strings:      []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "webHookUrl"},
-	Ints:         []string{"method", "port", "priority", "displayTime", "retry", "expire"},
-	StringSlices: []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc"},
-	IntSlices:    []string{"grabFields", "importFields"},
+	Bools:                  []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSsl"},
+	Strings:                []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "webHookUrl", "authUsername", "authPassword", "statelessUrls", "configurationKey", "serverUrl"},
+	Ints:                   []string{"method", "port", "priority", "displayTime", "retry", "expire", "notificationType"},
+	StringSlices:           []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc", "fieldTags"},
+	StringSlicesExceptions: []string{"tags"},
+	IntSlices:              []string{"grabFields", "importFields"},
 }
 
 func NewNotificationResource() resource.Resource {
@@ -46,6 +47,7 @@ type NotificationResource struct {
 // Notification describes the notification data model.
 type Notification struct {
 	Tags                  types.Set    `tfsdk:"tags"`
+	FieldTags             types.Set    `tfsdk:"field_tags"`
 	Recipients            types.Set    `tfsdk:"recipients"`
 	Devices               types.Set    `tfsdk:"devices"`
 	DeviceIds             types.Set    `tfsdk:"device_ids"`
@@ -92,6 +94,12 @@ type Notification struct {
 	ConsumerKey           types.String `tfsdk:"consumer_key"`
 	ConsumerSecret        types.String `tfsdk:"consumer_secret"`
 	DeviceNames           types.String `tfsdk:"device_names"`
+	StatelessURLs         types.String `tfsdk:"stateless_urls"`
+	ServerURL             types.String `tfsdk:"server_url"`
+	AuthUsername          types.String `tfsdk:"auth_username"`
+	AuthPassword          types.String `tfsdk:"auth_password"`
+	ConfigurationKey      types.String `tfsdk:"configuration_key"`
+	NotificationType      types.Int64  `tfsdk:"notification_type"`
 	Retry                 types.Int64  `tfsdk:"retry"`
 	Expire                types.Int64  `tfsdk:"expire"`
 	DisplayTime           types.Int64  `tfsdk:"display_time"`
@@ -288,6 +296,14 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 					int64validator.OneOf(-2, -1, 0, 1, 2, 3, 4, 5, 7),
 				},
 			},
+			"notification_type": schema.Int64Attribute{
+				MarkdownDescription: "Notification type. `0` Info, `1` Success, `2` Warning, `3` Failure.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.OneOf(0, 1, 2, 3),
+				},
+			},
 			"retry": schema.Int64Attribute{
 				MarkdownDescription: "Retry.",
 				Optional:            true,
@@ -337,6 +353,33 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				MarkdownDescription: "Auth user.",
 				Optional:            true,
 				Computed:            true,
+			},
+			"server_url": schema.StringAttribute{
+				MarkdownDescription: "Server URL.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"stateless_urls": schema.StringAttribute{
+				MarkdownDescription: "Stateless URLs.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"configuration_key": schema.StringAttribute{
+				MarkdownDescription: "Configuration key.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"auth_username": schema.StringAttribute{
+				MarkdownDescription: "Username.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"auth_password": schema.StringAttribute{
+				MarkdownDescription: "Password.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
 			},
 			"avatar": schema.StringAttribute{
 				MarkdownDescription: "Avatar.",
@@ -493,6 +536,12 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"recipients": schema.SetAttribute{
 				MarkdownDescription: "Recipients.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"field_tags": schema.SetAttribute{
+				MarkdownDescription: "Tags and emojis.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.StringType,
@@ -676,6 +725,7 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.To = types.SetValueMust(types.StringType, nil)
 	n.Cc = types.SetValueMust(types.StringType, nil)
 	n.Bcc = types.SetValueMust(types.StringType, nil)
+	n.FieldTags = types.SetValueMust(types.StringType, nil)
 	helpers.WriteFields(ctx, n, notification.GetFields(), notificationFields)
 }
 
