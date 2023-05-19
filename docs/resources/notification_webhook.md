@@ -47,7 +47,9 @@ resource "lidarr_notification_webhook" "example" {
 ### Optional
 
 - `include_health_warnings` (Boolean) Include health warnings.
+- `on_album_delete` (Boolean) On album delete flag.
 - `on_application_update` (Boolean) On application update flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
 - `on_download_failure` (Boolean) On download failure flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.

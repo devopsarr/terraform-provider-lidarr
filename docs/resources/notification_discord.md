@@ -43,7 +43,6 @@ resource "lidarr_notification_discord" "example" {
 ### Required
 
 - `name` (String) NotificationDiscord name.
-- `on_track_retag` (Boolean) On movie file delete flag.
 - `web_hook_url` (String) Web hook URL.
 
 ### Optional
@@ -53,14 +52,17 @@ resource "lidarr_notification_discord" "example" {
 - `grab_fields` (Set of Number) Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart.
 - `import_fields` (Set of Number) Import fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Codecs, `5` Group, `6` Size, `7` Languages, `8` Subtitles, `9` Links, `10` Release, `11` Poster, `12` Fanart.
 - `include_health_warnings` (Boolean) Include health warnings.
+- `on_album_delete` (Boolean) On album delete flag.
 - `on_application_update` (Boolean) On application update flag.
-- `on_download_failure` (Boolean) On movie delete flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
+- `on_download_failure` (Boolean) On download failure flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_health_restored` (Boolean) On health restored flag.
 - `on_import_failure` (Boolean) On download flag.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
+- `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
+- `on_track_retag` (Boolean) On track retag flag.
 - `on_upgrade` (Boolean) On upgrade flag.
 - `tags` (Set of Number) List of associated tags.
 - `username` (String) Username.

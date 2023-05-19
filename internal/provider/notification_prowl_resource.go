@@ -47,6 +47,8 @@ type NotificationProwl struct {
 	ID                    types.Int64  `tfsdk:"id"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
@@ -63,6 +65,8 @@ func (n NotificationProwl) toNotification() *Notification {
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
 		OnReleaseImport:       n.OnReleaseImport,
+		OnAlbumDelete:         n.OnAlbumDelete,
+		OnArtistDelete:        n.OnArtistDelete,
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
@@ -81,6 +85,8 @@ func (n *NotificationProwl) fromNotification(notification *Notification) {
 	n.ID = notification.ID
 	n.OnGrab = notification.OnGrab
 	n.OnReleaseImport = notification.OnReleaseImport
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
@@ -107,7 +113,17 @@ func (r *NotificationProwlResource) Schema(ctx context.Context, req resource.Sch
 				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete for upgrade flag.",
+				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
 				Optional:            true,
 				Computed:            true,
 			},

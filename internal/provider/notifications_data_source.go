@@ -59,6 +59,14 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "On release import flag.",
 							Computed:            true,
 						},
+						"on_album_delete": schema.BoolAttribute{
+							MarkdownDescription: "On album delete flag.",
+							Computed:            true,
+						},
+						"on_artist_delete": schema.BoolAttribute{
+							MarkdownDescription: "On artist delete flag.",
+							Computed:            true,
+						},
 						"on_upgrade": schema.BoolAttribute{
 							MarkdownDescription: "On upgrade flag.",
 							Computed:            true,

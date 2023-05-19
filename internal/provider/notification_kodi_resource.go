@@ -140,11 +140,12 @@ func (r *NotificationKodiResource) Schema(ctx context.Context, req resource.Sche
 				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete flag.",
-				Required:            true,
+				MarkdownDescription: "On track retag flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete for upgrade flag.",
+				MarkdownDescription: "On release import flag.",
 				Optional:            true,
 				Computed:            true,
 			},

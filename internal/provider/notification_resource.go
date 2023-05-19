@@ -111,6 +111,8 @@ type Notification struct {
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
@@ -136,6 +138,16 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -643,6 +655,8 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.OnUpgrade = types.BoolValue(notification.GetOnUpgrade())
 	n.OnRename = types.BoolValue(notification.GetOnRename())
 	n.OnReleaseImport = types.BoolValue(notification.GetOnReleaseImport())
+	n.OnArtistDelete = types.BoolValue(notification.GetOnArtistDelete())
+	n.OnAlbumDelete = types.BoolValue(notification.GetOnAlbumDelete())
 	n.OnTrackRetag = types.BoolValue(notification.GetOnTrackRetag())
 	n.OnDownloadFailure = types.BoolValue(notification.GetOnDownloadFailure())
 	n.OnHealthIssue = types.BoolValue(notification.GetOnHealthIssue())
@@ -672,6 +686,8 @@ func (n *Notification) read(ctx context.Context) *lidarr.NotificationResource {
 	notification := lidarr.NewNotificationResource()
 	notification.SetOnGrab(n.OnGrab.ValueBool())
 	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
+	notification.SetOnAlbumDelete(n.OnAlbumDelete.ValueBool())
+	notification.SetOnArtistDelete(n.OnArtistDelete.ValueBool())
 	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
 	notification.SetOnRename(n.OnRename.ValueBool())
 	notification.SetOnTrackRetag(n.OnTrackRetag.ValueBool())

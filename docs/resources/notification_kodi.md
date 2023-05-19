@@ -42,7 +42,6 @@ resource "lidarr_notification_kodi" "example" {
 
 - `host` (String) Host.
 - `name` (String) NotificationKodi name.
-- `on_track_retag` (Boolean) On movie file delete flag.
 - `port` (Number) Port.
 
 ### Optional
@@ -56,8 +55,9 @@ resource "lidarr_notification_kodi" "example" {
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_health_restored` (Boolean) On health restored flag.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
+- `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
+- `on_track_retag` (Boolean) On track retag flag.
 - `on_upgrade` (Boolean) On upgrade flag.
 - `password` (String, Sensitive) Password.
 - `tags` (Set of Number) List of associated tags.

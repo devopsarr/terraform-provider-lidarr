@@ -49,6 +49,8 @@ type NotificationWebhook struct {
 	Method                types.Int64  `tfsdk:"method"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
@@ -71,6 +73,8 @@ func (n NotificationWebhook) toNotification() *Notification {
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
 		OnReleaseImport:       n.OnReleaseImport,
+		OnAlbumDelete:         n.OnAlbumDelete,
+		OnArtistDelete:        n.OnArtistDelete,
 		OnDownloadFailure:     n.OnDownloadFailure,
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
@@ -101,6 +105,8 @@ func (n *NotificationWebhook) fromNotification(notification *Notification) {
 	n.OnHealthIssue = notification.OnHealthIssue
 	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnReleaseImport = notification.OnReleaseImport
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
 	n.OnImportFailure = notification.OnImportFailure
@@ -121,6 +127,16 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
 				Optional:            true,
 				Computed:            true,
 			},

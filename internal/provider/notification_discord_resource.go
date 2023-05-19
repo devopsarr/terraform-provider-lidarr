@@ -49,6 +49,8 @@ type NotificationDiscord struct {
 	ID                    types.Int64  `tfsdk:"id"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	OnTrackRetag          types.Bool   `tfsdk:"on_track_retag"`
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
@@ -73,6 +75,8 @@ func (n NotificationDiscord) toNotification() *Notification {
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
 		OnReleaseImport:       n.OnReleaseImport,
+		OnAlbumDelete:         n.OnAlbumDelete,
+		OnArtistDelete:        n.OnArtistDelete,
 		OnTrackRetag:          n.OnTrackRetag,
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
@@ -99,6 +103,8 @@ func (n *NotificationDiscord) fromNotification(notification *Notification) {
 	n.ID = notification.ID
 	n.OnGrab = notification.OnGrab
 	n.OnReleaseImport = notification.OnReleaseImport
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.OnTrackRetag = notification.OnTrackRetag
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
@@ -139,16 +145,27 @@ func (r *NotificationDiscordResource) Schema(ctx context.Context, req resource.S
 				Computed:            true,
 			},
 			"on_download_failure": schema.BoolAttribute{
-				MarkdownDescription: "On movie delete flag.",
+				MarkdownDescription: "On download failure flag.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete flag.",
-				Required:            true,
+				MarkdownDescription: "On track retag flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete for upgrade flag.",
+				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
 				Optional:            true,
 				Computed:            true,
 			},
