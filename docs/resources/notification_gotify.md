@@ -41,8 +41,12 @@ resource "lidarr_notification_gotify" "example" {
 ### Required
 
 - `app_token` (String, Sensitive) App token.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationGotify name.
+- `server` (String) Server.
+
+### Optional
+
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_download_failure` (Boolean) On movie delete flag.
 - `on_grab` (Boolean) On grab flag.
@@ -51,10 +55,6 @@ resource "lidarr_notification_gotify" "example" {
 - `on_import_failure` (Boolean) On download flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `server` (String) Server.
-
-### Optional
-
 - `priority` (Number) Priority. `0` Min, `2` Low, `5` Normal, `8` High.
 - `tags` (Set of Number) List of associated tags.
 

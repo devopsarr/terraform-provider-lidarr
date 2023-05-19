@@ -33,13 +33,13 @@ resource "lidarr_notification_synology_indexer" "example" {
 ### Required
 
 - `name` (String) NotificationSynology name.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
-- `on_rename` (Boolean) On rename flag.
 - `on_track_retag` (Boolean) On movie file delete flag.
-- `on_upgrade` (Boolean) On upgrade flag.
 
 ### Optional
 
+- `on_release_import` (Boolean) On movie file delete for upgrade flag.
+- `on_rename` (Boolean) On rename flag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `tags` (Set of Number) List of associated tags.
 - `update_library` (Boolean) Update library flag.
 

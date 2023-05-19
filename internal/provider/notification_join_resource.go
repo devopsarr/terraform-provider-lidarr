@@ -101,31 +101,38 @@ func (r *NotificationJoinResource) Schema(ctx context.Context, req resource.Sche
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On movie file delete for upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_restored": schema.BoolAttribute{
 				MarkdownDescription: "On health restored flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
 				MarkdownDescription: "On application update flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationJoin name.",

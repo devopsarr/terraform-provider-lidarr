@@ -42,8 +42,15 @@ resource "lidarr_notification_email" "example" {
 ### Required
 
 - `from` (String) From.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationEmail name.
+- `server` (String) Server.
+- `to` (Set of String) To.
+
+### Optional
+
+- `bcc` (Set of String) Bcc.
+- `cc` (Set of String) Cc.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_download_failure` (Boolean) On movie delete flag.
 - `on_grab` (Boolean) On grab flag.
@@ -52,13 +59,6 @@ resource "lidarr_notification_email" "example" {
 - `on_import_failure` (Boolean) On download flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `server` (String) Server.
-- `to` (Set of String) To.
-
-### Optional
-
-- `bcc` (Set of String) Bcc.
-- `cc` (Set of String) Cc.
 - `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `require_encryption` (Boolean) Require encryption flag.

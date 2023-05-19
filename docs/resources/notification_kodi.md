@@ -41,16 +41,8 @@ resource "lidarr_notification_kodi" "example" {
 ### Required
 
 - `host` (String) Host.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationKodi name.
-- `on_application_update` (Boolean) On application update flag.
-- `on_grab` (Boolean) On grab flag.
-- `on_health_issue` (Boolean) On health issue flag.
-- `on_health_restored` (Boolean) On health restored flag.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
-- `on_rename` (Boolean) On rename flag.
 - `on_track_retag` (Boolean) On movie file delete flag.
-- `on_upgrade` (Boolean) On upgrade flag.
 - `port` (Number) Port.
 
 ### Optional
@@ -58,7 +50,15 @@ resource "lidarr_notification_kodi" "example" {
 - `always_update` (Boolean) Always update flag.
 - `clean_library` (Boolean) Clean library flag.
 - `display_time` (Number) Display time.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `notify` (Boolean) Notification flag.
+- `on_application_update` (Boolean) On application update flag.
+- `on_grab` (Boolean) On grab flag.
+- `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
+- `on_release_import` (Boolean) On movie file delete for upgrade flag.
+- `on_rename` (Boolean) On rename flag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `password` (String, Sensitive) Password.
 - `tags` (Set of Number) List of associated tags.
 - `update_library` (Boolean) Update library flag.

@@ -35,17 +35,17 @@ resource "lidarr_notification_notifiarr" "example" {
 ### Required
 
 - `api_key` (String, Sensitive) API key.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationNotifiarr name.
+
+### Optional
+
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_health_restored` (Boolean) On health restored flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-
-### Optional
-
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

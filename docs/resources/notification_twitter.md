@@ -44,9 +44,13 @@ resource "lidarr_notification_twitter" "example" {
 - `access_token_secret` (String, Sensitive) Access token secret.
 - `consumer_key` (String, Sensitive) Consumer Key.
 - `consumer_secret` (String, Sensitive) Consumer Secret.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `mention` (String) Mention.
 - `name` (String) NotificationTwitter name.
+
+### Optional
+
+- `direct_message` (Boolean) Direct message flag.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_download_failure` (Boolean) On movie delete flag.
 - `on_grab` (Boolean) On grab flag.
@@ -55,10 +59,6 @@ resource "lidarr_notification_twitter" "example" {
 - `on_import_failure` (Boolean) On download flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-
-### Optional
-
-- `direct_message` (Boolean) Direct message flag.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

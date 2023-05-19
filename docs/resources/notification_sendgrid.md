@@ -39,8 +39,13 @@ resource "lidarr_notification_sendgrid" "example" {
 ### Required
 
 - `from` (String) From.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationSendgrid name.
+- `recipients` (Set of String) Recipients.
+
+### Optional
+
+- `api_key` (String, Sensitive) API key.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_download_failure` (Boolean) On movie delete flag.
 - `on_grab` (Boolean) On grab flag.
@@ -49,11 +54,6 @@ resource "lidarr_notification_sendgrid" "example" {
 - `on_import_failure` (Boolean) On download flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `recipients` (Set of String) Recipients.
-
-### Optional
-
-- `api_key` (String, Sensitive) API key.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

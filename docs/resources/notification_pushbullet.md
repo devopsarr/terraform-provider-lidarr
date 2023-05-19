@@ -38,8 +38,13 @@ resource "lidarr_notification_pushbullet" "example" {
 ### Required
 
 - `api_key` (String, Sensitive) API key.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationPushbullet name.
+
+### Optional
+
+- `channel_tags` (Set of String) List of channel tags.
+- `device_ids` (Set of String) List of devices IDs.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_download_failure` (Boolean) On movie delete flag.
 - `on_grab` (Boolean) On grab flag.
@@ -48,11 +53,6 @@ resource "lidarr_notification_pushbullet" "example" {
 - `on_import_failure` (Boolean) On download flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-
-### Optional
-
-- `channel_tags` (Set of String) List of channel tags.
-- `device_ids` (Set of String) List of devices IDs.
 - `sender_id` (String) Sender ID.
 - `tags` (Set of Number) List of associated tags.
 

@@ -38,8 +38,13 @@ resource "lidarr_notification_join" "example" {
 ### Required
 
 - `api_key` (String, Sensitive) API key.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationPushover name.
+
+### Optional
+
+- `devices` (Set of String) List of devices.
+- `expire` (Number) Expire.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_download_failure` (Boolean) On movie delete flag.
 - `on_grab` (Boolean) On grab flag.
@@ -48,11 +53,6 @@ resource "lidarr_notification_join" "example" {
 - `on_import_failure` (Boolean) On download flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-
-### Optional
-
-- `devices` (Set of String) List of devices.
-- `expire` (Number) Expire.
 - `priority` (Number) Priority. `-2` Silent, `-1` Quiet, `0` Normal, `1` High, `2` Emergency, `8` High.
 - `retry` (Number) Retry.
 - `sound` (String) Sound.

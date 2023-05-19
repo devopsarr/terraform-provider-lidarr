@@ -116,47 +116,58 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_download_failure": schema.BoolAttribute{
 				MarkdownDescription: "On download failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{
 				MarkdownDescription: "On import failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
 				MarkdownDescription: "On track retag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_restored": schema.BoolAttribute{
 				MarkdownDescription: "On health restored flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
 				MarkdownDescription: "On application update flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationWebhook name.",

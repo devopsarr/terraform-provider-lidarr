@@ -37,19 +37,19 @@ resource "lidarr_notification_mailgun" "example" {
 ### Required
 
 - `from` (String) From.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationMailgun name.
+- `recipients` (Set of String) Recipients.
+
+### Optional
+
+- `api_key` (String, Sensitive) API key.
+- `include_health_warnings` (Boolean) Include health warnings.
 - `on_application_update` (Boolean) On application update flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
 - `on_health_restored` (Boolean) On health restored flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `recipients` (Set of String) Recipients.
-
-### Optional
-
-- `api_key` (String, Sensitive) API key.
 - `sender_domain` (String) Sender domain.
 - `tags` (Set of Number) List of associated tags.
 - `use_eu_endpoint` (Boolean) Use EU endpoint flag.

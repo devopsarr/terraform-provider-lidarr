@@ -96,11 +96,13 @@ func (r *NotificationPlexResource) Schema(ctx context.Context, req resource.Sche
 		Attributes: map[string]schema.Attribute{
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
 				MarkdownDescription: "On movie file delete flag.",
@@ -108,7 +110,8 @@ func (r *NotificationPlexResource) Schema(ctx context.Context, req resource.Sche
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On movie file delete for upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationPlex name.",

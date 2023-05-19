@@ -84,11 +84,13 @@ func (r *NotificationSynologyResource) Schema(ctx context.Context, req resource.
 		Attributes: map[string]schema.Attribute{
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
 				MarkdownDescription: "On movie file delete flag.",
@@ -96,7 +98,8 @@ func (r *NotificationSynologyResource) Schema(ctx context.Context, req resource.
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On movie file delete for upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationSynology name.",
