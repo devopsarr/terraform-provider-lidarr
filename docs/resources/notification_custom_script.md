@@ -43,6 +43,7 @@ resource "lidarr_notification_custom_script" "example" {
 - `on_download_failure` (Boolean) On download failure flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
 - `on_import_failure` (Boolean) On import failure flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.

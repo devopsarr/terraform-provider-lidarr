@@ -53,6 +53,7 @@ type NotificationDiscord struct {
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
@@ -76,6 +77,7 @@ func (n NotificationDiscord) toNotification() *Notification {
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
+		OnHealthRestored:      n.OnHealthRestored,
 		OnDownloadFailure:     n.OnDownloadFailure,
 		OnRename:              n.OnRename,
 		OnUpgrade:             n.OnUpgrade,
@@ -101,6 +103,7 @@ func (n *NotificationDiscord) fromNotification(notification *Notification) {
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnDownloadFailure = notification.OnDownloadFailure
 	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
@@ -145,6 +148,10 @@ func (r *NotificationDiscordResource) Schema(ctx context.Context, req resource.S
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
 				Required:            true,
 			},
 			"on_application_update": schema.BoolAttribute{

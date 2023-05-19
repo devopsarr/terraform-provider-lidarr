@@ -52,6 +52,7 @@ type NotificationSlack struct {
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
@@ -73,6 +74,7 @@ func (n NotificationSlack) toNotification() *Notification {
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
+		OnHealthRestored:      n.OnHealthRestored,
 		OnDownloadFailure:     n.OnDownloadFailure,
 		OnUpgrade:             n.OnUpgrade,
 		OnImportFailure:       n.OnImportFailure,
@@ -95,6 +97,7 @@ func (n *NotificationSlack) fromNotification(notification *Notification) {
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnRename = notification.OnRename
 	n.OnDownloadFailure = notification.OnDownloadFailure
 	n.OnUpgrade = notification.OnUpgrade
@@ -139,6 +142,10 @@ func (r *NotificationSlackResource) Schema(ctx context.Context, req resource.Sch
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
 				Required:            true,
 			},
 			"on_application_update": schema.BoolAttribute{

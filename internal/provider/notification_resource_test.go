@@ -63,6 +63,7 @@ func testAccNotificationResourceConfig(name, upgrade string) string {
 		on_import_failure 				   = true
 		on_health_issue                    = false
 		on_application_update              = false
+		on_health_restored = false
 	  
 		include_health_warnings = false
 		name                    = "%s"

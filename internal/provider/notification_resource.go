@@ -114,6 +114,7 @@ type Notification struct {
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 	OnTrackRetag          types.Bool   `tfsdk:"on_track_retag"`
@@ -158,6 +159,10 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
 				Required:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
@@ -630,6 +635,7 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.OnTrackRetag = types.BoolValue(notification.GetOnTrackRetag())
 	n.OnDownloadFailure = types.BoolValue(notification.GetOnDownloadFailure())
 	n.OnHealthIssue = types.BoolValue(notification.GetOnHealthIssue())
+	n.OnHealthRestored = types.BoolValue(notification.GetOnHealthRestored())
 	n.OnApplicationUpdate = types.BoolValue(notification.GetOnApplicationUpdate())
 	n.IncludeHealthWarnings = types.BoolValue(notification.GetIncludeHealthWarnings())
 	n.ID = types.Int64Value(int64(notification.GetId()))
@@ -661,6 +667,7 @@ func (n *Notification) read(ctx context.Context) *lidarr.NotificationResource {
 	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
 	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
 	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
+	notification.SetOnHealthRestored(n.OnHealthRestored.ValueBool())
 	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
 	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
 	notification.SetId(int32(n.ID.ValueInt64()))

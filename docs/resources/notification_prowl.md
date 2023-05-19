@@ -41,6 +41,7 @@ resource "lidarr_notification_prowl" "example" {
 - `on_application_update` (Boolean) On application update flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
 - `on_release_import` (Boolean) On movie file delete for upgrade flag.
 - `on_upgrade` (Boolean) On upgrade flag.
 

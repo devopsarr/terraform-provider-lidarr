@@ -52,6 +52,7 @@ type NotificationWebhook struct {
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 	OnTrackRetag          types.Bool   `tfsdk:"on_track_retag"`
@@ -74,6 +75,7 @@ func (n NotificationWebhook) toNotification() *Notification {
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
+		OnHealthRestored:      n.OnHealthRestored,
 		OnImportFailure:       n.OnImportFailure,
 		OnRename:              n.OnRename,
 		OnUpgrade:             n.OnUpgrade,
@@ -97,6 +99,7 @@ func (n *NotificationWebhook) fromNotification(notification *Notification) {
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnReleaseImport = notification.OnReleaseImport
 	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
@@ -141,6 +144,10 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
 				Required:            true,
 			},
 			"on_application_update": schema.BoolAttribute{

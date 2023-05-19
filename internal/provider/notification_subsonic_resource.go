@@ -136,6 +136,10 @@ func (r *NotificationSubsonicResource) Schema(ctx context.Context, req resource.
 				MarkdownDescription: "On health issue flag.",
 				Required:            true,
 			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
+				Required:            true,
+			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
 				Required:            true,

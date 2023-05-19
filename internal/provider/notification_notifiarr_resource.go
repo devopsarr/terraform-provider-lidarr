@@ -47,6 +47,7 @@ type NotificationNotifiarr struct {
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 }
 
@@ -61,6 +62,7 @@ func (n NotificationNotifiarr) toNotification() *Notification {
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
+		OnHealthRestored:      n.OnHealthRestored,
 		OnUpgrade:             n.OnUpgrade,
 		Implementation:        types.StringValue(notificationNotifiarrImplementation),
 		ConfigContract:        types.StringValue(notificationNotifiarrConfigContract),
@@ -77,6 +79,7 @@ func (n *NotificationNotifiarr) fromNotification(notification *Notification) {
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnUpgrade = notification.OnUpgrade
 }
 
@@ -102,6 +105,10 @@ func (r *NotificationNotifiarrResource) Schema(ctx context.Context, req resource
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Required:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
 				Required:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
