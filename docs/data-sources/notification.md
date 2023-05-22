@@ -46,6 +46,7 @@ data "lidarr_notification" "example" {
 - `channel_tags` (Set of String) Channel tags.
 - `chat_id` (String) Chat ID.
 - `clean_library` (Boolean) Clean library flag.
+- `click_url` (String) Click URL.
 - `config_contract` (String) Notification configuration template.
 - `configuration_key` (String, Sensitive) Configuration key.
 - `consumer_key` (String) Consumer key.
@@ -101,6 +102,7 @@ data "lidarr_notification" "example" {
 - `tags` (Set of Number) List of associated tags.
 - `to` (Set of String) To.
 - `token` (String) Token.
+- `topics` (Set of String) Topics.
 - `update_library` (Boolean) Update library flag.
 - `url` (String) URL.
 - `url_base` (String) URL base.

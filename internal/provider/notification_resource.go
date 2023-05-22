@@ -28,9 +28,9 @@ var (
 
 var notificationFields = helpers.Fields{
 	Bools:                  []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSsl"},
-	Strings:                []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "webHookUrl", "authUsername", "authPassword", "statelessUrls", "configurationKey", "serverUrl"},
+	Strings:                []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "userName", "webHookUrl", "authUsername", "authPassword", "statelessUrls", "configurationKey", "serverUrl", "clickUrl"},
 	Ints:                   []string{"method", "port", "priority", "displayTime", "retry", "expire", "notificationType"},
-	StringSlices:           []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc", "fieldTags"},
+	StringSlices:           []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc", "fieldTags", "topics"},
 	StringSlicesExceptions: []string{"tags"},
 	IntSlices:              []string{"grabFields", "importFields"},
 }
@@ -57,6 +57,8 @@ type Notification struct {
 	ChannelTags           types.Set    `tfsdk:"channel_tags"`
 	ImportFields          types.Set    `tfsdk:"import_fields"`
 	GrabFields            types.Set    `tfsdk:"grab_fields"`
+	Topics                types.Set    `tfsdk:"topics"`
+	ClickURL              types.String `tfsdk:"click_url"`
 	Path                  types.String `tfsdk:"path"`
 	RefreshToken          types.String `tfsdk:"refresh_token"`
 	WebHookURL            types.String `tfsdk:"web_hook_url"`
@@ -501,6 +503,11 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
+			"click_url": schema.StringAttribute{
+				MarkdownDescription: "Click URL.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"user_key": schema.StringAttribute{
 				MarkdownDescription: "User key.",
 				Optional:            true,
@@ -572,6 +579,12 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"bcc": schema.SetAttribute{
 				MarkdownDescription: "Bcc.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"topics": schema.SetAttribute{
+				MarkdownDescription: "Topics.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.StringType,
@@ -726,6 +739,7 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.Cc = types.SetValueMust(types.StringType, nil)
 	n.Bcc = types.SetValueMust(types.StringType, nil)
 	n.FieldTags = types.SetValueMust(types.StringType, nil)
+	n.Topics = types.SetValueMust(types.StringType, nil)
 	helpers.WriteFields(ctx, n, notification.GetFields(), notificationFields)
 }
 

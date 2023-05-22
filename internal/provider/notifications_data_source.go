@@ -221,6 +221,10 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "Server URL.",
 							Computed:            true,
 						},
+						"click_url": schema.StringAttribute{
+							MarkdownDescription: "Click URL.",
+							Computed:            true,
+						},
 						"stateless_urls": schema.StringAttribute{
 							MarkdownDescription: "Stateless URLs.",
 							Computed:            true,
@@ -394,6 +398,11 @@ func (d *NotificationsDataSource) Schema(ctx context.Context, req datasource.Sch
 						},
 						"bcc": schema.SetAttribute{
 							MarkdownDescription: "Bcc.",
+							Computed:            true,
+							ElementType:         types.StringType,
+						},
+						"topics": schema.SetAttribute{
+							MarkdownDescription: "Topics.",
 							Computed:            true,
 							ElementType:         types.StringType,
 						},
