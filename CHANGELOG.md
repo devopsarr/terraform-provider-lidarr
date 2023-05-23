@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.8.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.7.0...v1.8.0) (2023-05-23)
+
+
+### Features
+
+* add apprise notification ([1342e8d](https://github.com/devopsarr/terraform-provider-lidarr/commit/1342e8d8bc2776c9bea00f51dd7abec74d218601))
+* add notification ntfy resource ([3597862](https://github.com/devopsarr/terraform-provider-lidarr/commit/35978629e9af27a419437339deea61af907faec4))
+* add notification on delete flags ([4e886ad](https://github.com/devopsarr/terraform-provider-lidarr/commit/4e886ad05d97f97a7527b9cde9537984ccd11b3e))
+* add notification simplepush ([0902f45](https://github.com/devopsarr/terraform-provider-lidarr/commit/0902f459c954aefcb6ab1f4aa2d057c7068df7c5))
+* add on health restored notification flag ([fbc398a](https://github.com/devopsarr/terraform-provider-lidarr/commit/fbc398a623bc3c0909418cb82a963a0a2db9be6d))
+* make notification flags optional ([aa3af7c](https://github.com/devopsarr/terraform-provider-lidarr/commit/aa3af7c146f2a926b4dbf91cdfc25dff950691fc))
+
+
+### Bug Fixes
+
+* remove passkey parameter from redacted indexer ([fc50e57](https://github.com/devopsarr/terraform-provider-lidarr/commit/fc50e57b5dbdcc61021d4921bb11c4e479b668dc))
+
 ## [1.7.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.6.1...v1.7.0) (2023-03-28)
 
 
