@@ -59,6 +59,7 @@ Read-Only:
 - `devices` (Set of String) Devices.
 - `direct_message` (Boolean) Direct message flag.
 - `display_time` (Number) Display time.
+- `event` (String) Event.
 - `expire` (Number) Expire.
 - `expires` (String) Expires.
 - `field_tags` (Set of String) Tags and emojis.
@@ -70,6 +71,7 @@ Read-Only:
 - `implementation` (String) Notification implementation name.
 - `import_fields` (Set of Number) Import fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Codecs, `5` Group, `6` Size, `7` Languages, `8` Subtitles, `9` Links, `10` Release, `11` Poster, `12` Fanart.
 - `include_health_warnings` (Boolean) Include health warnings.
+- `key` (String, Sensitive) Key.
 - `mention` (String) Mention.
 - `method` (Number) Method. `1` POST, `2` PUT.
 - `name` (String) Notification name.
