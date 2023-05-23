@@ -49,9 +49,12 @@ type NotificationWebhook struct {
 	Method                types.Int64  `tfsdk:"method"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 	OnTrackRetag          types.Bool   `tfsdk:"on_track_retag"`
@@ -70,10 +73,13 @@ func (n NotificationWebhook) toNotification() *Notification {
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
 		OnReleaseImport:       n.OnReleaseImport,
+		OnAlbumDelete:         n.OnAlbumDelete,
+		OnArtistDelete:        n.OnArtistDelete,
 		OnDownloadFailure:     n.OnDownloadFailure,
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
+		OnHealthRestored:      n.OnHealthRestored,
 		OnImportFailure:       n.OnImportFailure,
 		OnRename:              n.OnRename,
 		OnUpgrade:             n.OnUpgrade,
@@ -97,7 +103,10 @@ func (n *NotificationWebhook) fromNotification(notification *Notification) {
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnReleaseImport = notification.OnReleaseImport
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
 	n.OnImportFailure = notification.OnImportFailure
@@ -113,43 +122,68 @@ func (r *NotificationWebhookResource) Schema(ctx context.Context, req resource.S
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_download_failure": schema.BoolAttribute{
 				MarkdownDescription: "On download failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{
 				MarkdownDescription: "On import failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
 				MarkdownDescription: "On track retag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
 				MarkdownDescription: "On application update flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationWebhook name.",

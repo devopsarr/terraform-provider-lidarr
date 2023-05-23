@@ -47,6 +47,8 @@ type NotificationPlex struct {
 	UpdateLibrary   types.Bool   `tfsdk:"update_library"`
 	UseSSL          types.Bool   `tfsdk:"use_ssl"`
 	OnReleaseImport types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete   types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete  types.Bool   `tfsdk:"on_artist_delete"`
 	OnTrackRetag    types.Bool   `tfsdk:"on_track_retag"`
 	OnRename        types.Bool   `tfsdk:"on_rename"`
 	OnUpgrade       types.Bool   `tfsdk:"on_upgrade"`
@@ -81,6 +83,8 @@ func (n *NotificationPlex) fromNotification(notification *Notification) {
 	n.Port = notification.Port
 	n.UseSSL = notification.UseSSL
 	n.OnReleaseImport = notification.OnReleaseImport
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.OnTrackRetag = notification.OnTrackRetag
 	n.OnRename = notification.OnRename
 	n.OnUpgrade = notification.OnUpgrade
@@ -96,19 +100,33 @@ func (r *NotificationPlexResource) Schema(ctx context.Context, req resource.Sche
 		Attributes: map[string]schema.Attribute{
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete flag.",
-				Required:            true,
+				MarkdownDescription: "On track retag flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete for upgrade flag.",
-				Required:            true,
+				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationPlex name.",

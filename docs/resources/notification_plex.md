@@ -37,13 +37,15 @@ resource "lidarr_notification_plex" "example" {
 - `auth_token` (String, Sensitive) Auth Token.
 - `host` (String) Host.
 - `name` (String) NotificationPlex name.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
-- `on_rename` (Boolean) On rename flag.
-- `on_track_retag` (Boolean) On movie file delete flag.
-- `on_upgrade` (Boolean) On upgrade flag.
 
 ### Optional
 
+- `on_album_delete` (Boolean) On album delete flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
+- `on_release_import` (Boolean) On release import flag.
+- `on_rename` (Boolean) On rename flag.
+- `on_track_retag` (Boolean) On track retag flag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `port` (Number) Port.
 - `tags` (Set of Number) List of associated tags.
 - `update_library` (Boolean) Update library flag.

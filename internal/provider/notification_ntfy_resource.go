@@ -6,126 +6,130 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
 const (
-	notificationKodiResourceName   = "notification_kodi"
-	notificationKodiImplementation = "Xbmc"
-	notificationKodiConfigContract = "XbmcSettings"
+	notificationNtfyResourceName   = "notification_ntfy"
+	notificationNtfyImplementation = "Ntfy"
+	notificationNtfyConfigContract = "NtfySettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &NotificationKodiResource{}
-	_ resource.ResourceWithImportState = &NotificationKodiResource{}
+	_ resource.Resource                = &NotificationNtfyResource{}
+	_ resource.ResourceWithImportState = &NotificationNtfyResource{}
 )
 
-func NewNotificationKodiResource() resource.Resource {
-	return &NotificationKodiResource{}
+func NewNotificationNtfyResource() resource.Resource {
+	return &NotificationNtfyResource{}
 }
 
-// NotificationKodiResource defines the notification implementation.
-type NotificationKodiResource struct {
+// NotificationNtfyResource defines the notification implementation.
+type NotificationNtfyResource struct {
 	client *lidarr.APIClient
 }
 
-// NotificationKodi describes the notification data model.
-type NotificationKodi struct {
+// NotificationNtfy describes the notification data model.
+type NotificationNtfy struct {
 	Tags                  types.Set    `tfsdk:"tags"`
-	Host                  types.String `tfsdk:"host"`
-	Name                  types.String `tfsdk:"name"`
+	FieldTags             types.Set    `tfsdk:"field_tags"`
+	Topics                types.Set    `tfsdk:"topics"`
+	ClickURL              types.String `tfsdk:"click_url"`
+	ServerURL             types.String `tfsdk:"server_url"`
 	Username              types.String `tfsdk:"username"`
+	Name                  types.String `tfsdk:"name"`
 	Password              types.String `tfsdk:"password"`
-	DisplayTime           types.Int64  `tfsdk:"display_time"`
-	Port                  types.Int64  `tfsdk:"port"`
+	Priority              types.Int64  `tfsdk:"priority"`
 	ID                    types.Int64  `tfsdk:"id"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
-	UseSSL                types.Bool   `tfsdk:"use_ssl"`
-	Notify                types.Bool   `tfsdk:"notify"`
-	UpdateLibrary         types.Bool   `tfsdk:"update_library"`
-	CleanLibrary          types.Bool   `tfsdk:"clean_library"`
-	AlwaysUpdate          types.Bool   `tfsdk:"always_update"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
-	OnTrackRetag          types.Bool   `tfsdk:"on_track_retag"`
-	OnRename              types.Bool   `tfsdk:"on_rename"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
 	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
+	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
+	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 }
 
-func (n NotificationKodi) toNotification() *Notification {
+func (n NotificationNtfy) toNotification() *Notification {
 	return &Notification{
 		Tags:                  n.Tags,
-		Port:                  n.Port,
-		Host:                  n.Host,
-		DisplayTime:           n.DisplayTime,
-		Password:              n.Password,
+		FieldTags:             n.FieldTags,
+		Topics:                n.Topics,
+		ClickURL:              n.ClickURL,
+		ServerURL:             n.ServerURL,
 		Username:              n.Username,
+		Password:              n.Password,
+		Priority:              n.Priority,
 		Name:                  n.Name,
 		ID:                    n.ID,
-		UseSSL:                n.UseSSL,
-		Notify:                n.Notify,
-		UpdateLibrary:         n.UpdateLibrary,
-		AlwaysUpdate:          n.AlwaysUpdate,
-		CleanLibrary:          n.CleanLibrary,
 		OnGrab:                n.OnGrab,
 		OnReleaseImport:       n.OnReleaseImport,
-		OnRename:              n.OnRename,
-		OnTrackRetag:          n.OnTrackRetag,
+		OnAlbumDelete:         n.OnAlbumDelete,
+		OnArtistDelete:        n.OnArtistDelete,
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
 		OnHealthRestored:      n.OnHealthRestored,
+		OnDownloadFailure:     n.OnDownloadFailure,
 		OnUpgrade:             n.OnUpgrade,
-		Implementation:        types.StringValue(notificationKodiImplementation),
-		ConfigContract:        types.StringValue(notificationKodiConfigContract),
+		OnImportFailure:       n.OnImportFailure,
+		Implementation:        types.StringValue(notificationNtfyImplementation),
+		ConfigContract:        types.StringValue(notificationNtfyConfigContract),
 	}
 }
 
-func (n *NotificationKodi) fromNotification(notification *Notification) {
+func (n *NotificationNtfy) fromNotification(notification *Notification) {
 	n.Tags = notification.Tags
-	n.Port = notification.Port
-	n.DisplayTime = notification.DisplayTime
-	n.Host = notification.Host
-	n.Password = notification.Password
+	n.FieldTags = notification.FieldTags
+	n.Topics = notification.Topics
+	n.ClickURL = notification.ClickURL
+	n.ServerURL = notification.ServerURL
 	n.Username = notification.Username
+	n.Password = notification.Password
+	n.Priority = notification.Priority
 	n.Name = notification.Name
 	n.ID = notification.ID
-	n.UseSSL = notification.UseSSL
-	n.Notify = notification.Notify
-	n.UpdateLibrary = notification.UpdateLibrary
-	n.AlwaysUpdate = notification.AlwaysUpdate
-	n.CleanLibrary = notification.CleanLibrary
 	n.OnGrab = notification.OnGrab
 	n.OnReleaseImport = notification.OnReleaseImport
-	n.OnTrackRetag = notification.OnTrackRetag
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
 	n.OnHealthRestored = notification.OnHealthRestored
-	n.OnRename = notification.OnRename
+	n.OnDownloadFailure = notification.OnDownloadFailure
 	n.OnUpgrade = notification.OnUpgrade
+	n.OnImportFailure = notification.OnImportFailure
 }
 
-func (r *NotificationKodiResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + notificationKodiResourceName
+func (r *NotificationNtfyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + notificationNtfyResourceName
 }
 
-func (r *NotificationKodiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationNtfyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Kodi resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Kodi](https://wiki.servarr.com/lidarr/supported#xbmc).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Ntfy resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Ntfy](https://wiki.servarr.com/lidarr/supported#ntfy).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_import_failure": schema.BoolAttribute{
+				MarkdownDescription: "On download flag.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -134,18 +138,23 @@ func (r *NotificationKodiResource) Schema(ctx context.Context, req resource.Sche
 				Optional:            true,
 				Computed:            true,
 			},
-			"on_rename": schema.BoolAttribute{
-				MarkdownDescription: "On rename flag.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"on_track_retag": schema.BoolAttribute{
-				MarkdownDescription: "On track retag flag.",
+			"on_download_failure": schema.BoolAttribute{
+				MarkdownDescription: "On download failure flag.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -170,7 +179,7 @@ func (r *NotificationKodiResource) Schema(ctx context.Context, req resource.Sche
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "NotificationKodi name.",
+				MarkdownDescription: "NotificationNtfy name.",
 				Required:            true,
 			},
 			"tags": schema.SetAttribute{
@@ -187,43 +196,23 @@ func (r *NotificationKodiResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			// Field values
-			"use_ssl": schema.BoolAttribute{
-				MarkdownDescription: "Use SSL flag.",
+			"priority": schema.Int64Attribute{
+				MarkdownDescription: "Priority. `1` Min, `2` Low, `3` Default, `4` High, `5` Max.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.OneOf(1, 2, 3, 4, 5),
+				},
+			},
+			"server_url": schema.StringAttribute{
+				MarkdownDescription: "Server URL.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"notify": schema.BoolAttribute{
-				MarkdownDescription: "Notification flag.",
+			"click_url": schema.StringAttribute{
+				MarkdownDescription: "Click URL.",
 				Optional:            true,
 				Computed:            true,
-			},
-			"update_library": schema.BoolAttribute{
-				MarkdownDescription: "Update library flag.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"clean_library": schema.BoolAttribute{
-				MarkdownDescription: "Clean library flag.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"always_update": schema.BoolAttribute{
-				MarkdownDescription: "Always update flag.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"display_time": schema.Int64Attribute{
-				MarkdownDescription: "Display time.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"port": schema.Int64Attribute{
-				MarkdownDescription: "Port.",
-				Required:            true,
-			},
-			"host": schema.StringAttribute{
-				MarkdownDescription: "Host.",
-				Required:            true,
 			},
 			"username": schema.StringAttribute{
 				MarkdownDescription: "Username.",
@@ -236,19 +225,30 @@ func (r *NotificationKodiResource) Schema(ctx context.Context, req resource.Sche
 				Computed:            true,
 				Sensitive:           true,
 			},
+			"topics": schema.SetAttribute{
+				MarkdownDescription: "Topics.",
+				Required:            true,
+				ElementType:         types.StringType,
+			},
+			"field_tags": schema.SetAttribute{
+				MarkdownDescription: "Tags and emojis.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
 		},
 	}
 }
 
-func (r *NotificationKodiResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NotificationNtfyResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *NotificationKodiResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *NotificationNtfyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var notification *NotificationKodi
+	var notification *NotificationNtfy
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -256,25 +256,25 @@ func (r *NotificationKodiResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 
-	// Create new NotificationKodi
+	// Create new NotificationNtfy
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationKodiResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationNtfyResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+notificationKodiResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+notificationNtfyResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationKodiResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *NotificationNtfyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var notification *NotificationKodi
+	var notification *NotificationNtfy
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -282,23 +282,23 @@ func (r *NotificationKodiResource) Read(ctx context.Context, req resource.ReadRe
 		return
 	}
 
-	// Get NotificationKodi current value
+	// Get NotificationNtfy current value
 	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(int(notification.ID.ValueInt64()))).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationKodiResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationNtfyResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+notificationKodiResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+notificationNtfyResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationKodiResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *NotificationNtfyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var notification *NotificationKodi
+	var notification *NotificationNtfy
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -306,24 +306,24 @@ func (r *NotificationKodiResource) Update(ctx context.Context, req resource.Upda
 		return
 	}
 
-	// Update NotificationKodi
+	// Update NotificationNtfy
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationKodiResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationNtfyResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+notificationKodiResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+notificationNtfyResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationKodiResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var notification *NotificationKodi
+func (r *NotificationNtfyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var notification *NotificationNtfy
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -331,29 +331,29 @@ func (r *NotificationKodiResource) Delete(ctx context.Context, req resource.Dele
 		return
 	}
 
-	// Delete NotificationKodi current value
+	// Delete NotificationNtfy current value
 	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationKodiResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationNtfyResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+notificationKodiResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+notificationNtfyResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *NotificationKodiResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NotificationNtfyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+notificationKodiResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+notificationNtfyResourceName+": "+req.ID)
 }
 
-func (n *NotificationKodi) write(ctx context.Context, notification *lidarr.NotificationResource) {
+func (n *NotificationNtfy) write(ctx context.Context, notification *lidarr.NotificationResource) {
 	genericNotification := n.toNotification()
 	genericNotification.write(ctx, notification)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationKodi) read(ctx context.Context) *lidarr.NotificationResource {
+func (n *NotificationNtfy) read(ctx context.Context) *lidarr.NotificationResource {
 	return n.toNotification().read(ctx)
 }

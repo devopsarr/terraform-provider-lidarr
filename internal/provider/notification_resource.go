@@ -27,11 +27,12 @@ var (
 )
 
 var notificationFields = helpers.Fields{
-	Bools:        []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSsl"},
-	Strings:      []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "webHookUrl"},
-	Ints:         []string{"method", "port", "priority", "displayTime", "retry", "expire"},
-	StringSlices: []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc"},
-	IntSlices:    []string{"grabFields", "importFields"},
+	Bools:                  []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSsl"},
+	Strings:                []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "userName", "webHookUrl", "authUsername", "authPassword", "statelessUrls", "configurationKey", "serverUrl", "clickUrl", "event", "key"},
+	Ints:                   []string{"method", "port", "priority", "displayTime", "retry", "expire", "notificationType"},
+	StringSlices:           []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc", "fieldTags", "topics"},
+	StringSlicesExceptions: []string{"tags"},
+	IntSlices:              []string{"grabFields", "importFields"},
 }
 
 func NewNotificationResource() resource.Resource {
@@ -46,6 +47,7 @@ type NotificationResource struct {
 // Notification describes the notification data model.
 type Notification struct {
 	Tags                  types.Set    `tfsdk:"tags"`
+	FieldTags             types.Set    `tfsdk:"field_tags"`
 	Recipients            types.Set    `tfsdk:"recipients"`
 	Devices               types.Set    `tfsdk:"devices"`
 	DeviceIds             types.Set    `tfsdk:"device_ids"`
@@ -55,6 +57,8 @@ type Notification struct {
 	ChannelTags           types.Set    `tfsdk:"channel_tags"`
 	ImportFields          types.Set    `tfsdk:"import_fields"`
 	GrabFields            types.Set    `tfsdk:"grab_fields"`
+	Topics                types.Set    `tfsdk:"topics"`
+	ClickURL              types.String `tfsdk:"click_url"`
 	Path                  types.String `tfsdk:"path"`
 	RefreshToken          types.String `tfsdk:"refresh_token"`
 	WebHookURL            types.String `tfsdk:"web_hook_url"`
@@ -79,6 +83,8 @@ type Notification struct {
 	Expires               types.String `tfsdk:"expires"`
 	AccessToken           types.String `tfsdk:"access_token"`
 	AccessTokenSecret     types.String `tfsdk:"access_token_secret"`
+	Event                 types.String `tfsdk:"event"`
+	Key                   types.String `tfsdk:"key"`
 	APIKey                types.String `tfsdk:"api_key"`
 	AppToken              types.String `tfsdk:"app_token"`
 	Arguments             types.String `tfsdk:"arguments"`
@@ -92,6 +98,12 @@ type Notification struct {
 	ConsumerKey           types.String `tfsdk:"consumer_key"`
 	ConsumerSecret        types.String `tfsdk:"consumer_secret"`
 	DeviceNames           types.String `tfsdk:"device_names"`
+	StatelessURLs         types.String `tfsdk:"stateless_urls"`
+	ServerURL             types.String `tfsdk:"server_url"`
+	AuthUsername          types.String `tfsdk:"auth_username"`
+	AuthPassword          types.String `tfsdk:"auth_password"`
+	ConfigurationKey      types.String `tfsdk:"configuration_key"`
+	NotificationType      types.Int64  `tfsdk:"notification_type"`
 	Retry                 types.Int64  `tfsdk:"retry"`
 	Expire                types.Int64  `tfsdk:"expire"`
 	DisplayTime           types.Int64  `tfsdk:"display_time"`
@@ -111,9 +123,12 @@ type Notification struct {
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	OnRename              types.Bool   `tfsdk:"on_rename"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 	OnTrackRetag          types.Bool   `tfsdk:"on_track_retag"`
@@ -130,43 +145,68 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
 				MarkdownDescription: "On release import flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_rename": schema.BoolAttribute{
 				MarkdownDescription: "On rename flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_download_failure": schema.BoolAttribute{
 				MarkdownDescription: "On download failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_import_failure": schema.BoolAttribute{
 				MarkdownDescription: "On import failure flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_track_retag": schema.BoolAttribute{
 				MarkdownDescription: "On track retag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
 				MarkdownDescription: "On application update flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"config_contract": schema.StringAttribute{
 				MarkdownDescription: "Notification configuration template.",
@@ -260,6 +300,14 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 					int64validator.OneOf(-2, -1, 0, 1, 2, 3, 4, 5, 7),
 				},
 			},
+			"notification_type": schema.Int64Attribute{
+				MarkdownDescription: "Notification type. `0` Info, `1` Success, `2` Warning, `3` Failure.",
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.OneOf(0, 1, 2, 3),
+				},
+			},
 			"retry": schema.Int64Attribute{
 				MarkdownDescription: "Retry.",
 				Optional:            true,
@@ -310,6 +358,33 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
+			"server_url": schema.StringAttribute{
+				MarkdownDescription: "Server URL.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"stateless_urls": schema.StringAttribute{
+				MarkdownDescription: "Stateless URLs.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"configuration_key": schema.StringAttribute{
+				MarkdownDescription: "Configuration key.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"auth_username": schema.StringAttribute{
+				MarkdownDescription: "Username.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"auth_password": schema.StringAttribute{
+				MarkdownDescription: "Password.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
+			},
 			"avatar": schema.StringAttribute{
 				MarkdownDescription: "Avatar.",
 				Optional:            true,
@@ -354,6 +429,17 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				MarkdownDescription: "Expires.",
 				Optional:            true,
 				Computed:            true,
+			},
+			"event": schema.StringAttribute{
+				MarkdownDescription: "Event.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"key": schema.StringAttribute{
+				MarkdownDescription: "Key.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
 			},
 			"from": schema.StringAttribute{
 				MarkdownDescription: "From.",
@@ -430,6 +516,11 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				Computed:            true,
 			},
+			"click_url": schema.StringAttribute{
+				MarkdownDescription: "Click URL.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"user_key": schema.StringAttribute{
 				MarkdownDescription: "User key.",
 				Optional:            true,
@@ -469,6 +560,12 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 				Computed:            true,
 				ElementType:         types.StringType,
 			},
+			"field_tags": schema.SetAttribute{
+				MarkdownDescription: "Tags and emojis.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
 			"grab_fields": schema.SetAttribute{
 				MarkdownDescription: "Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart.",
 				Optional:            true,
@@ -495,6 +592,12 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"bcc": schema.SetAttribute{
 				MarkdownDescription: "Bcc.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"topics": schema.SetAttribute{
+				MarkdownDescription: "Topics.",
 				Optional:            true,
 				Computed:            true,
 				ElementType:         types.StringType,
@@ -627,9 +730,12 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.OnUpgrade = types.BoolValue(notification.GetOnUpgrade())
 	n.OnRename = types.BoolValue(notification.GetOnRename())
 	n.OnReleaseImport = types.BoolValue(notification.GetOnReleaseImport())
+	n.OnArtistDelete = types.BoolValue(notification.GetOnArtistDelete())
+	n.OnAlbumDelete = types.BoolValue(notification.GetOnAlbumDelete())
 	n.OnTrackRetag = types.BoolValue(notification.GetOnTrackRetag())
 	n.OnDownloadFailure = types.BoolValue(notification.GetOnDownloadFailure())
 	n.OnHealthIssue = types.BoolValue(notification.GetOnHealthIssue())
+	n.OnHealthRestored = types.BoolValue(notification.GetOnHealthRestored())
 	n.OnApplicationUpdate = types.BoolValue(notification.GetOnApplicationUpdate())
 	n.IncludeHealthWarnings = types.BoolValue(notification.GetIncludeHealthWarnings())
 	n.ID = types.Int64Value(int64(notification.GetId()))
@@ -645,6 +751,8 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.To = types.SetValueMust(types.StringType, nil)
 	n.Cc = types.SetValueMust(types.StringType, nil)
 	n.Bcc = types.SetValueMust(types.StringType, nil)
+	n.FieldTags = types.SetValueMust(types.StringType, nil)
+	n.Topics = types.SetValueMust(types.StringType, nil)
 	helpers.WriteFields(ctx, n, notification.GetFields(), notificationFields)
 }
 
@@ -655,12 +763,15 @@ func (n *Notification) read(ctx context.Context) *lidarr.NotificationResource {
 	notification := lidarr.NewNotificationResource()
 	notification.SetOnGrab(n.OnGrab.ValueBool())
 	notification.SetOnReleaseImport(n.OnReleaseImport.ValueBool())
+	notification.SetOnAlbumDelete(n.OnAlbumDelete.ValueBool())
+	notification.SetOnArtistDelete(n.OnArtistDelete.ValueBool())
 	notification.SetOnUpgrade(n.OnUpgrade.ValueBool())
 	notification.SetOnRename(n.OnRename.ValueBool())
 	notification.SetOnTrackRetag(n.OnTrackRetag.ValueBool())
 	notification.SetOnDownloadFailure(n.OnDownloadFailure.ValueBool())
 	notification.SetOnImportFailure(n.OnImportFailure.ValueBool())
 	notification.SetOnHealthIssue(n.OnHealthIssue.ValueBool())
+	notification.SetOnHealthRestored(n.OnHealthRestored.ValueBool())
 	notification.SetOnApplicationUpdate(n.OnApplicationUpdate.ValueBool())
 	notification.SetIncludeHealthWarnings(n.IncludeHealthWarnings.ValueBool())
 	notification.SetId(int32(n.ID.ValueInt64()))

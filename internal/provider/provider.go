@@ -198,6 +198,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 
 		// Notifications
 		NewNotificationResource,
+		NewNotificationAppriseResource,
 		NewNotificationBoxcarResource,
 		NewNotificationCustomScriptResource,
 		NewNotificationDiscordResource,
@@ -208,11 +209,13 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 		NewNotificationKodiResource,
 		NewNotificationMailgunResource,
 		NewNotificationNotifiarrResource,
+		NewNotificationNtfyResource,
 		NewNotificationPlexResource,
 		NewNotificationProwlResource,
 		NewNotificationPushbulletResource,
 		NewNotificationPushoverResource,
 		NewNotificationSendgridResource,
+		NewNotificationSimplepushResource,
 		NewNotificationSlackResource,
 		NewNotificationSubsonicResource,
 		NewNotificationSynologyResource,

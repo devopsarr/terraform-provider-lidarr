@@ -42,17 +42,7 @@ resource "lidarr_notification" "example" {
 
 - `config_contract` (String) Notification configuration template.
 - `implementation` (String) Notification implementation name.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) Notification name.
-- `on_application_update` (Boolean) On application update flag.
-- `on_download_failure` (Boolean) On download failure flag.
-- `on_grab` (Boolean) On grab flag.
-- `on_health_issue` (Boolean) On health issue flag.
-- `on_import_failure` (Boolean) On import failure flag.
-- `on_release_import` (Boolean) On release import flag.
-- `on_rename` (Boolean) On rename flag.
-- `on_track_retag` (Boolean) On track retag.
-- `on_upgrade` (Boolean) On upgrade flag.
 
 ### Optional
 
@@ -62,8 +52,10 @@ resource "lidarr_notification" "example" {
 - `api_key` (String) API key.
 - `app_token` (String) App token.
 - `arguments` (String) Arguments.
+- `auth_password` (String, Sensitive) Password.
 - `auth_token` (String) Auth token.
 - `auth_user` (String) Auth user.
+- `auth_username` (String) Username.
 - `author` (String) Author.
 - `avatar` (String) Avatar.
 - `bcc` (Set of String) Bcc.
@@ -73,6 +65,8 @@ resource "lidarr_notification" "example" {
 - `channel_tags` (Set of String) Channel tags.
 - `chat_id` (String) Chat ID.
 - `clean_library` (Boolean) Clean library flag.
+- `click_url` (String) Click URL.
+- `configuration_key` (String, Sensitive) Configuration key.
 - `consumer_key` (String) Consumer key.
 - `consumer_secret` (String) Consumer secret.
 - `device_ids` (Set of String) Device IDs.
@@ -80,16 +74,33 @@ resource "lidarr_notification" "example" {
 - `devices` (Set of String) Devices.
 - `direct_message` (Boolean) Direct message flag.
 - `display_time` (Number) Display time.
+- `event` (String) Event.
 - `expire` (Number) Expire.
 - `expires` (String) Expires.
+- `field_tags` (Set of String) Tags and emojis.
 - `from` (String) From.
 - `grab_fields` (Set of Number) Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart.
 - `host` (String) Host.
 - `icon` (String) Icon.
 - `import_fields` (Set of Number) Import fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Codecs, `5` Group, `6` Size, `7` Languages, `8` Subtitles, `9` Links, `10` Release, `11` Poster, `12` Fanart.
+- `include_health_warnings` (Boolean) Include health warnings.
+- `key` (String, Sensitive) Key.
 - `mention` (String) Mention.
 - `method` (Number) Method. `1` POST, `2` PUT.
+- `notification_type` (Number) Notification type. `0` Info, `1` Success, `2` Warning, `3` Failure.
 - `notify` (Boolean) Notify flag.
+- `on_album_delete` (Boolean) On album delete flag.
+- `on_application_update` (Boolean) On application update flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
+- `on_download_failure` (Boolean) On download failure flag.
+- `on_grab` (Boolean) On grab flag.
+- `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
+- `on_import_failure` (Boolean) On import failure flag.
+- `on_release_import` (Boolean) On release import flag.
+- `on_rename` (Boolean) On rename flag.
+- `on_track_retag` (Boolean) On track retag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `password` (String) password.
 - `path` (String) Path.
 - `port` (Number) Port.
@@ -102,11 +113,14 @@ resource "lidarr_notification" "example" {
 - `sender_domain` (String) Sender domain.
 - `sender_id` (String) Sender ID.
 - `server` (String) server.
+- `server_url` (String) Server URL.
 - `sign_in` (String) Sign in.
 - `sound` (String) Sound.
+- `stateless_urls` (String) Stateless URLs.
 - `tags` (Set of Number) List of associated tags.
 - `to` (Set of String) To.
 - `token` (String) Token.
+- `topics` (Set of String) Topics.
 - `update_library` (Boolean) Update library flag.
 - `url` (String) URL.
 - `url_base` (String) URL base.

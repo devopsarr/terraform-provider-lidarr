@@ -18,49 +18,61 @@ import (
 )
 
 const (
-	notificationProwlResourceName   = "notification_prowl"
-	notificationProwlImplementation = "Prowl"
-	notificationProwlConfigContract = "ProwlSettings"
+	notificationAppriseResourceName   = "notification_apprise"
+	notificationAppriseImplementation = "Apprise"
+	notificationAppriseConfigContract = "AppriseSettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &NotificationProwlResource{}
-	_ resource.ResourceWithImportState = &NotificationProwlResource{}
+	_ resource.Resource                = &NotificationAppriseResource{}
+	_ resource.ResourceWithImportState = &NotificationAppriseResource{}
 )
 
-func NewNotificationProwlResource() resource.Resource {
-	return &NotificationProwlResource{}
+func NewNotificationAppriseResource() resource.Resource {
+	return &NotificationAppriseResource{}
 }
 
-// NotificationProwlResource defines the notification implementation.
-type NotificationProwlResource struct {
+// NotificationAppriseResource defines the notification implementation.
+type NotificationAppriseResource struct {
 	client *lidarr.APIClient
 }
 
-// NotificationProwl describes the notification data model.
-type NotificationProwl struct {
+// NotificationApprise describes the notification data model.
+type NotificationApprise struct {
 	Tags                  types.Set    `tfsdk:"tags"`
+	FieldTags             types.Set    `tfsdk:"field_tags"`
 	Name                  types.String `tfsdk:"name"`
-	APIKey                types.String `tfsdk:"api_key"`
-	Priority              types.Int64  `tfsdk:"priority"`
+	StatelessURLs         types.String `tfsdk:"stateless_urls"`
+	ServerURL             types.String `tfsdk:"server_url"`
+	AuthUsername          types.String `tfsdk:"auth_username"`
+	AuthPassword          types.String `tfsdk:"auth_password"`
+	ConfigurationKey      types.String `tfsdk:"configuration_key"`
+	NotificationType      types.Int64  `tfsdk:"notification_type"`
 	ID                    types.Int64  `tfsdk:"id"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
 	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
 	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
-	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
 	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
+	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
+	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
+	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 }
 
-func (n NotificationProwl) toNotification() *Notification {
+func (n NotificationApprise) toNotification() *Notification {
 	return &Notification{
 		Tags:                  n.Tags,
-		APIKey:                n.APIKey,
-		Priority:              n.Priority,
+		FieldTags:             n.FieldTags,
+		StatelessURLs:         n.StatelessURLs,
+		ServerURL:             n.ServerURL,
+		AuthUsername:          n.AuthUsername,
+		AuthPassword:          n.AuthPassword,
+		ConfigurationKey:      n.ConfigurationKey,
+		NotificationType:      n.NotificationType,
 		Name:                  n.Name,
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
@@ -71,16 +83,23 @@ func (n NotificationProwl) toNotification() *Notification {
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
 		OnHealthRestored:      n.OnHealthRestored,
+		OnDownloadFailure:     n.OnDownloadFailure,
 		OnUpgrade:             n.OnUpgrade,
-		Implementation:        types.StringValue(notificationProwlImplementation),
-		ConfigContract:        types.StringValue(notificationProwlConfigContract),
+		OnImportFailure:       n.OnImportFailure,
+		Implementation:        types.StringValue(notificationAppriseImplementation),
+		ConfigContract:        types.StringValue(notificationAppriseConfigContract),
 	}
 }
 
-func (n *NotificationProwl) fromNotification(notification *Notification) {
+func (n *NotificationApprise) fromNotification(notification *Notification) {
 	n.Tags = notification.Tags
-	n.APIKey = notification.APIKey
-	n.Priority = notification.Priority
+	n.FieldTags = notification.FieldTags
+	n.StatelessURLs = notification.StatelessURLs
+	n.ServerURL = notification.ServerURL
+	n.AuthUsername = notification.AuthUsername
+	n.AuthPassword = notification.AuthPassword
+	n.ConfigurationKey = notification.ConfigurationKey
+	n.NotificationType = notification.NotificationType
 	n.Name = notification.Name
 	n.ID = notification.ID
 	n.OnGrab = notification.OnGrab
@@ -91,24 +110,36 @@ func (n *NotificationProwl) fromNotification(notification *Notification) {
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
 	n.OnHealthRestored = notification.OnHealthRestored
+	n.OnDownloadFailure = notification.OnDownloadFailure
 	n.OnUpgrade = notification.OnUpgrade
+	n.OnImportFailure = notification.OnImportFailure
 }
 
-func (r *NotificationProwlResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + notificationProwlResourceName
+func (r *NotificationAppriseResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + notificationAppriseResourceName
 }
 
-func (r *NotificationProwlResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationAppriseResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Prowl resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Prowl](https://wiki.servarr.com/lidarr/supported#prowl).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Apprise resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Apprise](https://wiki.servarr.com/lidarr/supported#apprise).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
 				Optional:            true,
 				Computed:            true,
 			},
+			"on_import_failure": schema.BoolAttribute{
+				MarkdownDescription: "On download flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_download_failure": schema.BoolAttribute{
+				MarkdownDescription: "On download failure flag.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -148,7 +179,7 @@ func (r *NotificationProwlResource) Schema(ctx context.Context, req resource.Sch
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "NotificationProwl name.",
+				MarkdownDescription: "NotificationApprise name.",
 				Required:            true,
 			},
 			"tags": schema.SetAttribute{
@@ -165,32 +196,59 @@ func (r *NotificationProwlResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			// Field values
-			"priority": schema.Int64Attribute{
-				MarkdownDescription: "Priority.`-2` Very Low, `-1` Low, `0` Normal, `1` High, `2` Emergency.",
+			"notification_type": schema.Int64Attribute{
+				MarkdownDescription: "Notification type. `0` Info, `1` Success, `2` Warning, `3` Failure.",
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
-					int64validator.OneOf(-2, -1, 0, 1, 2),
+					int64validator.OneOf(0, 1, 2, 3),
 				},
 			},
-			"api_key": schema.StringAttribute{
-				MarkdownDescription: "API key.",
+			"server_url": schema.StringAttribute{
+				MarkdownDescription: "Server URL.",
 				Required:            true,
+			},
+			"stateless_urls": schema.StringAttribute{
+				MarkdownDescription: "Stateless URLs.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"configuration_key": schema.StringAttribute{
+				MarkdownDescription: "Configuration key.",
+				Optional:            true,
+				Computed:            true,
 				Sensitive:           true,
+			},
+			"auth_username": schema.StringAttribute{
+				MarkdownDescription: "Username.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"auth_password": schema.StringAttribute{
+				MarkdownDescription: "Password.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"field_tags": schema.SetAttribute{
+				MarkdownDescription: "Tags and emojis.",
+				Optional:            true,
+				Computed:            true,
+				ElementType:         types.StringType,
 			},
 		},
 	}
 }
 
-func (r *NotificationProwlResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NotificationAppriseResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *NotificationProwlResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *NotificationAppriseResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var notification *NotificationProwl
+	var notification *NotificationApprise
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -198,25 +256,25 @@ func (r *NotificationProwlResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	// Create new NotificationProwl
+	// Create new NotificationApprise
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationProwlResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationAppriseResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+notificationProwlResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+notificationAppriseResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationProwlResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *NotificationAppriseResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var notification *NotificationProwl
+	var notification *NotificationApprise
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -224,23 +282,23 @@ func (r *NotificationProwlResource) Read(ctx context.Context, req resource.ReadR
 		return
 	}
 
-	// Get NotificationProwl current value
+	// Get NotificationApprise current value
 	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(int(notification.ID.ValueInt64()))).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationProwlResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationAppriseResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+notificationProwlResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+notificationAppriseResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationProwlResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *NotificationAppriseResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var notification *NotificationProwl
+	var notification *NotificationApprise
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -248,24 +306,24 @@ func (r *NotificationProwlResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	// Update NotificationProwl
+	// Update NotificationApprise
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationProwlResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationAppriseResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+notificationProwlResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+notificationAppriseResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationProwlResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var notification *NotificationProwl
+func (r *NotificationAppriseResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var notification *NotificationApprise
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -273,29 +331,29 @@ func (r *NotificationProwlResource) Delete(ctx context.Context, req resource.Del
 		return
 	}
 
-	// Delete NotificationProwl current value
+	// Delete NotificationApprise current value
 	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationProwlResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationAppriseResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+notificationProwlResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+notificationAppriseResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *NotificationProwlResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NotificationAppriseResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+notificationProwlResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+notificationAppriseResourceName+": "+req.ID)
 }
 
-func (n *NotificationProwl) write(ctx context.Context, notification *lidarr.NotificationResource) {
+func (n *NotificationApprise) write(ctx context.Context, notification *lidarr.NotificationResource) {
 	genericNotification := n.toNotification()
 	genericNotification.write(ctx, notification)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationProwl) read(ctx context.Context) *lidarr.NotificationResource {
+func (n *NotificationApprise) read(ctx context.Context) *lidarr.NotificationResource {
 	return n.toNotification().read(ctx)
 }

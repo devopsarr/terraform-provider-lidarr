@@ -37,22 +37,25 @@ resource "lidarr_notification_custom_script" "example" {
 
 ### Required
 
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationCustomScript name.
-- `on_application_update` (Boolean) On application update flag.
-- `on_download_failure` (Boolean) On download failure flag.
-- `on_grab` (Boolean) On grab flag.
-- `on_health_issue` (Boolean) On health issue flag.
-- `on_import_failure` (Boolean) On import failure flag.
-- `on_release_import` (Boolean) On release import flag.
-- `on_rename` (Boolean) On rename flag.
-- `on_track_retag` (Boolean) On track retag.
-- `on_upgrade` (Boolean) On upgrade flag.
 - `path` (String) Path.
 
 ### Optional
 
 - `arguments` (String) Arguments.
+- `include_health_warnings` (Boolean) Include health warnings.
+- `on_album_delete` (Boolean) On album delete flag.
+- `on_application_update` (Boolean) On application update flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
+- `on_download_failure` (Boolean) On download failure flag.
+- `on_grab` (Boolean) On grab flag.
+- `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
+- `on_import_failure` (Boolean) On import failure flag.
+- `on_release_import` (Boolean) On release import flag.
+- `on_rename` (Boolean) On rename flag.
+- `on_track_retag` (Boolean) On track retag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

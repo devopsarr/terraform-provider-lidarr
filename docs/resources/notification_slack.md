@@ -40,17 +40,7 @@ resource "lidarr_notification_slack" "example" {
 
 ### Required
 
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationSlack name.
-- `on_application_update` (Boolean) On application update flag.
-- `on_download_failure` (Boolean) On movie delete flag.
-- `on_grab` (Boolean) On grab flag.
-- `on_health_issue` (Boolean) On health issue flag.
-- `on_import_failure` (Boolean) On download flag.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
-- `on_rename` (Boolean) On rename flag.
-- `on_track_retag` (Boolean) On movie file delete flag.
-- `on_upgrade` (Boolean) On upgrade flag.
 - `username` (String) Username.
 - `web_hook_url` (String) URL.
 
@@ -58,6 +48,19 @@ resource "lidarr_notification_slack" "example" {
 
 - `channel` (String) Channel.
 - `icon` (String) Icon.
+- `include_health_warnings` (Boolean) Include health warnings.
+- `on_album_delete` (Boolean) On album delete flag.
+- `on_application_update` (Boolean) On application update flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
+- `on_download_failure` (Boolean) On download failure flag.
+- `on_grab` (Boolean) On grab flag.
+- `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
+- `on_import_failure` (Boolean) On download flag.
+- `on_release_import` (Boolean) On release import flag.
+- `on_rename` (Boolean) On rename flag.
+- `on_track_retag` (Boolean) On track retag flag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `tags` (Set of Number) List of associated tags.
 
 ### Read-Only

@@ -36,16 +36,19 @@ resource "lidarr_notification_prowl" "example" {
 ### Required
 
 - `api_key` (String, Sensitive) API key.
-- `include_health_warnings` (Boolean) Include health warnings.
 - `name` (String) NotificationProwl name.
-- `on_application_update` (Boolean) On application update flag.
-- `on_grab` (Boolean) On grab flag.
-- `on_health_issue` (Boolean) On health issue flag.
-- `on_release_import` (Boolean) On movie file delete for upgrade flag.
-- `on_upgrade` (Boolean) On upgrade flag.
 
 ### Optional
 
+- `include_health_warnings` (Boolean) Include health warnings.
+- `on_album_delete` (Boolean) On album delete flag.
+- `on_application_update` (Boolean) On application update flag.
+- `on_artist_delete` (Boolean) On artist delete flag.
+- `on_grab` (Boolean) On grab flag.
+- `on_health_issue` (Boolean) On health issue flag.
+- `on_health_restored` (Boolean) On health restored flag.
+- `on_release_import` (Boolean) On release import flag.
+- `on_upgrade` (Boolean) On upgrade flag.
 - `priority` (Number) Priority.`-2` Very Low, `-1` Low, `0` Normal, `1` High, `2` Emergency.
 - `tags` (Set of Number) List of associated tags.
 

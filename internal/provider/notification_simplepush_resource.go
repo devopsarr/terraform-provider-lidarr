@@ -16,31 +16,32 @@ import (
 )
 
 const (
-	notificationNotifiarrResourceName   = "notification_notifiarr"
-	notificationNotifiarrImplementation = "Notifiarr"
-	notificationNotifiarrConfigContract = "NotifiarrSettings"
+	notificationSimplepushResourceName   = "notification_simplepush"
+	notificationSimplepushImplementation = "Simplepush"
+	notificationSimplepushConfigContract = "SimplepushSettings"
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
 var (
-	_ resource.Resource                = &NotificationNotifiarrResource{}
-	_ resource.ResourceWithImportState = &NotificationNotifiarrResource{}
+	_ resource.Resource                = &NotificationSimplepushResource{}
+	_ resource.ResourceWithImportState = &NotificationSimplepushResource{}
 )
 
-func NewNotificationNotifiarrResource() resource.Resource {
-	return &NotificationNotifiarrResource{}
+func NewNotificationSimplepushResource() resource.Resource {
+	return &NotificationSimplepushResource{}
 }
 
-// NotificationNotifiarrResource defines the notification implementation.
-type NotificationNotifiarrResource struct {
+// NotificationSimplepushResource defines the notification implementation.
+type NotificationSimplepushResource struct {
 	client *lidarr.APIClient
 }
 
-// NotificationNotifiarr describes the notification data model.
-type NotificationNotifiarr struct {
+// NotificationSimplepush describes the notification data model.
+type NotificationSimplepush struct {
 	Tags                  types.Set    `tfsdk:"tags"`
 	Name                  types.String `tfsdk:"name"`
-	APIKey                types.String `tfsdk:"api_key"`
+	Event                 types.String `tfsdk:"event"`
+	Key                   types.String `tfsdk:"key"`
 	ID                    types.Int64  `tfsdk:"id"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
@@ -50,13 +51,16 @@ type NotificationNotifiarr struct {
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
 	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
+	OnDownloadFailure     types.Bool   `tfsdk:"on_download_failure"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
+	OnImportFailure       types.Bool   `tfsdk:"on_import_failure"`
 }
 
-func (n NotificationNotifiarr) toNotification() *Notification {
+func (n NotificationSimplepush) toNotification() *Notification {
 	return &Notification{
 		Tags:                  n.Tags,
-		APIKey:                n.APIKey,
+		Event:                 n.Event,
+		Key:                   n.Key,
 		Name:                  n.Name,
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
@@ -67,15 +71,18 @@ func (n NotificationNotifiarr) toNotification() *Notification {
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
 		OnHealthRestored:      n.OnHealthRestored,
+		OnDownloadFailure:     n.OnDownloadFailure,
 		OnUpgrade:             n.OnUpgrade,
-		Implementation:        types.StringValue(notificationNotifiarrImplementation),
-		ConfigContract:        types.StringValue(notificationNotifiarrConfigContract),
+		OnImportFailure:       n.OnImportFailure,
+		Implementation:        types.StringValue(notificationSimplepushImplementation),
+		ConfigContract:        types.StringValue(notificationSimplepushConfigContract),
 	}
 }
 
-func (n *NotificationNotifiarr) fromNotification(notification *Notification) {
+func (n *NotificationSimplepush) fromNotification(notification *Notification) {
 	n.Tags = notification.Tags
-	n.APIKey = notification.APIKey
+	n.Event = notification.Event
+	n.Key = notification.Key
 	n.Name = notification.Name
 	n.ID = notification.ID
 	n.OnGrab = notification.OnGrab
@@ -86,24 +93,36 @@ func (n *NotificationNotifiarr) fromNotification(notification *Notification) {
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
 	n.OnHealthRestored = notification.OnHealthRestored
+	n.OnDownloadFailure = notification.OnDownloadFailure
 	n.OnUpgrade = notification.OnUpgrade
+	n.OnImportFailure = notification.OnImportFailure
 }
 
-func (r *NotificationNotifiarrResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + notificationNotifiarrResourceName
+func (r *NotificationSimplepushResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + notificationSimplepushResourceName
 }
 
-func (r *NotificationNotifiarrResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationSimplepushResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Notifiarr resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Notifiarr](https://wiki.servarr.com/lidarr/supported#notifiarr).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Simplepush resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Simplepush](https://wiki.servarr.com/lidarr/supported#simplepush).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
 				Optional:            true,
 				Computed:            true,
 			},
+			"on_import_failure": schema.BoolAttribute{
+				MarkdownDescription: "On download flag.",
+				Optional:            true,
+				Computed:            true,
+			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_download_failure": schema.BoolAttribute{
+				MarkdownDescription: "On download failure flag.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -143,7 +162,7 @@ func (r *NotificationNotifiarrResource) Schema(ctx context.Context, req resource
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "NotificationNotifiarr name.",
+				MarkdownDescription: "NotificationSimplepush name.",
 				Required:            true,
 			},
 			"tags": schema.SetAttribute{
@@ -160,8 +179,13 @@ func (r *NotificationNotifiarrResource) Schema(ctx context.Context, req resource
 				},
 			},
 			// Field values
-			"api_key": schema.StringAttribute{
-				MarkdownDescription: "API key.",
+			"event": schema.StringAttribute{
+				MarkdownDescription: "Event.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"key": schema.StringAttribute{
+				MarkdownDescription: "Key.",
 				Required:            true,
 				Sensitive:           true,
 			},
@@ -169,15 +193,15 @@ func (r *NotificationNotifiarrResource) Schema(ctx context.Context, req resource
 	}
 }
 
-func (r *NotificationNotifiarrResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *NotificationSimplepushResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
 	}
 }
 
-func (r *NotificationNotifiarrResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *NotificationSimplepushResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Retrieve values from plan
-	var notification *NotificationNotifiarr
+	var notification *NotificationSimplepush
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -185,25 +209,25 @@ func (r *NotificationNotifiarrResource) Create(ctx context.Context, req resource
 		return
 	}
 
-	// Create new NotificationNotifiarr
+	// Create new NotificationSimplepush
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationNotifiarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, notificationSimplepushResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "created "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "created "+notificationSimplepushResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationNotifiarrResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *NotificationSimplepushResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	// Get current state
-	var notification *NotificationNotifiarr
+	var notification *NotificationSimplepush
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -211,23 +235,23 @@ func (r *NotificationNotifiarrResource) Read(ctx context.Context, req resource.R
 		return
 	}
 
-	// Get NotificationNotifiarr current value
+	// Get NotificationSimplepush current value
 	response, _, err := r.client.NotificationApi.GetNotificationById(ctx, int32(int(notification.ID.ValueInt64()))).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationNotifiarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationSimplepushResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "read "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "read "+notificationSimplepushResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationNotifiarrResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *NotificationSimplepushResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	// Get plan values
-	var notification *NotificationNotifiarr
+	var notification *NotificationSimplepush
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &notification)...)
 
@@ -235,24 +259,24 @@ func (r *NotificationNotifiarrResource) Update(ctx context.Context, req resource
 		return
 	}
 
-	// Update NotificationNotifiarr
+	// Update NotificationSimplepush
 	request := notification.read(ctx)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationNotifiarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationSimplepushResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "updated "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(response.GetId())))
+	tflog.Trace(ctx, "updated "+notificationSimplepushResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	notification.write(ctx, response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
-func (r *NotificationNotifiarrResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var notification *NotificationNotifiarr
+func (r *NotificationSimplepushResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var notification *NotificationSimplepush
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
 
@@ -260,29 +284,29 @@ func (r *NotificationNotifiarrResource) Delete(ctx context.Context, req resource
 		return
 	}
 
-	// Delete NotificationNotifiarr current value
+	// Delete NotificationSimplepush current value
 	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationNotifiarrResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationSimplepushResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+notificationNotifiarrResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+notificationSimplepushResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
 	resp.State.RemoveResource(ctx)
 }
 
-func (r *NotificationNotifiarrResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NotificationSimplepushResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	helpers.ImportStatePassthroughIntID(ctx, path.Root("id"), req, resp)
-	tflog.Trace(ctx, "imported "+notificationNotifiarrResourceName+": "+req.ID)
+	tflog.Trace(ctx, "imported "+notificationSimplepushResourceName+": "+req.ID)
 }
 
-func (n *NotificationNotifiarr) write(ctx context.Context, notification *lidarr.NotificationResource) {
+func (n *NotificationSimplepush) write(ctx context.Context, notification *lidarr.NotificationResource) {
 	genericNotification := n.toNotification()
 	genericNotification.write(ctx, notification)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationNotifiarr) read(ctx context.Context) *lidarr.NotificationResource {
+func (n *NotificationSimplepush) read(ctx context.Context) *lidarr.NotificationResource {
 	return n.toNotification().read(ctx)
 }

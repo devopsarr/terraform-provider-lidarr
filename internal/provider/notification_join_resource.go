@@ -48,9 +48,12 @@ type NotificationJoin struct {
 	ID                    types.Int64  `tfsdk:"id"`
 	OnGrab                types.Bool   `tfsdk:"on_grab"`
 	OnReleaseImport       types.Bool   `tfsdk:"on_release_import"`
+	OnAlbumDelete         types.Bool   `tfsdk:"on_album_delete"`
+	OnArtistDelete        types.Bool   `tfsdk:"on_artist_delete"`
 	IncludeHealthWarnings types.Bool   `tfsdk:"include_health_warnings"`
 	OnApplicationUpdate   types.Bool   `tfsdk:"on_application_update"`
 	OnHealthIssue         types.Bool   `tfsdk:"on_health_issue"`
+	OnHealthRestored      types.Bool   `tfsdk:"on_health_restored"`
 	OnUpgrade             types.Bool   `tfsdk:"on_upgrade"`
 }
 
@@ -64,9 +67,12 @@ func (n NotificationJoin) toNotification() *Notification {
 		ID:                    n.ID,
 		OnGrab:                n.OnGrab,
 		OnReleaseImport:       n.OnReleaseImport,
+		OnAlbumDelete:         n.OnAlbumDelete,
+		OnArtistDelete:        n.OnArtistDelete,
 		IncludeHealthWarnings: n.IncludeHealthWarnings,
 		OnApplicationUpdate:   n.OnApplicationUpdate,
 		OnHealthIssue:         n.OnHealthIssue,
+		OnHealthRestored:      n.OnHealthRestored,
 		OnUpgrade:             n.OnUpgrade,
 		Implementation:        types.StringValue(notificationJoinImplementation),
 		ConfigContract:        types.StringValue(notificationJoinConfigContract),
@@ -82,9 +88,12 @@ func (n *NotificationJoin) fromNotification(notification *Notification) {
 	n.ID = notification.ID
 	n.OnGrab = notification.OnGrab
 	n.OnReleaseImport = notification.OnReleaseImport
+	n.OnAlbumDelete = notification.OnAlbumDelete
+	n.OnArtistDelete = notification.OnArtistDelete
 	n.IncludeHealthWarnings = notification.IncludeHealthWarnings
 	n.OnApplicationUpdate = notification.OnApplicationUpdate
 	n.OnHealthIssue = notification.OnHealthIssue
+	n.OnHealthRestored = notification.OnHealthRestored
 	n.OnUpgrade = notification.OnUpgrade
 }
 
@@ -98,27 +107,48 @@ func (r *NotificationJoinResource) Schema(ctx context.Context, req resource.Sche
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_release_import": schema.BoolAttribute{
-				MarkdownDescription: "On movie file delete for upgrade flag.",
-				Required:            true,
+				MarkdownDescription: "On release import flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
+				Optional:            true,
+				Computed:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
 				MarkdownDescription: "On application update flag.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"include_health_warnings": schema.BoolAttribute{
 				MarkdownDescription: "Include health warnings.",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "NotificationJoin name.",

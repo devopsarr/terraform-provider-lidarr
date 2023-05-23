@@ -43,6 +43,14 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "On release import flag.",
 				Computed:            true,
 			},
+			"on_album_delete": schema.BoolAttribute{
+				MarkdownDescription: "On album delete flag.",
+				Computed:            true,
+			},
+			"on_artist_delete": schema.BoolAttribute{
+				MarkdownDescription: "On artist delete flag.",
+				Computed:            true,
+			},
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",
 				Computed:            true,
@@ -65,6 +73,10 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"on_health_issue": schema.BoolAttribute{
 				MarkdownDescription: "On health issue flag.",
+				Computed:            true,
+			},
+			"on_health_restored": schema.BoolAttribute{
+				MarkdownDescription: "On health restored flag.",
 				Computed:            true,
 			},
 			"on_application_update": schema.BoolAttribute{
@@ -145,6 +157,10 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Priority.", // TODO: add values in description
 				Computed:            true,
 			},
+			"notification_type": schema.Int64Attribute{
+				MarkdownDescription: "Notification type. `0` Info, `1` Success, `2` Warning, `3` Failure.",
+				Computed:            true,
+			},
 			"retry": schema.Int64Attribute{
 				MarkdownDescription: "Retry.",
 				Computed:            true,
@@ -185,6 +201,32 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Auth user.",
 				Computed:            true,
 			},
+			"server_url": schema.StringAttribute{
+				MarkdownDescription: "Server URL.",
+				Computed:            true,
+			},
+			"click_url": schema.StringAttribute{
+				MarkdownDescription: "Click URL.",
+				Computed:            true,
+			},
+			"stateless_urls": schema.StringAttribute{
+				MarkdownDescription: "Stateless URLs.",
+				Computed:            true,
+			},
+			"configuration_key": schema.StringAttribute{
+				MarkdownDescription: "Configuration key.",
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"auth_username": schema.StringAttribute{
+				MarkdownDescription: "Username.",
+				Computed:            true,
+			},
+			"auth_password": schema.StringAttribute{
+				MarkdownDescription: "Password.",
+				Computed:            true,
+				Sensitive:           true,
+			},
 			"avatar": schema.StringAttribute{
 				MarkdownDescription: "Avatar.",
 				Computed:            true,
@@ -220,6 +262,15 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 			"expires": schema.StringAttribute{
 				MarkdownDescription: "Expires.",
 				Computed:            true,
+			},
+			"event": schema.StringAttribute{
+				MarkdownDescription: "Event.",
+				Computed:            true,
+			},
+			"key": schema.StringAttribute{
+				MarkdownDescription: "Key.",
+				Computed:            true,
+				Sensitive:           true,
 			},
 			"from": schema.StringAttribute{
 				MarkdownDescription: "From.",
@@ -313,6 +364,11 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 				ElementType:         types.StringType,
 			},
+			"field_tags": schema.SetAttribute{
+				MarkdownDescription: "Tags and emojis.",
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
 			"grab_fields": schema.SetAttribute{
 				MarkdownDescription: "Grab fields. `0` Overview, `1` Rating, `2` Genres, `3` Quality, `4` Group, `5` Size, `6` Links, `7` Release, `8` Poster, `9` Fanart.",
 				Computed:            true,
@@ -335,6 +391,11 @@ func (d *NotificationDataSource) Schema(ctx context.Context, req datasource.Sche
 			},
 			"bcc": schema.SetAttribute{
 				MarkdownDescription: "Bcc.",
+				Computed:            true,
+				ElementType:         types.StringType,
+			},
+			"topics": schema.SetAttribute{
+				MarkdownDescription: "Topics.",
 				Computed:            true,
 				ElementType:         types.StringType,
 			},
