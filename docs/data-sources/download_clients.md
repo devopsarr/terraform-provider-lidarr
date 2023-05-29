@@ -28,10 +28,6 @@ data "lidarr_download_clients" "example" {
 <a id="nestedatt--download_clients"></a>
 ### Nested Schema for `download_clients`
 
-Optional:
-
-- `musicdirectory` (String) Music directory.
-
 Read-Only:
 
 - `add_paused` (Boolean) Add paused flag.

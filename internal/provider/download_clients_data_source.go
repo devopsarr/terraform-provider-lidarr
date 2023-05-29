@@ -181,12 +181,6 @@ func (d *DownloadClientsDataSource) Schema(ctx context.Context, req datasource.S
 							MarkdownDescription: "Music imported category.",
 							Computed:            true,
 						},
-						// needed to manage difference from tvDirectory and musicDirectory.
-						"musicdirectory": schema.StringAttribute{
-							MarkdownDescription: "Music directory.",
-							Optional:            true,
-							Computed:            true,
-						},
 						"music_directory": schema.StringAttribute{
 							MarkdownDescription: "Music directory.",
 							Computed:            true,

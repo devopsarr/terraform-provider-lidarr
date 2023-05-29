@@ -51,7 +51,6 @@ resource "lidarr_notification_subsonic" "example" {
 - `on_artist_delete` (Boolean) On artist delete flag.
 - `on_grab` (Boolean) On grab flag.
 - `on_health_issue` (Boolean) On health issue flag.
-- `on_health_restored` (Boolean) On health restored flag.
 - `on_release_import` (Boolean) On release import flag.
 - `on_rename` (Boolean) On rename flag.
 - `on_track_retag` (Boolean) On track retag flag.
