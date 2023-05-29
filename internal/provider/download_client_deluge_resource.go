@@ -48,8 +48,8 @@ type DownloadClientDeluge struct {
 	Password                 types.String `tfsdk:"password"`
 	MusicCategory            types.String `tfsdk:"music_category"`
 	MusicImportedCategory    types.String `tfsdk:"music_imported_category"`
-	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
-	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
+	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
+	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -69,8 +69,8 @@ func (d DownloadClientDeluge) toDownloadClient() *DownloadClient {
 		Password:                 d.Password,
 		MusicCategory:            d.MusicCategory,
 		MusicImportedCategory:    d.MusicImportedCategory,
-		RecentTVPriority:         d.RecentTVPriority,
-		OlderTVPriority:          d.OlderTVPriority,
+		RecentMusicPriority:      d.RecentMusicPriority,
+		OlderMusicPriority:       d.OlderMusicPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -93,8 +93,8 @@ func (d *DownloadClientDeluge) fromDownloadClient(client *DownloadClient) {
 	d.Password = client.Password
 	d.MusicCategory = client.MusicCategory
 	d.MusicImportedCategory = client.MusicImportedCategory
-	d.RecentTVPriority = client.RecentTVPriority
-	d.OlderTVPriority = client.OlderTVPriority
+	d.RecentMusicPriority = client.RecentMusicPriority
+	d.OlderMusicPriority = client.OlderMusicPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID

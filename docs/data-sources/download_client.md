@@ -25,10 +25,6 @@ data "lidarr_download_client" "example" {
 
 - `name` (String) Download Client name.
 
-### Optional
-
-- `musicdirectory` (String) Music directory.
-
 ### Read-Only
 
 - `add_paused` (Boolean) Add paused flag.

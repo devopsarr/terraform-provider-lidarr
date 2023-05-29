@@ -45,7 +45,7 @@ type DownloadClientTorrentDownloadStation struct {
 	Username                 types.String `tfsdk:"username"`
 	Password                 types.String `tfsdk:"password"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	TVDirectory              types.String `tfsdk:"music_directory"`
+	MusicDirectory           types.String `tfsdk:"music_directory"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -63,7 +63,7 @@ func (d DownloadClientTorrentDownloadStation) toDownloadClient() *DownloadClient
 		Username:                 d.Username,
 		Password:                 d.Password,
 		MusicCategory:            d.MusicCategory,
-		TVDirectory:              d.TVDirectory,
+		MusicDirectory:           d.MusicDirectory,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -84,7 +84,7 @@ func (d *DownloadClientTorrentDownloadStation) fromDownloadClient(client *Downlo
 	d.Username = client.Username
 	d.Password = client.Password
 	d.MusicCategory = client.MusicCategory
-	d.TVDirectory = client.TVDirectory
+	d.MusicDirectory = client.MusicDirectory
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID

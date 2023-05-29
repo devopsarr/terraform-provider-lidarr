@@ -47,8 +47,8 @@ type DownloadClientNzbvortex struct {
 	URLBase                  types.String `tfsdk:"url_base"`
 	APIKey                   types.String `tfsdk:"api_key"`
 	MusicCategory            types.String `tfsdk:"music_category"`
-	RecentTVPriority         types.Int64  `tfsdk:"recent_music_priority"`
-	OlderTVPriority          types.Int64  `tfsdk:"older_music_priority"`
+	RecentMusicPriority      types.Int64  `tfsdk:"recent_music_priority"`
+	OlderMusicPriority       types.Int64  `tfsdk:"older_music_priority"`
 	Priority                 types.Int64  `tfsdk:"priority"`
 	Port                     types.Int64  `tfsdk:"port"`
 	ID                       types.Int64  `tfsdk:"id"`
@@ -65,8 +65,8 @@ func (d DownloadClientNzbvortex) toDownloadClient() *DownloadClient {
 		URLBase:                  d.URLBase,
 		APIKey:                   d.APIKey,
 		MusicCategory:            d.MusicCategory,
-		RecentTVPriority:         d.RecentTVPriority,
-		OlderTVPriority:          d.OlderTVPriority,
+		RecentMusicPriority:      d.RecentMusicPriority,
+		OlderMusicPriority:       d.OlderMusicPriority,
 		Priority:                 d.Priority,
 		Port:                     d.Port,
 		ID:                       d.ID,
@@ -86,8 +86,8 @@ func (d *DownloadClientNzbvortex) fromDownloadClient(client *DownloadClient) {
 	d.URLBase = client.URLBase
 	d.APIKey = client.APIKey
 	d.MusicCategory = client.MusicCategory
-	d.RecentTVPriority = client.RecentTVPriority
-	d.OlderTVPriority = client.OlderTVPriority
+	d.RecentMusicPriority = client.RecentMusicPriority
+	d.OlderMusicPriority = client.OlderMusicPriority
 	d.Priority = client.Priority
 	d.Port = client.Port
 	d.ID = client.ID
