@@ -28,7 +28,7 @@ var (
 
 var notificationFields = helpers.Fields{
 	Bools:                  []string{"alwaysUpdate", "cleanLibrary", "directMessage", "notify", "requireEncryption", "sendSilently", "updateLibrary", "useEuEndpoint", "useSsl"},
-	Strings:                []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "userName", "webHookUrl", "authUsername", "authPassword", "statelessUrls", "configurationKey", "serverUrl", "clickUrl", "event", "key"},
+	Strings:                []string{"accessToken", "accessTokenSecret", "apiKey", "aPIKey", "appToken", "arguments", "author", "authToken", "authUser", "avatar", "botToken", "channel", "chatId", "consumerKey", "consumerSecret", "deviceNames", "expires", "from", "host", "icon", "mention", "password", "path", "refreshToken", "senderDomain", "senderId", "server", "signIn", "sound", "token", "urlBase", "url", "userKey", "username", "userName", "webHookUrl", "authUsername", "authPassword", "statelessUrls", "configurationKey", "serverUrl", "clickUrl", "event", "key", "senderNumber", "receiverId"},
 	Ints:                   []string{"method", "port", "priority", "displayTime", "retry", "expire", "notificationType"},
 	StringSlices:           []string{"channelTags", "deviceIds", "devices", "recipients", "to", "cC", "bcc", "fieldTags", "topics"},
 	StringSlicesExceptions: []string{"tags"},
@@ -75,6 +75,8 @@ type Notification struct {
 	SignIn                types.String `tfsdk:"sign_in"`
 	Server                types.String `tfsdk:"server"`
 	SenderID              types.String `tfsdk:"sender_id"`
+	SenderNumber          types.String `tfsdk:"sender_number"`
+	ReceiverID            types.String `tfsdk:"receiver_id"`
 	BotToken              types.String `tfsdk:"bot_token"`
 	SenderDomain          types.String `tfsdk:"sender_domain"`
 	Icon                  types.String `tfsdk:"icon"`
@@ -483,6 +485,17 @@ func (r *NotificationResource) Schema(ctx context.Context, req resource.SchemaRe
 			},
 			"sender_id": schema.StringAttribute{
 				MarkdownDescription: "Sender ID.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"sender_number": schema.StringAttribute{
+				MarkdownDescription: "Sender Number.",
+				Optional:            true,
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"receiver_id": schema.StringAttribute{
+				MarkdownDescription: "Receiver ID.",
 				Optional:            true,
 				Computed:            true,
 			},
