@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.8.0...v1.9.0) (2023-05-29)
+
+
+### Features
+
+* add notification signal resource ([b892260](https://github.com/devopsarr/terraform-provider-lidarr/commit/b892260ab5c629c6d3ad951701837c21ef76a027))
+* align music fields with lidarr naming convention ([0bfe5b8](https://github.com/devopsarr/terraform-provider-lidarr/commit/0bfe5b854066761b5b357f854b9f2b27091fa138))
+
 ## [1.8.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.7.0...v1.8.0) (2023-05-23)
 
 
