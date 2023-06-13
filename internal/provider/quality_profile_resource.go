@@ -323,31 +323,26 @@ func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfi
 }
 
 func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQualityItemResource) {
-	var (
-		name      string
-		id        int64
-		qualities []Quality
-	)
+	name := types.StringValue(group.GetName())
+	id := types.Int64Value(int64(group.GetId()))
+
+	qualities := make([]Quality, len(group.GetItems()))
+	for m, q := range group.GetItems() {
+		qualities[m].write(q)
+	}
 
 	if len(group.GetItems()) == 0 {
+		name = types.StringNull()
+		id = types.Int64Null()
 		qualities = []Quality{{
 			ID:   types.Int64Value(int64(group.Quality.GetId())),
 			Name: types.StringValue(group.Quality.GetName()),
 		}}
-	} else {
-		name = group.GetName()
-		id = int64(group.GetId())
-		qualities = make([]Quality, len(group.GetItems()))
-		for m, q := range group.GetItems() {
-			qualities[m].write(q)
-		}
 	}
 
-	q.Name = types.StringValue(name)
-	q.ID = types.Int64Value(id)
-	q.Qualities = types.SetValueMust(QualityProfileResource{}.getQualitySchema().Type(), nil)
-
-	tfsdk.ValueFrom(ctx, qualities, q.Qualities.Type(ctx), &q.Qualities)
+	q.Name = name
+	q.ID = id
+	q.Qualities, _ = types.SetValueFrom(ctx, QualityProfileResource{}.getQualitySchema().Type(), &qualities)
 }
 
 func (q *Quality) write(quality *lidarr.QualityProfileQualityItemResource) {
