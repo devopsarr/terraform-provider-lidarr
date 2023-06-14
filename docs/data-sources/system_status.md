@@ -29,6 +29,8 @@ data "lidarr_system_status" "example" {
 - `authentication` (String) Authentication.
 - `branch` (String) Branch.
 - `build_time` (String) Build time.
+- `database_type` (String) Database type.
+- `database_version` (String) Database version.
 - `id` (Number) Delay Profile ID.
 - `instance_name` (String) Instance name.
 - `is_admin` (Boolean) Is admin flag.
@@ -43,12 +45,13 @@ data "lidarr_system_status" "example" {
 - `migration_version` (Number) Migration version.
 - `mode` (String) Mode.
 - `os_name` (String) OS name.
+- `os_version` (String) OS version.
 - `package_author` (String) Package author.
 - `package_update_mechanism` (String) Package update mechanism.
+- `package_update_mechanism_message` (String) Package update mechanism message.
 - `package_version` (String) Package version.
 - `runtime_name` (String) Runtime name.
 - `runtime_version` (String) Runtime version.
-- `sqlite_version` (String) SQLite version.
 - `start_time` (String) Start time.
 - `startup_path` (String) Startup path.
 - `url_base` (String) Base URL.
