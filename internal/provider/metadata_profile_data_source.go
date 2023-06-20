@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -69,9 +69,9 @@ func (d *MetadataProfileDataSource) Configure(ctx context.Context, req datasourc
 }
 
 func (d *MetadataProfileDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var metadataProfile *MetadataProfile
+	var data *MetadataProfile
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &metadataProfile)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -84,24 +84,20 @@ func (d *MetadataProfileDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 
-	profile, err := findMetadataProfile(metadataProfile.Name.ValueString(), response)
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", metadataProfileDataSourceName, err))
-
-		return
-	}
-
+	data.find(ctx, data.Name.ValueString(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+metadataProfileDataSourceName)
-	metadataProfile.write(ctx, profile)
-	resp.Diagnostics.Append(resp.State.Set(ctx, &metadataProfile)...)
+	// Map response body to resource schema attribute
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func findMetadataProfile(name string, profiles []*lidarr.MetadataProfileResource) (*lidarr.MetadataProfileResource, error) {
+func (m *MetadataProfile) find(ctx context.Context, name string, profiles []*lidarr.MetadataProfileResource, diags *diag.Diagnostics) {
 	for _, p := range profiles {
 		if p.GetName() == name {
-			return p, nil
+			m.write(ctx, p, diags)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(metadataProfileDataSourceName, "name", name)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(metadataProfileDataSourceName, "name", name))
 }

@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -111,13 +110,6 @@ func (d *ArtistsDataSource) Configure(ctx context.Context, req datasource.Config
 }
 
 func (d *ArtistsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *Artists
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
 	// Get artists current value
 	response, _, err := d.client.ArtistApi.ListArtist(ctx).Execute()
 	if err != nil {
@@ -130,11 +122,10 @@ func (d *ArtistsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	// Map response body to resource schema attribute
 	artists := make([]Artist, len(response))
 	for i, m := range response {
-		artists[i].write(ctx, m)
+		artists[i].write(ctx, m, &resp.Diagnostics)
 	}
 
-	tfsdk.ValueFrom(ctx, artists, data.Artists.Type(ctx), &data.Artists)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(response)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	artistList, diags := types.SetValueFrom(ctx, Artist{}.getType(), artists)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, Artists{Artists: artistList, ID: types.StringValue(strconv.Itoa(len(response)))})...)
 }

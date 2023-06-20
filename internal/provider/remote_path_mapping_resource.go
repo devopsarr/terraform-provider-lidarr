@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -40,6 +41,20 @@ type RemotePathMapping struct {
 	ID         types.Int64  `tfsdk:"id"`
 }
 
+func (r RemotePathMapping) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"id":          types.Int64Type,
+			"host":        types.StringType,
+			"remote_path": types.StringType,
+			"local_path":  types.StringType,
+		})
+}
+
+func (r *RemotePathMappingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_" + remotePathMappingResourceName
+}
+
 func (r *RemotePathMappingResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Download Clients -->Remote Path Mapping resource.\nFor more information refer to [Remote Path Mapping](https://wiki.servarr.com/lidarr/settings#remote-path-mappings) documentation.",
@@ -65,10 +80,6 @@ func (r *RemotePathMappingResource) Schema(ctx context.Context, req resource.Sch
 			},
 		},
 	}
-}
-
-func (r *RemotePathMappingResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_" + remotePathMappingResourceName
 }
 
 func (r *RemotePathMappingResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
@@ -154,24 +165,23 @@ func (r *RemotePathMappingResource) Update(ctx context.Context, req resource.Upd
 }
 
 func (r *RemotePathMappingResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var mapping *RemotePathMapping
+	var ID int64
 
-	diags := req.State.Get(ctx, &mapping)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete remotePathMapping current value
-	_, err := r.client.RemotePathMappingApi.DeleteRemotePathMapping(ctx, int32(mapping.ID.ValueInt64())).Execute()
+	_, err := r.client.RemotePathMappingApi.DeleteRemotePathMapping(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, remotePathMappingResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, remotePathMappingResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+remotePathMappingResourceName+": "+strconv.Itoa(int(mapping.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+remotePathMappingResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 

@@ -1,9 +1,10 @@
 package provider
 
 import (
+	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
 func TestAccSystemStatusDataSource(t *testing.T) {
@@ -13,12 +14,17 @@ func TestAccSystemStatusDataSource(t *testing.T) {
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
+			// Unauthorized
+			{
+				Config:      testAccSystemStatusDataSourceConfig + testUnauthorizedProvider,
+				ExpectError: regexp.MustCompile("Client Error"),
+			},
 			// Read testing
 			{
 				Config: testAccSystemStatusDataSourceConfig,
-				// Check: resource.ComposeAggregateTestCheckFunc(
-				// 	resource.TestCheckResourceAttrSet("data.lidarr_system_status.test", "id"),
-				// 	resource.TestCheckResourceAttr("data.lidarr_system_status.test", "is_production", "true")),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttrSet("data.lidarr_system_status.test", "id"),
+					resource.TestCheckResourceAttr("data.lidarr_system_status.test", "is_production", "true")),
 			},
 		},
 	})

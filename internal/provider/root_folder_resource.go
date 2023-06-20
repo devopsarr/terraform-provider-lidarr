@@ -7,6 +7,8 @@ import (
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -14,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -47,6 +48,21 @@ type RootFolder struct {
 	MetadataProfileID    types.Int64  `tfsdk:"metadata_profile_id"`
 	QualityProfileID     types.Int64  `tfsdk:"quality_profile_id"`
 	Accessible           types.Bool   `tfsdk:"accessible"`
+}
+
+func (r RootFolder) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"tags":                    types.SetType{}.WithElementType(types.Int64Type),
+			"path":                    types.StringType,
+			"name":                    types.StringType,
+			"monitor_option":          types.StringType,
+			"new_item_monitor_option": types.StringType,
+			"id":                      types.Int64Type,
+			"metadata_profile_id":     types.Int64Type,
+			"quality_profile_id":      types.Int64Type,
+			"accessible":              types.BoolType,
+		})
 }
 
 func (r *RootFolderResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -128,7 +144,7 @@ func (r *RootFolderResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	// Create new RootFolder
-	request := folder.read(ctx)
+	request := folder.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.RootFolderApi.CreateRootFolder(ctx).RootFolderResource(*request).Execute()
 	if err != nil {
@@ -139,7 +155,7 @@ func (r *RootFolderResource) Create(ctx context.Context, req resource.CreateRequ
 
 	tflog.Trace(ctx, "created "+rootFolderResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	folder.write(ctx, response)
+	folder.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &folder)...)
 }
 
@@ -163,7 +179,7 @@ func (r *RootFolderResource) Read(ctx context.Context, req resource.ReadRequest,
 
 	tflog.Trace(ctx, "read "+rootFolderResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	folder.write(ctx, response)
+	folder.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &folder)...)
 }
 
@@ -178,7 +194,7 @@ func (r *RootFolderResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 
 	// Update Notification
-	request := folder.read(ctx)
+	request := folder.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.RootFolderApi.UpdateRootFolder(ctx, strconv.Itoa(int(request.GetId()))).RootFolderResource(*request).Execute()
 	if err != nil {
@@ -189,28 +205,28 @@ func (r *RootFolderResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	tflog.Trace(ctx, "updated "+notificationResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	folder.write(ctx, response)
+	folder.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, folder)...)
 }
 
 func (r *RootFolderResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var folder *RootFolder
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &folder)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete rootFolder current value
-	_, err := r.client.RootFolderApi.DeleteRootFolder(ctx, int32(folder.ID.ValueInt64())).Execute()
+	_, err := r.client.RootFolderApi.DeleteRootFolder(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, rootFolderResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, rootFolderResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+rootFolderResourceName+": "+strconv.Itoa(int(folder.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+rootFolderResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -219,8 +235,9 @@ func (r *RootFolderResource) ImportState(ctx context.Context, req resource.Impor
 	tflog.Trace(ctx, "imported "+rootFolderResourceName+": "+req.ID)
 }
 
-func (r *RootFolder) write(ctx context.Context, rootFolder *lidarr.RootFolderResource) {
-	r.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, rootFolder.GetDefaultTags())
+func (r *RootFolder) write(ctx context.Context, rootFolder *lidarr.RootFolderResource, diags *diag.Diagnostics) {
+	var tempDiag diag.Diagnostics
+
 	r.Accessible = types.BoolValue(rootFolder.GetAccessible())
 	r.ID = types.Int64Value(int64(rootFolder.GetId()))
 	r.Path = types.StringValue(rootFolder.GetPath())
@@ -229,12 +246,11 @@ func (r *RootFolder) write(ctx context.Context, rootFolder *lidarr.RootFolderRes
 	r.Name = types.StringValue(rootFolder.GetName())
 	r.MonitorOption = types.StringValue(string(rootFolder.GetDefaultMonitorOption()))
 	r.NewItemMonitorOption = types.StringValue(string(rootFolder.GetDefaultNewItemMonitorOption()))
+	r.Tags, tempDiag = types.SetValueFrom(ctx, types.Int64Type, rootFolder.GetDefaultTags())
+	diags.Append(tempDiag...)
 }
 
-func (r *RootFolder) read(ctx context.Context) *lidarr.RootFolderResource {
-	tags := make([]*int32, len(r.Tags.Elements()))
-	tfsdk.ValueAs(ctx, r.Tags, &tags)
-
+func (r *RootFolder) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.RootFolderResource {
 	folder := lidarr.NewRootFolderResource()
 	folder.SetId(int32(r.ID.ValueInt64()))
 	folder.SetDefaultMetadataProfileId(int32(r.MetadataProfileID.ValueInt64()))
@@ -243,7 +259,7 @@ func (r *RootFolder) read(ctx context.Context) *lidarr.RootFolderResource {
 	folder.SetDefaultMonitorOption(lidarr.MonitorTypes(r.MonitorOption.ValueString()))
 	folder.SetDefaultNewItemMonitorOption(lidarr.NewItemMonitorTypes(r.NewItemMonitorOption.ValueString()))
 	folder.SetName(r.Name.ValueString())
-	folder.SetDefaultTags(tags)
+	diags.Append(r.Tags.ElementsAs(ctx, &folder.DefaultTags, true)...)
 
 	return folder
 }

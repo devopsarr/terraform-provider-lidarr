@@ -7,13 +7,14 @@ import (
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -79,6 +80,44 @@ type Indexer struct {
 	AllowZeroSize           types.Bool    `tfsdk:"allow_zero_size"`
 	UseFreeleechToken       types.Bool    `tfsdk:"use_freeleech_token"`
 	RankedOnly              types.Bool    `tfsdk:"ranked_only"`
+}
+
+func (i Indexer) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"tags":                      types.SetType{}.WithElementType(types.Int64Type),
+			"categories":                types.SetType{}.WithElementType(types.Int64Type),
+			"api_user":                  types.StringType,
+			"additional_parameters":     types.StringType,
+			"name":                      types.StringType,
+			"implementation":            types.StringType,
+			"rss_passkey":               types.StringType,
+			"user_id":                   types.StringType,
+			"captcha_token":             types.StringType,
+			"protocol":                  types.StringType,
+			"config_contract":           types.StringType,
+			"api_key":                   types.StringType,
+			"api_path":                  types.StringType,
+			"cookie":                    types.StringType,
+			"base_url":                  types.StringType,
+			"username":                  types.StringType,
+			"password":                  types.StringType,
+			"passkey":                   types.StringType,
+			"early_release_limit":       types.Int64Type,
+			"seed_time":                 types.Int64Type,
+			"delay":                     types.Int64Type,
+			"minimum_seeders":           types.Int64Type,
+			"id":                        types.Int64Type,
+			"seed_ratio":                types.Float64Type,
+			"priority":                  types.Int64Type,
+			"discography_seed_time":     types.Int64Type,
+			"enable_interactive_search": types.BoolType,
+			"enable_rss":                types.BoolType,
+			"enable_automatic_search":   types.BoolType,
+			"allow_zero_size":           types.BoolType,
+			"use_freeleech_token":       types.BoolType,
+			"ranked_only":               types.BoolType,
+		})
 }
 
 func (r *IndexerResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -276,7 +315,7 @@ func (r *IndexerResource) Create(ctx context.Context, req resource.CreateRequest
 	}
 
 	// Create new Indexer
-	request := indexer.read(ctx)
+	request := indexer.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
@@ -290,7 +329,7 @@ func (r *IndexerResource) Create(ctx context.Context, req resource.CreateRequest
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Indexer
 
-	state.write(ctx, response)
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
@@ -317,7 +356,7 @@ func (r *IndexerResource) Read(ctx context.Context, req resource.ReadRequest, re
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Indexer
 
-	state.write(ctx, response)
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
@@ -332,7 +371,7 @@ func (r *IndexerResource) Update(ctx context.Context, req resource.UpdateRequest
 	}
 
 	// Update Indexer
-	request := indexer.read(ctx)
+	request := indexer.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
@@ -346,28 +385,28 @@ func (r *IndexerResource) Update(ctx context.Context, req resource.UpdateRequest
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Indexer
 
-	state.write(ctx, response)
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
 func (r *IndexerResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var indexer Indexer
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &indexer)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete Indexer current value
-	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
+	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+indexerResourceName+": "+strconv.Itoa(int(indexer.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+indexerResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -376,8 +415,12 @@ func (r *IndexerResource) ImportState(ctx context.Context, req resource.ImportSt
 	tflog.Trace(ctx, "imported "+indexerResourceName+": "+req.ID)
 }
 
-func (i *Indexer) write(ctx context.Context, indexer *lidarr.IndexerResource) {
-	i.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, indexer.Tags)
+func (i *Indexer) write(ctx context.Context, indexer *lidarr.IndexerResource, diags *diag.Diagnostics) {
+	var localDiag diag.Diagnostics
+
+	i.Tags, localDiag = types.SetValueFrom(ctx, types.Int64Type, indexer.Tags)
+	diags.Append(localDiag...)
+
 	i.EnableAutomaticSearch = types.BoolValue(indexer.GetEnableAutomaticSearch())
 	i.EnableInteractiveSearch = types.BoolValue(indexer.GetEnableInteractiveSearch())
 	i.EnableRss = types.BoolValue(indexer.GetEnableRss())
@@ -391,10 +434,7 @@ func (i *Indexer) write(ctx context.Context, indexer *lidarr.IndexerResource) {
 	helpers.WriteFields(ctx, i, indexer.GetFields(), indexerFields)
 }
 
-func (i *Indexer) read(ctx context.Context) *lidarr.IndexerResource {
-	tags := make([]*int32, len(i.Tags.Elements()))
-	tfsdk.ValueAs(ctx, i.Tags, &tags)
-
+func (i *Indexer) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.IndexerResource {
 	indexer := lidarr.NewIndexerResource()
 	indexer.SetEnableAutomaticSearch(i.EnableAutomaticSearch.ValueBool())
 	indexer.SetEnableInteractiveSearch(i.EnableInteractiveSearch.ValueBool())
@@ -405,7 +445,7 @@ func (i *Indexer) read(ctx context.Context) *lidarr.IndexerResource {
 	indexer.SetImplementation(i.Implementation.ValueString())
 	indexer.SetName(i.Name.ValueString())
 	indexer.SetProtocol(lidarr.DownloadProtocol(i.Protocol.ValueString()))
-	indexer.SetTags(tags)
+	diags.Append(i.Tags.ElementsAs(ctx, &indexer.Tags, true)...)
 	indexer.SetFields(helpers.ReadFields(ctx, i, indexerFields))
 
 	return indexer

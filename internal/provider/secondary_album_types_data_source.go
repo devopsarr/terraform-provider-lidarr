@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -66,14 +65,6 @@ func (d *SecondaryAlbumTypesDataSource) Configure(ctx context.Context, req datas
 }
 
 func (d *SecondaryAlbumTypesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *MetadataProfileElements
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
 	// Get secondary album type current value
 	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {
@@ -91,8 +82,7 @@ func (d *SecondaryAlbumTypesDataSource) Read(ctx context.Context, req datasource
 		secondaryTypes[i].writeSecondary(t.AlbumType)
 	}
 
-	tfsdk.ValueFrom(ctx, secondaryTypes, data.Elements.Type(ctx), &data.Elements)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(albumTypes)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	typeList, diags := types.SetValueFrom(ctx, MetadataProfileElement{}.getType(), secondaryTypes)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, MetadataProfileElements{Elements: typeList, ID: types.StringValue(strconv.Itoa(len(albumTypes)))})...)
 }

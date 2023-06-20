@@ -8,7 +8,6 @@ import (
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -66,14 +65,6 @@ func (d *ReleaseStatusesDataSource) Configure(ctx context.Context, req datasourc
 }
 
 func (d *ReleaseStatusesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data *MetadataProfileElements
-
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-
-	if resp.Diagnostics.HasError() {
-		return
-	}
-
 	// Get release status type current value
 	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {
@@ -91,8 +82,7 @@ func (d *ReleaseStatusesDataSource) Read(ctx context.Context, req datasource.Rea
 		releaseTypes[i].writeRelease(t.ReleaseStatus)
 	}
 
-	tfsdk.ValueFrom(ctx, releaseTypes, data.Elements.Type(ctx), &data.Elements)
-	// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
-	data.ID = types.StringValue(strconv.Itoa(len(statuses)))
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	releaseList, diags := types.SetValueFrom(ctx, MetadataProfileElement{}.getType(), releaseTypes)
+	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, MetadataProfileElements{Elements: releaseList, ID: types.StringValue(strconv.Itoa(len(statuses)))})...)
 }

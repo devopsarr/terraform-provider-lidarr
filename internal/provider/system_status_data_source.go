@@ -27,35 +27,38 @@ type SystemStatusDataSource struct {
 
 // SystemStatus describes the system status data model.
 type SystemStatus struct {
-	RuntimeName            types.String `tfsdk:"runtime_name"`
-	AppData                types.String `tfsdk:"app_data"`
-	OsName                 types.String `tfsdk:"os_name"`
-	PackageVersion         types.String `tfsdk:"package_version"`
-	Mode                   types.String `tfsdk:"mode"`
-	PackageUpdateMechanism types.String `tfsdk:"package_update_mechanism"`
-	PackageAuthor          types.String `tfsdk:"package_author"`
-	InstanceName           types.String `tfsdk:"instance_name"`
-	AppName                types.String `tfsdk:"app_name"`
-	URLBase                types.String `tfsdk:"url_base"`
-	SqliteVersion          types.String `tfsdk:"sqlite_version"`
-	Branch                 types.String `tfsdk:"branch"`
-	StartupPath            types.String `tfsdk:"startup_path"`
-	RuntimeVersion         types.String `tfsdk:"runtime_version"`
-	StartTime              types.String `tfsdk:"start_time"`
-	BuildTime              types.String `tfsdk:"build_time"`
-	Version                types.String `tfsdk:"version"`
-	Authentication         types.String `tfsdk:"authentication"`
-	MigrationVersion       types.Int64  `tfsdk:"migration_version"`
-	ID                     types.Int64  `tfsdk:"id"`
-	IsDocker               types.Bool   `tfsdk:"is_docker"`
-	IsDebug                types.Bool   `tfsdk:"is_debug"`
-	IsNetCore              types.Bool   `tfsdk:"is_net_core"`
-	IsAdmin                types.Bool   `tfsdk:"is_admin"`
-	IsProduction           types.Bool   `tfsdk:"is_production"`
-	IsWindows              types.Bool   `tfsdk:"is_windows"`
-	IsOsx                  types.Bool   `tfsdk:"is_osx"`
-	IsLinux                types.Bool   `tfsdk:"is_linux"`
-	IsUserInteractive      types.Bool   `tfsdk:"is_user_interactive"`
+	RuntimeName                   types.String `tfsdk:"runtime_name"`
+	AppData                       types.String `tfsdk:"app_data"`
+	OsName                        types.String `tfsdk:"os_name"`
+	PackageVersion                types.String `tfsdk:"package_version"`
+	Mode                          types.String `tfsdk:"mode"`
+	PackageUpdateMechanism        types.String `tfsdk:"package_update_mechanism"`
+	PackageAuthor                 types.String `tfsdk:"package_author"`
+	InstanceName                  types.String `tfsdk:"instance_name"`
+	AppName                       types.String `tfsdk:"app_name"`
+	Branch                        types.String `tfsdk:"branch"`
+	StartupPath                   types.String `tfsdk:"startup_path"`
+	RuntimeVersion                types.String `tfsdk:"runtime_version"`
+	StartTime                     types.String `tfsdk:"start_time"`
+	BuildTime                     types.String `tfsdk:"build_time"`
+	Version                       types.String `tfsdk:"version"`
+	Authentication                types.String `tfsdk:"authentication"`
+	OsVersion                     types.String `tfsdk:"os_version"`
+	DatabaseVersion               types.String `tfsdk:"database_version"`
+	DatabaseType                  types.String `tfsdk:"database_type"`
+	URLBase                       types.String `tfsdk:"url_base"`
+	PackageUpdateMechanismMessage types.String `tfsdk:"package_update_mechanism_message"`
+	MigrationVersion              types.Int64  `tfsdk:"migration_version"`
+	ID                            types.Int64  `tfsdk:"id"`
+	IsDocker                      types.Bool   `tfsdk:"is_docker"`
+	IsDebug                       types.Bool   `tfsdk:"is_debug"`
+	IsNetCore                     types.Bool   `tfsdk:"is_net_core"`
+	IsAdmin                       types.Bool   `tfsdk:"is_admin"`
+	IsProduction                  types.Bool   `tfsdk:"is_production"`
+	IsWindows                     types.Bool   `tfsdk:"is_windows"`
+	IsOsx                         types.Bool   `tfsdk:"is_osx"`
+	IsLinux                       types.Bool   `tfsdk:"is_linux"`
+	IsUserInteractive             types.Bool   `tfsdk:"is_user_interactive"`
 }
 
 func (d *SystemStatusDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -140,10 +143,6 @@ func (d *SystemStatusDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Authentication.",
 				Computed:            true,
 			},
-			"sqlite_version": schema.StringAttribute{
-				MarkdownDescription: "SQLite version.",
-				Computed:            true,
-			},
 			"url_base": schema.StringAttribute{
 				MarkdownDescription: "Base URL.",
 				Computed:            true,
@@ -184,6 +183,22 @@ func (d *SystemStatusDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Package version.",
 				Computed:            true,
 			},
+			"os_version": schema.StringAttribute{
+				MarkdownDescription: "OS version.",
+				Computed:            true,
+			},
+			"database_version": schema.StringAttribute{
+				MarkdownDescription: "Database version.",
+				Computed:            true,
+			},
+			"database_type": schema.StringAttribute{
+				MarkdownDescription: "Database type.",
+				Computed:            true,
+			},
+			"package_update_mechanism_message": schema.StringAttribute{
+				MarkdownDescription: "Package update mechanism message.",
+				Computed:            true,
+			},
 		},
 	}
 }
@@ -195,53 +210,52 @@ func (d *SystemStatusDataSource) Configure(ctx context.Context, req datasource.C
 }
 
 func (d *SystemStatusDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	tflog.Trace(ctx, "NOT SUPPORTED")
-	// TODO: add it back again once system status is present in sdk
 	// Get system status current value
-	// response, _, err := d.client.SystemApi.GetSystemStatus(ctx).Execute()
-	// if err != nil {
-	// 	resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, systemStatusDataSourceName, err))
+	response, _, err := d.client.SystemApi.GetSystemStatus(ctx).Execute()
+	if err != nil {
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, systemStatusDataSourceName, err))
 
-	// 	return
-	// }
+		return
+	}
 
 	tflog.Trace(ctx, "read "+systemStatusDataSourceName)
 
 	status := SystemStatus{}
-	// status.write(response)
-	resp.Diagnostics.Append(req.Config.Get(ctx, &status)...)
-	status.ID = types.Int64Value(1)
+	status.write(response)
 	resp.Diagnostics.Append(resp.State.Set(ctx, status)...)
 }
 
-// func (s *SystemStatus) write(status *lidarr.SystemResource) {
-// 	s.IsDebug = types.BoolValue(status.IsDebug)
-// 	s.IsProduction = types.BoolValue(status.IsProduction)
-// 	s.IsAdmin = types.BoolValue(status.IsAdmin)
-// 	s.IsUserInteractive = types.BoolValue(status.IsUserInteractive)
-// 	s.IsNetCore = types.BoolValue(status.IsNetCore)
-// 	s.IsLinux = types.BoolValue(status.IsLinux)
-// 	s.IsOsx = types.BoolValue(status.IsOsx)
-// 	s.IsWindows = types.BoolValue(status.IsWindows)
-// 	s.IsDocker = types.BoolValue(status.IsDocker)
-// 	s.ID = types.Int64Value(int64(1))
-// 	s.MigrationVersion = types.Int64Value(status.MigrationVersion)
-// 	s.Version = types.StringValue(status.Version)
-// 	s.StartupPath = types.StringValue(status.StartupPath)
-// 	s.AppData = types.StringValue(status.AppData)
-// 	s.OsName = types.StringValue(status.OsName)
-// 	s.Mode = types.StringValue(status.Mode)
-// 	s.Branch = types.StringValue(status.Branch)
-// 	s.Authentication = types.StringValue(status.Authentication)
-// 	s.SqliteVersion = types.StringValue(status.SqliteVersion)
-// 	s.URLBase = types.StringValue(status.URLBase)
-// 	s.RuntimeVersion = types.StringValue(status.RuntimeVersion)
-// 	s.RuntimeName = types.StringValue(status.RuntimeName)
-// 	s.BuildTime = types.StringValue(status.BuildTime.String())
-// 	s.StartTime = types.StringValue(status.StartTime.String())
-// 	s.AppName = types.StringValue(status.AppName)
-// 	s.InstanceName = types.StringValue(status.InstanceName)
-// 	s.PackageAuthor = types.StringValue(status.PackageAuthor)
-// 	s.PackageUpdateMechanism = types.StringValue(status.PackageUpdateMechanism)
-// 	s.PackageVersion = types.StringValue(status.PackageVersion)
-// }
+func (s *SystemStatus) write(status *lidarr.SystemResource) {
+	s.IsDebug = types.BoolValue(status.GetIsDebug())
+	s.IsProduction = types.BoolValue(status.GetIsProduction())
+	s.IsAdmin = types.BoolValue(status.GetIsAdmin())
+	s.IsUserInteractive = types.BoolValue(status.GetIsUserInteractive())
+	s.IsNetCore = types.BoolValue(status.GetIsNetCore())
+	s.IsLinux = types.BoolValue(status.GetIsLinux())
+	s.IsOsx = types.BoolValue(status.GetIsOsx())
+	s.IsWindows = types.BoolValue(status.GetIsWindows())
+	s.IsDocker = types.BoolValue(status.GetIsDocker())
+	s.ID = types.Int64Value(int64(1))
+	s.MigrationVersion = types.Int64Value(int64(status.GetMigrationVersion()))
+	s.Version = types.StringValue(status.GetVersion())
+	s.StartupPath = types.StringValue(status.GetStartupPath())
+	s.AppData = types.StringValue(status.GetAppData())
+	s.OsName = types.StringValue(status.GetOsName())
+	s.Mode = types.StringValue(string(status.GetMode()))
+	s.Branch = types.StringValue(status.GetBranch())
+	s.Authentication = types.StringValue(string(status.GetAuthentication()))
+	s.RuntimeVersion = types.StringValue(status.GetRuntimeVersion())
+	s.RuntimeName = types.StringValue(status.GetRuntimeName())
+	s.BuildTime = types.StringValue(status.GetBuildTime().String())
+	s.StartTime = types.StringValue(status.GetStartTime().String())
+	s.AppName = types.StringValue(status.GetAppName())
+	s.InstanceName = types.StringValue(status.GetInstanceName())
+	s.PackageAuthor = types.StringValue(status.GetPackageAuthor())
+	s.PackageUpdateMechanism = types.StringValue(string(status.GetPackageUpdateMechanism()))
+	s.PackageVersion = types.StringValue(status.GetPackageVersion())
+	s.OsVersion = types.StringValue(status.GetOsVersion())
+	s.DatabaseVersion = types.StringValue(status.GetDatabaseVersion())
+	s.DatabaseType = types.StringValue(string(status.GetDatabaseType()))
+	s.URLBase = types.StringValue(status.GetUrlBase())
+	s.PackageUpdateMechanismMessage = types.StringValue(status.GetPackageUpdateMechanismMessage())
+}
