@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -203,7 +204,7 @@ func (r *ImportListHeadphonesResource) Create(ctx context.Context, req resource.
 	}
 
 	// Create new ImportListHeadphones
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
@@ -214,7 +215,7 @@ func (r *ImportListHeadphonesResource) Create(ctx context.Context, req resource.
 
 	tflog.Trace(ctx, "created "+importListHeadphonesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -238,7 +239,7 @@ func (r *ImportListHeadphonesResource) Read(ctx context.Context, req resource.Re
 
 	tflog.Trace(ctx, "read "+importListHeadphonesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -253,7 +254,7 @@ func (r *ImportListHeadphonesResource) Update(ctx context.Context, req resource.
 	}
 
 	// Update ImportListHeadphones
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
@@ -264,28 +265,28 @@ func (r *ImportListHeadphonesResource) Update(ctx context.Context, req resource.
 
 	tflog.Trace(ctx, "updated "+importListHeadphonesResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
 func (r *ImportListHeadphonesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListHeadphones
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete ImportListHeadphones current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
+	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListHeadphonesResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListHeadphonesResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListHeadphonesResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListHeadphonesResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -294,12 +295,12 @@ func (r *ImportListHeadphonesResource) ImportState(ctx context.Context, req reso
 	tflog.Trace(ctx, "imported "+importListHeadphonesResourceName+": "+req.ID)
 }
 
-func (i *ImportListHeadphones) write(ctx context.Context, importList *lidarr.ImportListResource) {
+func (i *ImportListHeadphones) write(ctx context.Context, importList *lidarr.ImportListResource, diags *diag.Diagnostics) {
 	genericImportList := i.toImportList()
-	genericImportList.write(ctx, importList)
+	genericImportList.write(ctx, importList, diags)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListHeadphones) read(ctx context.Context) *lidarr.ImportListResource {
-	return i.toImportList().read(ctx)
+func (i *ImportListHeadphones) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.ImportListResource {
+	return i.toImportList().read(ctx, diags)
 }

@@ -6,12 +6,13 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -42,10 +43,29 @@ type MetadataProfile struct {
 	ID                  types.Int64  `tfsdk:"id"`
 }
 
+func (p MetadataProfile) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"id":                    types.Int64Type,
+			"name":                  types.StringType,
+			"release_statuses":      types.SetType{}.WithElementType(types.Int64Type),
+			"secondary_album_types": types.SetType{}.WithElementType(types.Int64Type),
+			"primary_album_types":   types.SetType{}.WithElementType(types.Int64Type),
+		})
+}
+
 // MetadataProfileElement describes the metadata profile element data model.
 type MetadataProfileElement struct {
 	Name types.String `tfsdk:"name"`
 	ID   types.Int64  `tfsdk:"id"`
+}
+
+func (m MetadataProfileElement) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"id":   types.Int64Type,
+			"name": types.StringType,
+		})
 }
 
 // MetadataProfileElements describes the metadata profile elements data model.
@@ -109,7 +129,7 @@ func (r *MetadataProfileResource) Create(ctx context.Context, req resource.Creat
 	}
 
 	// Create new MetadataProfile
-	request := profile.read(ctx)
+	request := profile.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.MetadataProfileApi.CreateMetadataProfile(ctx).MetadataProfileResource(*request).Execute()
 	if err != nil {
@@ -120,7 +140,7 @@ func (r *MetadataProfileResource) Create(ctx context.Context, req resource.Creat
 
 	tflog.Trace(ctx, "created "+metadataProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	profile.write(ctx, response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -144,7 +164,7 @@ func (r *MetadataProfileResource) Read(ctx context.Context, req resource.ReadReq
 
 	tflog.Trace(ctx, "read "+metadataProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	profile.write(ctx, response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -159,7 +179,7 @@ func (r *MetadataProfileResource) Update(ctx context.Context, req resource.Updat
 	}
 
 	// Update MetadataProfile
-	request := profile.read(ctx)
+	request := profile.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.MetadataProfileApi.UpdateMetadataProfile(ctx, strconv.Itoa(int(request.GetId()))).MetadataProfileResource(*request).Execute()
 	if err != nil {
@@ -170,29 +190,28 @@ func (r *MetadataProfileResource) Update(ctx context.Context, req resource.Updat
 
 	tflog.Trace(ctx, "updated "+metadataProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	profile.write(ctx, response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
 func (r *MetadataProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var profile *MetadataProfile
+	var ID int64
 
-	diags := req.State.Get(ctx, &profile)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete metadataProfile current value
-	_, err := r.client.MetadataProfileApi.DeleteMetadataProfile(ctx, int32(profile.ID.ValueInt64())).Execute()
+	_, err := r.client.MetadataProfileApi.DeleteMetadataProfile(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataProfileResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, metadataProfileResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+metadataProfileResourceName+": "+strconv.Itoa(int(profile.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+metadataProfileResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -201,8 +220,11 @@ func (r *MetadataProfileResource) ImportState(ctx context.Context, req resource.
 	tflog.Trace(ctx, "imported "+metadataProfileResourceName+": "+req.ID)
 }
 
-func (p *MetadataProfile) write(ctx context.Context, profile *lidarr.MetadataProfileResource) {
-	var primary, secondary, release []*int32
+func (p *MetadataProfile) write(ctx context.Context, profile *lidarr.MetadataProfileResource, diags *diag.Diagnostics) {
+	var (
+		tempDiag                    diag.Diagnostics
+		primary, secondary, release []*int32
+	)
 
 	p.ID = types.Int64Value(int64(profile.GetId()))
 	p.Name = types.StringValue(profile.GetName())
@@ -225,17 +247,20 @@ func (p *MetadataProfile) write(ctx context.Context, profile *lidarr.MetadataPro
 		}
 	}
 
-	p.PrimaryAlbumTypes, _ = types.SetValueFrom(ctx, types.Int64Type, primary)
-	p.SecondaryAlbumTypes, _ = types.SetValueFrom(ctx, types.Int64Type, secondary)
-	p.ReleaseStatuses, _ = types.SetValueFrom(ctx, types.Int64Type, release)
+	p.PrimaryAlbumTypes, tempDiag = types.SetValueFrom(ctx, types.Int64Type, primary)
+	diags.Append(tempDiag...)
+	p.SecondaryAlbumTypes, tempDiag = types.SetValueFrom(ctx, types.Int64Type, secondary)
+	diags.Append(tempDiag...)
+	p.ReleaseStatuses, tempDiag = types.SetValueFrom(ctx, types.Int64Type, release)
+	diags.Append(tempDiag...)
 }
 
-func (p *MetadataProfile) read(ctx context.Context) *lidarr.MetadataProfileResource {
+func (p *MetadataProfile) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.MetadataProfileResource {
 	var primary, secondary, release []*int64
 
-	tfsdk.ValueAs(ctx, p.PrimaryAlbumTypes, &primary)
-	tfsdk.ValueAs(ctx, p.SecondaryAlbumTypes, &secondary)
-	tfsdk.ValueAs(ctx, p.ReleaseStatuses, &release)
+	diags.Append(p.PrimaryAlbumTypes.ElementsAs(ctx, &primary, true)...)
+	diags.Append(p.SecondaryAlbumTypes.ElementsAs(ctx, &secondary, true)...)
+	diags.Append(p.ReleaseStatuses.ElementsAs(ctx, &release, true)...)
 
 	primaryTypes := make([]*lidarr.ProfilePrimaryAlbumTypeItemResource, len(primary))
 	for i, e := range primary {

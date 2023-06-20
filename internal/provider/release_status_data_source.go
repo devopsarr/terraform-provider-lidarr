@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -69,15 +69,9 @@ func (d *ReleaseStatusDataSource) Read(ctx context.Context, req datasource.ReadR
 		return
 	}
 
-	value, err := findReleaseStatus(releaseType.Name.ValueString(), response.GetReleaseStatuses())
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", releaseStatusDataSourceName, err))
-
-		return
-	}
+	releaseType.find(releaseType.Name.ValueString(), response.GetReleaseStatuses(), &resp.Diagnostics)
 
 	tflog.Trace(ctx, "read "+releaseStatusDataSourceName)
-	releaseType.writeRelease(value)
 	// Map response body to resource schema attribute
 	resp.Diagnostics.Append(resp.State.Set(ctx, &releaseType)...)
 }
@@ -87,12 +81,14 @@ func (e *MetadataProfileElement) writeRelease(element *lidarr.ReleaseStatus) {
 	e.ID = types.Int64Value(int64(element.GetId()))
 }
 
-func findReleaseStatus(name string, types []*lidarr.ProfileReleaseStatusItemResource) (*lidarr.ReleaseStatus, error) {
+func (e *MetadataProfileElement) find(name string, types []*lidarr.ProfileReleaseStatusItemResource, diags *diag.Diagnostics) {
 	for _, t := range types {
 		if t.ReleaseStatus.GetName() == name {
-			return t.ReleaseStatus, nil
+			e.writeRelease(t.ReleaseStatus)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(releaseStatusDataSourceName, "name", name)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(releaseStatusDataSourceName, "name", name))
 }

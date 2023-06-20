@@ -9,6 +9,7 @@ import (
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -40,6 +41,14 @@ type TagResource struct {
 type Tag struct {
 	Label types.String `tfsdk:"label"`
 	ID    types.Int64  `tfsdk:"id"`
+}
+
+func (t Tag) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"id":    types.Int64Type,
+			"label": types.StringType,
+		})
 }
 
 func (r *TagResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -88,10 +97,9 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 	}
 
 	// Create new Tag
-	request := *lidarr.NewTagResource()
-	request.SetLabel(tag.Label.ValueString())
+	request := tag.read()
 
-	response, _, err := r.client.TagApi.CreateTag(ctx).TagResource(request).Execute()
+	response, _, err := r.client.TagApi.CreateTag(ctx).TagResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, tagResourceName, err))
 
@@ -139,11 +147,9 @@ func (r *TagResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	}
 
 	// Update Tag
-	tagResource := *lidarr.NewTagResource()
-	tagResource.SetLabel(tag.Label.ValueString())
-	tagResource.SetId(int32(tag.ID.ValueInt64()))
+	tagResource := tag.read()
 
-	response, _, err := r.client.TagApi.UpdateTag(ctx, fmt.Sprint(tagResource.GetId())).TagResource(tagResource).Execute()
+	response, _, err := r.client.TagApi.UpdateTag(ctx, fmt.Sprint(tagResource.GetId())).TagResource(*tagResource).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, tagResourceName, err))
 
@@ -157,23 +163,23 @@ func (r *TagResource) Update(ctx context.Context, req resource.UpdateRequest, re
 }
 
 func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var tag *Tag
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &tag)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete tag current value
-	_, err := r.client.TagApi.DeleteTag(ctx, int32(tag.ID.ValueInt64())).Execute()
+	_, err := r.client.TagApi.DeleteTag(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, tagResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, tagResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+tagResourceName+": "+strconv.Itoa(int(tag.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+tagResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -185,4 +191,12 @@ func (r *TagResource) ImportState(ctx context.Context, req resource.ImportStateR
 func (t *Tag) write(tag *lidarr.TagResource) {
 	t.ID = types.Int64Value(int64(tag.GetId()))
 	t.Label = types.StringValue(tag.GetLabel())
+}
+
+func (t *Tag) read() *lidarr.TagResource {
+	tag := lidarr.NewTagResource()
+	tag.SetLabel(t.Label.ValueString())
+	tag.SetId(int32(t.ID.ValueInt64()))
+
+	return tag
 }

@@ -6,13 +6,14 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -46,6 +47,20 @@ type QualityProfile struct {
 	UpgradeAllowed    types.Bool   `tfsdk:"upgrade_allowed"`
 }
 
+func (p QualityProfile) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"quality_groups":      types.SetType{}.WithElementType(QualityGroup{}.getType()),
+			"format_items":        types.SetType{}.WithElementType(FormatItem{}.getType()),
+			"name":                types.StringType,
+			"id":                  types.Int64Type,
+			"cutoff":              types.Int64Type,
+			"min_format_score":    types.Int64Type,
+			"cutoff_format_score": types.Int64Type,
+			"upgrade_allowed":     types.BoolType,
+		})
+}
+
 // QualityGroup is part of QualityProfile.
 type QualityGroup struct {
 	Qualities types.Set    `tfsdk:"qualities"`
@@ -53,11 +68,29 @@ type QualityGroup struct {
 	ID        types.Int64  `tfsdk:"id"`
 }
 
+func (q QualityGroup) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"qualities": types.SetType{}.WithElementType(Quality{}.getType()),
+			"name":      types.StringType,
+			"id":        types.Int64Type,
+		})
+}
+
 // FormatItem is part of QualityProfile.
 type FormatItem struct {
 	Name   types.String `tfsdk:"name"`
 	Format types.Int64  `tfsdk:"format"`
 	Score  types.Int64  `tfsdk:"score"`
+}
+
+func (f FormatItem) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"name":   types.StringType,
+			"format": types.Int64Type,
+			"score":  types.Int64Type,
+		})
 }
 
 func (r *QualityProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -205,7 +238,7 @@ func (r *QualityProfileResource) Create(ctx context.Context, req resource.Create
 	}
 
 	// Build Create resource
-	request := profile.read(ctx)
+	request := profile.read(ctx, &resp.Diagnostics)
 
 	// Create new QualityProfile
 	response, _, err := r.client.QualityProfileApi.CreateQualityProfile(ctx).QualityProfileResource(*request).Execute()
@@ -217,7 +250,7 @@ func (r *QualityProfileResource) Create(ctx context.Context, req resource.Create
 
 	tflog.Trace(ctx, "created "+qualityProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	profile.write(ctx, response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -241,7 +274,7 @@ func (r *QualityProfileResource) Read(ctx context.Context, req resource.ReadRequ
 
 	tflog.Trace(ctx, "read "+qualityProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	profile.write(ctx, response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
@@ -256,7 +289,7 @@ func (r *QualityProfileResource) Update(ctx context.Context, req resource.Update
 	}
 
 	// Build Update resource
-	request := profile.read(ctx)
+	request := profile.read(ctx, &resp.Diagnostics)
 
 	// Update QualityProfile
 	response, _, err := r.client.QualityProfileApi.UpdateQualityProfile(ctx, strconv.Itoa(int(request.GetId()))).QualityProfileResource(*request).Execute()
@@ -268,28 +301,28 @@ func (r *QualityProfileResource) Update(ctx context.Context, req resource.Update
 
 	tflog.Trace(ctx, "updated "+qualityProfileResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	profile.write(ctx, response)
+	profile.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &profile)...)
 }
 
 func (r *QualityProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var profile *QualityProfile
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &profile)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete qualityprofile current value
-	_, err := r.client.QualityProfileApi.DeleteQualityProfile(ctx, int32(profile.ID.ValueInt64())).Execute()
+	_, err := r.client.QualityProfileApi.DeleteQualityProfile(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, qualityProfileResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, qualityProfileResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+qualityProfileResourceName+": "+strconv.Itoa(int(profile.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+qualityProfileResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -298,19 +331,19 @@ func (r *QualityProfileResource) ImportState(ctx context.Context, req resource.I
 	tflog.Trace(ctx, "imported "+qualityProfileResourceName+": "+req.ID)
 }
 
-func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfileResource) {
+func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfileResource, diags *diag.Diagnostics) {
+	var tempDiag diag.Diagnostics
+
 	p.UpgradeAllowed = types.BoolValue(profile.GetUpgradeAllowed())
 	p.ID = types.Int64Value(int64(profile.GetId()))
 	p.Name = types.StringValue(profile.GetName())
 	p.Cutoff = types.Int64Value(int64(profile.GetCutoff()))
 	p.CutoffFormatScore = types.Int64Value(int64(profile.GetCutoffFormatScore()))
 	p.MinFormatScore = types.Int64Value(int64(profile.GetMinFormatScore()))
-	p.QualityGroups = types.SetValueMust(QualityProfileResource{}.getQualityGroupSchema().Type(), nil)
-	p.FormatItems = types.SetValueMust(QualityProfileResource{}.getFormatItemsSchema().Type(), nil)
 
 	qualityGroups := make([]QualityGroup, len(profile.GetItems()))
 	for n, g := range profile.GetItems() {
-		qualityGroups[n].write(ctx, g)
+		qualityGroups[n].write(ctx, g, diags)
 	}
 
 	formatItems := make([]FormatItem, len(profile.GetFormatItems()))
@@ -318,11 +351,15 @@ func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfi
 		formatItems[n].write(f)
 	}
 
-	tfsdk.ValueFrom(ctx, qualityGroups, p.QualityGroups.Type(ctx), &p.QualityGroups)
-	tfsdk.ValueFrom(ctx, formatItems, p.FormatItems.Type(ctx), &p.FormatItems)
+	p.QualityGroups, tempDiag = types.SetValueFrom(ctx, QualityGroup{}.getType(), qualityGroups)
+	diags.Append(tempDiag...)
+	p.FormatItems, tempDiag = types.SetValueFrom(ctx, FormatItem{}.getType(), formatItems)
+	diags.Append(tempDiag...)
 }
 
-func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQualityItemResource) {
+func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQualityItemResource, diags *diag.Diagnostics) {
+	var tempDiag diag.Diagnostics
+
 	name := types.StringValue(group.GetName())
 	id := types.Int64Value(int64(group.GetId()))
 
@@ -342,7 +379,8 @@ func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQu
 
 	q.Name = name
 	q.ID = id
-	q.Qualities, _ = types.SetValueFrom(ctx, QualityProfileResource{}.getQualitySchema().Type(), &qualities)
+	q.Qualities, tempDiag = types.SetValueFrom(ctx, QualityProfileResource{}.getQualitySchema().Type(), &qualities)
+	diags.Append(tempDiag...)
 }
 
 func (q *Quality) write(quality *lidarr.QualityProfileQualityItemResource) {
@@ -356,14 +394,14 @@ func (f *FormatItem) write(format *lidarr.ProfileFormatItemResource) {
 	f.Score = types.Int64Value(int64(format.GetScore()))
 }
 
-func (p *QualityProfile) read(ctx context.Context) *lidarr.QualityProfileResource {
+func (p *QualityProfile) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.QualityProfileResource {
 	groups := make([]QualityGroup, len(p.QualityGroups.Elements()))
-	tfsdk.ValueAs(ctx, p.QualityGroups, &groups)
+	diags.Append(p.QualityGroups.ElementsAs(ctx, &groups, false)...)
 	qualities := make([]*lidarr.QualityProfileQualityItemResource, len(groups))
 
 	for n, g := range groups {
 		q := make([]Quality, len(g.Qualities.Elements()))
-		tfsdk.ValueAs(ctx, g.Qualities, &q)
+		diags.Append(g.Qualities.ElementsAs(ctx, &q, false)...)
 
 		if len(q) == 1 {
 			quality := lidarr.NewQuality()
@@ -393,9 +431,10 @@ func (p *QualityProfile) read(ctx context.Context) *lidarr.QualityProfileResourc
 	}
 
 	formats := make([]FormatItem, len(p.FormatItems.Elements()))
-	tfsdk.ValueAs(ctx, p.FormatItems, &formats)
-	formatItems := make([]*lidarr.ProfileFormatItemResource, len(formats))
+	// true to allow empty values
+	diags.Append(p.FormatItems.ElementsAs(ctx, &formats, true)...)
 
+	formatItems := make([]*lidarr.ProfileFormatItemResource, len(formats))
 	for n, f := range formats {
 		formatItems[n] = f.read()
 	}

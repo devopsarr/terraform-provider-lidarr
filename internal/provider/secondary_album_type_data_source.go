@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -53,9 +53,9 @@ func (d *SecondaryAlbumTypeDataSource) Configure(ctx context.Context, req dataso
 }
 
 func (d *SecondaryAlbumTypeDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var secondaryType *MetadataProfileElement
+	var data *MetadataProfileElement
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &secondaryType)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -69,17 +69,10 @@ func (d *SecondaryAlbumTypeDataSource) Read(ctx context.Context, req datasource.
 		return
 	}
 
-	value, err := findSecondaryAlbumType(secondaryType.Name.ValueString(), response.GetSecondaryAlbumTypes())
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", secondaryAlbumTypeDataSourceName, err))
-
-		return
-	}
-
+	data.findSecondary(data.Name.ValueString(), response.GetSecondaryAlbumTypes(), &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+secondaryAlbumTypeDataSourceName)
-	secondaryType.writeSecondary(value)
 	// Map response body to resource schema attribute
-	resp.Diagnostics.Append(resp.State.Set(ctx, &secondaryType)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (e *MetadataProfileElement) writeSecondary(element *lidarr.SecondaryAlbumType) {
@@ -87,12 +80,14 @@ func (e *MetadataProfileElement) writeSecondary(element *lidarr.SecondaryAlbumTy
 	e.ID = types.Int64Value(int64(element.GetId()))
 }
 
-func findSecondaryAlbumType(name string, types []*lidarr.ProfileSecondaryAlbumTypeItemResource) (*lidarr.SecondaryAlbumType, error) {
+func (e *MetadataProfileElement) findSecondary(name string, types []*lidarr.ProfileSecondaryAlbumTypeItemResource, diags *diag.Diagnostics) {
 	for _, t := range types {
 		if t.AlbumType.GetName() == name {
-			return t.AlbumType, nil
+			e.writeSecondary(t.AlbumType)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(secondaryAlbumTypeDataSourceName, "name", name)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(secondaryAlbumTypeDataSourceName, "name", name))
 }

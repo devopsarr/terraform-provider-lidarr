@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -53,9 +53,9 @@ func (d *PrimaryAlbumTypeDataSource) Configure(ctx context.Context, req datasour
 }
 
 func (d *PrimaryAlbumTypeDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var primaryType *MetadataProfileElement
+	var data *MetadataProfileElement
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &primaryType)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -69,17 +69,10 @@ func (d *PrimaryAlbumTypeDataSource) Read(ctx context.Context, req datasource.Re
 		return
 	}
 
-	value, err := findPrimaryAlbumType(primaryType.Name.ValueString(), response.GetPrimaryAlbumTypes())
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", primaryAlbumTypeDataSourceName, err))
-
-		return
-	}
-
+	data.findPrimary(data.Name.ValueString(), response.GetPrimaryAlbumTypes(), &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+primaryAlbumTypeDataSourceName)
-	primaryType.writePrimary(value)
 	// Map response body to resource schema attribute
-	resp.Diagnostics.Append(resp.State.Set(ctx, &primaryType)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
 func (e *MetadataProfileElement) writePrimary(element *lidarr.PrimaryAlbumType) {
@@ -87,12 +80,14 @@ func (e *MetadataProfileElement) writePrimary(element *lidarr.PrimaryAlbumType) 
 	e.ID = types.Int64Value(int64(element.GetId()))
 }
 
-func findPrimaryAlbumType(name string, types []*lidarr.ProfilePrimaryAlbumTypeItemResource) (*lidarr.PrimaryAlbumType, error) {
+func (e *MetadataProfileElement) findPrimary(name string, types []*lidarr.ProfilePrimaryAlbumTypeItemResource, diags *diag.Diagnostics) {
 	for _, t := range types {
 		if t.AlbumType.GetName() == name {
-			return t.AlbumType, nil
+			e.writePrimary(t.AlbumType)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(primaryAlbumTypeDataSourceName, "name", name)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(primaryAlbumTypeDataSourceName, "name", name))
 }

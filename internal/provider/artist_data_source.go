@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -92,14 +92,13 @@ func (d *ArtistDataSource) Configure(ctx context.Context, req datasource.Configu
 }
 
 func (d *ArtistDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var artist *Artist
+	var data *Artist
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &artist)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
-
 	// Get artists current value
 	response, _, err := d.client.ArtistApi.ListArtist(ctx).Execute()
 	if err != nil {
@@ -108,25 +107,20 @@ func (d *ArtistDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	value, err := findArtist(artist.ForeignArtistID.ValueString(), response)
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", artistDataSourceName, err))
-
-		return
-	}
-
+	data.find(ctx, data.ForeignArtistID.ValueString(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+artistDataSourceName)
-	artist.write(ctx, value)
 	// Map response body to resource schema attribute
-	resp.Diagnostics.Append(resp.State.Set(ctx, &artist)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func findArtist(ID string, artists []*lidarr.ArtistResource) (*lidarr.ArtistResource, error) {
-	for _, t := range artists {
-		if t.GetForeignArtistId() == ID {
-			return t, nil
+func (a *Artist) find(ctx context.Context, ID string, artists []*lidarr.ArtistResource, diags *diag.Diagnostics) {
+	for _, artist := range artists {
+		if artist.GetForeignArtistId() == ID {
+			a.write(ctx, artist, diags)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(artistDataSourceName, "TMDB ID", ID)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(artistDataSourceName, "Foreign artist ID", ID))
 }

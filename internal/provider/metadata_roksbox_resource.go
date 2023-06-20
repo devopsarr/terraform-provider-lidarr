@@ -7,6 +7,7 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -136,7 +137,7 @@ func (r *MetadataRoksboxResource) Create(ctx context.Context, req resource.Creat
 	}
 
 	// Create new MetadataRoksbox
-	request := metadata.read(ctx)
+	request := metadata.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.MetadataApi.CreateMetadata(ctx).MetadataResource(*request).Execute()
 	if err != nil {
@@ -147,7 +148,8 @@ func (r *MetadataRoksboxResource) Create(ctx context.Context, req resource.Creat
 
 	tflog.Trace(ctx, "created "+metadataRoksboxResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	metadata.write(ctx, response)
+	metadata.write(ctx, response, &resp.Diagnostics)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -171,7 +173,8 @@ func (r *MetadataRoksboxResource) Read(ctx context.Context, req resource.ReadReq
 
 	tflog.Trace(ctx, "read "+metadataRoksboxResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	metadata.write(ctx, response)
+	metadata.write(ctx, response, &resp.Diagnostics)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -186,7 +189,7 @@ func (r *MetadataRoksboxResource) Update(ctx context.Context, req resource.Updat
 	}
 
 	// Update MetadataRoksbox
-	request := metadata.read(ctx)
+	request := metadata.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.MetadataApi.UpdateMetadata(ctx, strconv.Itoa(int(request.GetId()))).MetadataResource(*request).Execute()
 	if err != nil {
@@ -197,28 +200,29 @@ func (r *MetadataRoksboxResource) Update(ctx context.Context, req resource.Updat
 
 	tflog.Trace(ctx, "updated "+metadataRoksboxResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	metadata.write(ctx, response)
+	metadata.write(ctx, response, &resp.Diagnostics)
+
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
 func (r *MetadataRoksboxResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var metadata *MetadataRoksbox
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &metadata)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete MetadataRoksbox current value
-	_, err := r.client.MetadataApi.DeleteMetadata(ctx, int32(metadata.ID.ValueInt64())).Execute()
+	_, err := r.client.MetadataApi.DeleteMetadata(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataRoksboxResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, metadataRoksboxResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+metadataRoksboxResourceName+": "+strconv.Itoa(int(metadata.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+metadataRoksboxResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -227,12 +231,12 @@ func (r *MetadataRoksboxResource) ImportState(ctx context.Context, req resource.
 	tflog.Trace(ctx, "imported "+metadataRoksboxResourceName+": "+req.ID)
 }
 
-func (m *MetadataRoksbox) write(ctx context.Context, metadata *lidarr.MetadataResource) {
+func (m *MetadataRoksbox) write(ctx context.Context, metadata *lidarr.MetadataResource, diags *diag.Diagnostics) {
 	genericMetadata := m.toMetadata()
-	genericMetadata.write(ctx, metadata)
+	genericMetadata.write(ctx, metadata, diags)
 	m.fromMetadata(genericMetadata)
 }
 
-func (m *MetadataRoksbox) read(ctx context.Context) *lidarr.MetadataResource {
-	return m.toMetadata().read(ctx)
+func (m *MetadataRoksbox) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.MetadataResource {
+	return m.toMetadata().read(ctx, diags)
 }

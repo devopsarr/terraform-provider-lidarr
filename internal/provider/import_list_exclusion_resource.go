@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -37,6 +38,15 @@ type ImportListExclusion struct {
 	ArtistName types.String `tfsdk:"artist_name"`
 	ForeignID  types.String `tfsdk:"foreign_id"`
 	ID         types.Int64  `tfsdk:"id"`
+}
+
+func (i ImportListExclusion) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"id":          types.Int64Type,
+			"artist_name": types.StringType,
+			"foreign_id":  types.StringType,
+		})
 }
 
 func (r *ImportListExclusionResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -160,7 +170,7 @@ func (r *ImportListExclusionResource) Delete(ctx context.Context, req resource.D
 	// Delete importListExclusion current value
 	_, err := r.client.ImportListExclusionApi.DeleteImportListExclusion(ctx, int32(importListExclusion.ID.ValueInt64())).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListExclusionResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListExclusionResourceName, err))
 
 		return
 	}

@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
@@ -56,9 +56,9 @@ func (d *ImportListExclusionDataSource) Configure(ctx context.Context, req datas
 }
 
 func (d *ImportListExclusionDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var importListExclusion *ImportListExclusion
+	var data *ImportListExclusion
 
-	resp.Diagnostics.Append(req.Config.Get(ctx, &importListExclusion)...)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
 		return
@@ -72,25 +72,20 @@ func (d *ImportListExclusionDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	value, err := findImportListExclusion(importListExclusion.ForeignID.ValueString(), response)
-	if err != nil {
-		resp.Diagnostics.AddError(helpers.DataSourceError, fmt.Sprintf("Unable to find %s, got error: %s", importListExclusionDataSourceName, err))
-
-		return
-	}
-
+	data.find(data.ForeignID.ValueString(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+importListExclusionDataSourceName)
-	importListExclusion.write(value)
 	// Map response body to resource schema attribute
-	resp.Diagnostics.Append(resp.State.Set(ctx, &importListExclusion)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func findImportListExclusion(foreignID string, importListExclusions []*lidarr.ImportListExclusionResource) (*lidarr.ImportListExclusionResource, error) {
+func (i *ImportListExclusion) find(foreignID string, importListExclusions []*lidarr.ImportListExclusionResource, diags *diag.Diagnostics) {
 	for _, t := range importListExclusions {
 		if t.GetForeignId() == foreignID {
-			return t, nil
+			i.write(t)
+
+			return
 		}
 	}
 
-	return nil, helpers.ErrDataNotFoundError(importListExclusionDataSourceName, "foreign_id", foreignID)
+	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(importListExclusionDataSourceName, "foreign_id", foreignID))
 }

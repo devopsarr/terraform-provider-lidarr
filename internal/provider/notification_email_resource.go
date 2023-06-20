@@ -6,6 +6,7 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -267,7 +268,7 @@ func (r *NotificationEmailResource) Create(ctx context.Context, req resource.Cre
 	}
 
 	// Create new NotificationEmail
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.CreateNotification(ctx).NotificationResource(*request).Execute()
 	if err != nil {
@@ -278,7 +279,7 @@ func (r *NotificationEmailResource) Create(ctx context.Context, req resource.Cre
 
 	tflog.Trace(ctx, "created "+notificationEmailResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -302,7 +303,7 @@ func (r *NotificationEmailResource) Read(ctx context.Context, req resource.ReadR
 
 	tflog.Trace(ctx, "read "+notificationEmailResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
@@ -317,7 +318,7 @@ func (r *NotificationEmailResource) Update(ctx context.Context, req resource.Upd
 	}
 
 	// Update NotificationEmail
-	request := notification.read(ctx)
+	request := notification.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.NotificationApi.UpdateNotification(ctx, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
 	if err != nil {
@@ -328,28 +329,28 @@ func (r *NotificationEmailResource) Update(ctx context.Context, req resource.Upd
 
 	tflog.Trace(ctx, "updated "+notificationEmailResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	notification.write(ctx, response)
+	notification.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &notification)...)
 }
 
 func (r *NotificationEmailResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var notification *NotificationEmail
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &notification)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete NotificationEmail current value
-	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(notification.ID.ValueInt64())).Execute()
+	_, err := r.client.NotificationApi.DeleteNotification(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, notificationEmailResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, notificationEmailResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+notificationEmailResourceName+": "+strconv.Itoa(int(notification.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+notificationEmailResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -358,12 +359,12 @@ func (r *NotificationEmailResource) ImportState(ctx context.Context, req resourc
 	tflog.Trace(ctx, "imported "+notificationEmailResourceName+": "+req.ID)
 }
 
-func (n *NotificationEmail) write(ctx context.Context, notification *lidarr.NotificationResource) {
+func (n *NotificationEmail) write(ctx context.Context, notification *lidarr.NotificationResource, diags *diag.Diagnostics) {
 	genericNotification := n.toNotification()
-	genericNotification.write(ctx, notification)
+	genericNotification.write(ctx, notification, diags)
 	n.fromNotification(genericNotification)
 }
 
-func (n *NotificationEmail) read(ctx context.Context) *lidarr.NotificationResource {
-	return n.toNotification().read(ctx)
+func (n *NotificationEmail) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.NotificationResource {
+	return n.toNotification().read(ctx, diags)
 }

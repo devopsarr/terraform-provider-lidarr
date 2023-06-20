@@ -7,6 +7,7 @@ import (
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -211,7 +212,7 @@ func (r *ImportListSpotifyArtistsResource) Create(ctx context.Context, req resou
 	}
 
 	// Create new ImportListSpotifyArtists
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
@@ -222,7 +223,7 @@ func (r *ImportListSpotifyArtistsResource) Create(ctx context.Context, req resou
 
 	tflog.Trace(ctx, "created "+importListSpotifyArtistsResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -246,7 +247,7 @@ func (r *ImportListSpotifyArtistsResource) Read(ctx context.Context, req resourc
 
 	tflog.Trace(ctx, "read "+importListSpotifyArtistsResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
@@ -261,7 +262,7 @@ func (r *ImportListSpotifyArtistsResource) Update(ctx context.Context, req resou
 	}
 
 	// Update ImportListSpotifyArtists
-	request := importList.read(ctx)
+	request := importList.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
@@ -272,28 +273,28 @@ func (r *ImportListSpotifyArtistsResource) Update(ctx context.Context, req resou
 
 	tflog.Trace(ctx, "updated "+importListSpotifyArtistsResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	importList.write(ctx, response)
+	importList.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &importList)...)
 }
 
 func (r *ImportListSpotifyArtistsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var importList *ImportListSpotifyArtists
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &importList)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete ImportListSpotifyArtists current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(importList.ID.ValueInt64())).Execute()
+	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListSpotifyArtistsResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListSpotifyArtistsResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+importListSpotifyArtistsResourceName+": "+strconv.Itoa(int(importList.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+importListSpotifyArtistsResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -302,12 +303,12 @@ func (r *ImportListSpotifyArtistsResource) ImportState(ctx context.Context, req 
 	tflog.Trace(ctx, "imported "+importListSpotifyArtistsResourceName+": "+req.ID)
 }
 
-func (i *ImportListSpotifyArtists) write(ctx context.Context, importList *lidarr.ImportListResource) {
+func (i *ImportListSpotifyArtists) write(ctx context.Context, importList *lidarr.ImportListResource, diags *diag.Diagnostics) {
 	genericImportList := i.toImportList()
-	genericImportList.write(ctx, importList)
+	genericImportList.write(ctx, importList, diags)
 	i.fromImportList(genericImportList)
 }
 
-func (i *ImportListSpotifyArtists) read(ctx context.Context) *lidarr.ImportListResource {
-	return i.toImportList().read(ctx)
+func (i *ImportListSpotifyArtists) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.ImportListResource {
+	return i.toImportList().read(ctx, diags)
 }

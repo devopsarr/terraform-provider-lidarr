@@ -7,6 +7,7 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -212,7 +213,7 @@ func (r *IndexerGazelleResource) Create(ctx context.Context, req resource.Create
 	}
 
 	// Create new IndexerGazelle
-	request := indexer.read(ctx)
+	request := indexer.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
@@ -223,7 +224,7 @@ func (r *IndexerGazelleResource) Create(ctx context.Context, req resource.Create
 
 	tflog.Trace(ctx, "created "+indexerGazelleResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	indexer.write(ctx, response)
+	indexer.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
@@ -247,7 +248,7 @@ func (r *IndexerGazelleResource) Read(ctx context.Context, req resource.ReadRequ
 
 	tflog.Trace(ctx, "read "+indexerGazelleResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	indexer.write(ctx, response)
+	indexer.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
@@ -262,7 +263,7 @@ func (r *IndexerGazelleResource) Update(ctx context.Context, req resource.Update
 	}
 
 	// Update IndexerGazelle
-	request := indexer.read(ctx)
+	request := indexer.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
@@ -273,28 +274,28 @@ func (r *IndexerGazelleResource) Update(ctx context.Context, req resource.Update
 
 	tflog.Trace(ctx, "updated "+indexerGazelleResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	indexer.write(ctx, response)
+	indexer.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &indexer)...)
 }
 
 func (r *IndexerGazelleResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var indexer *IndexerGazelle
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &indexer)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete IndexerGazelle current value
-	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(indexer.ID.ValueInt64())).Execute()
+	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerGazelleResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerGazelleResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+indexerGazelleResourceName+": "+strconv.Itoa(int(indexer.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+indexerGazelleResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -303,12 +304,12 @@ func (r *IndexerGazelleResource) ImportState(ctx context.Context, req resource.I
 	tflog.Trace(ctx, "imported "+indexerGazelleResourceName+": "+req.ID)
 }
 
-func (i *IndexerGazelle) write(ctx context.Context, indexer *lidarr.IndexerResource) {
+func (i *IndexerGazelle) write(ctx context.Context, indexer *lidarr.IndexerResource, diags *diag.Diagnostics) {
 	genericIndexer := i.toIndexer()
-	genericIndexer.write(ctx, indexer)
+	genericIndexer.write(ctx, indexer, diags)
 	i.fromIndexer(genericIndexer)
 }
 
-func (i *IndexerGazelle) read(ctx context.Context) *lidarr.IndexerResource {
-	return i.toIndexer().read(ctx)
+func (i *IndexerGazelle) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.IndexerResource {
+	return i.toIndexer().read(ctx, diags)
 }

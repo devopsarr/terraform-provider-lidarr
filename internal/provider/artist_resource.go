@@ -7,12 +7,13 @@ import (
 
 	"github.com/devopsarr/lidarr-go/lidarr"
 	"github.com/devopsarr/terraform-provider-lidarr/internal/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
@@ -62,6 +63,23 @@ type Artist struct {
 	// Ratings        types.Object `tfsdk:"ratings"`
 	// TadbId         types.Int64  `tfsdk:"tadb_id"`
 	// DiscogsId      types.Int64  `tfsdk:"discogs_id"`
+}
+
+func (a Artist) getType() attr.Type {
+	return types.ObjectType{}.WithAttributeTypes(
+		map[string]attr.Type{
+			"monitored":           types.BoolType,
+			"id":                  types.Int64Type,
+			"quality_profile_id":  types.Int64Type,
+			"metadata_profile_id": types.Int64Type,
+			"artist_name":         types.StringType,
+			"foreign_artist_id":   types.StringType,
+			"status":              types.StringType,
+			"path":                types.StringType,
+			"overview":            types.StringType,
+			"genres":              types.SetType{}.WithElementType(types.StringType),
+			"tags":                types.SetType{}.WithElementType(types.Int64Type),
+		})
 }
 
 func (r *ArtistResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -143,7 +161,7 @@ func (r *ArtistResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	// Create new Artist
-	request := artist.read(ctx)
+	request := artist.read(ctx, &resp.Diagnostics)
 	// TODO: can parametrize AddArtistOptions
 	options := lidarr.NewAddArtistOptions()
 	options.SetMonitor(lidarr.MONITORTYPES_ALL)
@@ -158,7 +176,7 @@ func (r *ArtistResource) Create(ctx context.Context, req resource.CreateRequest,
 
 	tflog.Trace(ctx, "created artist: "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	artist.write(ctx, response)
+	artist.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &artist)...)
 }
 
@@ -182,7 +200,7 @@ func (r *ArtistResource) Read(ctx context.Context, req resource.ReadRequest, res
 
 	tflog.Trace(ctx, "read "+artistResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
-	artist.write(ctx, response)
+	artist.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &artist)...)
 }
 
@@ -197,7 +215,7 @@ func (r *ArtistResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	// Update Artist
-	request := artist.read(ctx)
+	request := artist.read(ctx, &resp.Diagnostics)
 
 	response, _, err := r.client.ArtistApi.UpdateArtist(ctx, fmt.Sprint(request.GetId())).ArtistResource(*request).Execute()
 	if err != nil {
@@ -208,28 +226,28 @@ func (r *ArtistResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Trace(ctx, "updated "+artistResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
-	artist.write(ctx, response)
+	artist.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, &artist)...)
 }
 
 func (r *ArtistResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var artist *Artist
+	var ID int64
 
-	resp.Diagnostics.Append(req.State.Get(ctx, &artist)...)
+	resp.Diagnostics.Append(req.State.GetAttribute(ctx, path.Root("id"), &ID)...)
 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Delete artist current value
-	_, err := r.client.ArtistApi.DeleteArtist(ctx, int32(artist.ID.ValueInt64())).Execute()
+	_, err := r.client.ArtistApi.DeleteArtist(ctx, int32(ID)).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, artistResourceName, err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, artistResourceName, err))
 
 		return
 	}
 
-	tflog.Trace(ctx, "deleted "+artistResourceName+": "+strconv.Itoa(int(artist.ID.ValueInt64())))
+	tflog.Trace(ctx, "deleted "+artistResourceName+": "+strconv.Itoa(int(ID)))
 	resp.State.RemoveResource(ctx)
 }
 
@@ -238,34 +256,36 @@ func (r *ArtistResource) ImportState(ctx context.Context, req resource.ImportSta
 	tflog.Trace(ctx, "imported "+artistResourceName+": "+req.ID)
 }
 
-func (m *Artist) write(ctx context.Context, artist *lidarr.ArtistResource) {
-	m.Tags, _ = types.SetValueFrom(ctx, types.Int64Type, artist.GetTags())
-	m.Genres, _ = types.SetValueFrom(ctx, types.StringType, artist.GetGenres())
-	m.Monitored = types.BoolValue(artist.GetMonitored())
-	m.ID = types.Int64Value(int64(artist.GetId()))
-	m.ArtistName = types.StringValue(artist.GetArtistName())
-	m.Path = types.StringValue(artist.GetPath())
-	m.QualityProfileID = types.Int64Value(int64(artist.GetQualityProfileId()))
-	m.MetadataProfileID = types.Int64Value(int64(artist.GetMetadataProfileId()))
-	m.ForeignArtistID = types.StringValue(artist.GetForeignArtistId())
+func (a *Artist) write(ctx context.Context, artist *lidarr.ArtistResource, diags *diag.Diagnostics) {
+	var localDiag diag.Diagnostics
+
+	a.Tags, localDiag = types.SetValueFrom(ctx, types.Int64Type, artist.GetTags())
+	diags.Append(localDiag...)
+	a.Genres, localDiag = types.SetValueFrom(ctx, types.StringType, artist.GetGenres())
+	diags.Append(localDiag...)
+
+	a.Monitored = types.BoolValue(artist.GetMonitored())
+	a.ID = types.Int64Value(int64(artist.GetId()))
+	a.ArtistName = types.StringValue(artist.GetArtistName())
+	a.Path = types.StringValue(artist.GetPath())
+	a.QualityProfileID = types.Int64Value(int64(artist.GetQualityProfileId()))
+	a.MetadataProfileID = types.Int64Value(int64(artist.GetMetadataProfileId()))
+	a.ForeignArtistID = types.StringValue(artist.GetForeignArtistId())
 	// Read only values
-	m.Status = types.StringValue(string(artist.GetStatus()))
-	m.Overview = types.StringValue(artist.GetOverview())
+	a.Status = types.StringValue(string(artist.GetStatus()))
+	a.Overview = types.StringValue(artist.GetOverview())
 }
 
-func (m *Artist) read(ctx context.Context) *lidarr.ArtistResource {
-	tags := make([]*int32, len(m.Tags.Elements()))
-	tfsdk.ValueAs(ctx, m.Tags, &tags)
-
+func (a *Artist) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.ArtistResource {
 	artist := lidarr.NewArtistResource()
-	artist.SetMonitored(m.Monitored.ValueBool())
-	artist.SetArtistName(m.ArtistName.ValueString())
-	artist.SetPath(m.Path.ValueString())
-	artist.SetQualityProfileId(int32(m.QualityProfileID.ValueInt64()))
-	artist.SetMetadataProfileId(int32(m.MetadataProfileID.ValueInt64()))
-	artist.SetForeignArtistId(m.ForeignArtistID.ValueString())
-	artist.SetId(int32(m.ID.ValueInt64()))
-	artist.SetTags(tags)
+	artist.SetMonitored(a.Monitored.ValueBool())
+	artist.SetArtistName(a.ArtistName.ValueString())
+	artist.SetPath(a.Path.ValueString())
+	artist.SetQualityProfileId(int32(a.QualityProfileID.ValueInt64()))
+	artist.SetMetadataProfileId(int32(a.MetadataProfileID.ValueInt64()))
+	artist.SetForeignArtistId(a.ForeignArtistID.ValueString())
+	artist.SetId(int32(a.ID.ValueInt64()))
+	diags.Append(a.Tags.ElementsAs(ctx, &artist.Tags, true)...)
 
 	return artist
 }

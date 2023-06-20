@@ -62,6 +62,26 @@ resource "lidarr_quality_profile" "test" {
 
 func testAccQualityProfileResourceConfig(name string) string {
 	return fmt.Sprintf(`
+
+	// resource "lidarr_custom_format" "test" {
+	// 	include_custom_format_when_renaming = false
+	// 	name = "QualityFormatTest"
+		
+	// 	specifications = [
+	// 		{
+	// 			name = "Preferred Words"
+	// 			implementation = "ReleaseTitleSpecification"
+	// 			negate = false
+	// 			required = false
+	// 			value = "\\b(SPARKS|Framestor)\\b"
+	// 		}
+	// 	]	
+	// }
+
+	// data "lidarr_custom_formats" "test" {
+	// 	depends_on = [lidarr_custom_format.test]
+	// }
+
 	data "lidarr_quality" "flac" {
 		name = "FLAC"
 	}
@@ -92,6 +112,15 @@ func testAccQualityProfileResourceConfig(name string) string {
 				qualities = [data.lidarr_quality.ogg]
 			}
 		]
+
+		// format_items = [
+		// 	for format in data.lidarr_custom_formats.test.custom_formats :
+		// 	{
+		// 		name   = format.name
+		// 		format = format.id
+		// 		score  = 0
+		// 	}
+		// ]
 	}
 	`, name)
 }
