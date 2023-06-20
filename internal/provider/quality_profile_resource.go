@@ -379,7 +379,7 @@ func (q *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQu
 
 	q.Name = name
 	q.ID = id
-	q.Qualities, tempDiag = types.SetValueFrom(ctx, QualityProfileResource{}.getQualitySchema().Type(), &qualities)
+	q.Qualities, tempDiag = types.SetValueFrom(ctx, Quality{}.getType(), &qualities)
 	diags.Append(tempDiag...)
 }
 

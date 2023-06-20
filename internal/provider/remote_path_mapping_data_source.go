@@ -77,24 +77,20 @@ func (d *RemotePathMappingDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	resp.Diagnostics.Append(data.find(data.ID.ValueInt64(), response)...)
+	data.find(data.ID.ValueInt64(), response, &resp.Diagnostics)
 	tflog.Trace(ctx, "read "+remotePathMappingDataSourceName)
 	// Map response body to resource schema attribute
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *RemotePathMapping) find(id int64, mappings []*lidarr.RemotePathMappingResource) diag.Diagnostics {
-	var diags diag.Diagnostics
-
+func (r *RemotePathMapping) find(id int64, mappings []*lidarr.RemotePathMappingResource, diags *diag.Diagnostics) {
 	for _, m := range mappings {
 		if int64(m.GetId()) == id {
 			r.write(m)
 
-			return diags
+			return
 		}
 	}
 
 	diags.AddError(helpers.DataSourceError, helpers.ParseNotFoundError(remotePathMappingDataSourceName, "id", strconv.Itoa(int(id))))
-
-	return diags
 }

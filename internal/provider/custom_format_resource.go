@@ -258,7 +258,7 @@ func (c *CustomFormat) write(ctx context.Context, customFormat *lidarr.CustomFor
 	c.ID = types.Int64Value(int64(customFormat.GetId()))
 	c.Name = types.StringValue(customFormat.GetName())
 	c.IncludeCustomFormatWhenRenaming = types.BoolValue(customFormat.GetIncludeCustomFormatWhenRenaming())
-	c.Specifications, tempDiag = types.SetValueFrom(ctx, CustomFormatResource{}.getSpecificationSchema().Type(), specs)
+	c.Specifications, tempDiag = types.SetValueFrom(ctx, CustomFormatCondition{}.getType(), specs)
 	diags.Append(tempDiag...)
 }
 
