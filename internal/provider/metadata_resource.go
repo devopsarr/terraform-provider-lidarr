@@ -258,14 +258,13 @@ func (r *MetadataResource) ImportState(ctx context.Context, req resource.ImportS
 func (m *Metadata) write(ctx context.Context, metadata *lidarr.MetadataResource, diags *diag.Diagnostics) {
 	var localDiag diag.Diagnostics
 
-	m.Tags, localDiag = types.SetValueFrom(ctx, types.Int64Type, metadata.Tags)
-	diags.Append(localDiag...)
-
 	m.Enable = types.BoolValue(metadata.GetEnable())
 	m.ID = types.Int64Value(int64(metadata.GetId()))
 	m.ConfigContract = types.StringValue(metadata.GetConfigContract())
 	m.Implementation = types.StringValue(metadata.GetImplementation())
 	m.Name = types.StringValue(metadata.GetName())
+	m.Tags, localDiag = types.SetValueFrom(ctx, types.Int64Type, metadata.Tags)
+	diags.Append(localDiag...)
 	helpers.WriteFields(ctx, m, metadata.GetFields(), metadataFields)
 }
 

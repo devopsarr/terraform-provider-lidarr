@@ -252,8 +252,8 @@ func (d *DownloadClientsDataSource) Read(ctx context.Context, req datasource.Rea
 	tflog.Trace(ctx, "read "+downloadClientsDataSourceName)
 	// Map response body to resource schema attribute
 	clients := make([]DownloadClient, len(response))
-	for i, p := range response {
-		clients[i].write(ctx, p, &resp.Diagnostics)
+	for i, d := range response {
+		clients[i].write(ctx, d, &resp.Diagnostics)
 	}
 
 	clientList, diags := types.SetValueFrom(ctx, DownloadClient{}.getType(), clients)

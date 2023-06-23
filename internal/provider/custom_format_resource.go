@@ -161,7 +161,7 @@ func (r *CustomFormatResource) Create(ctx context.Context, req resource.CreateRe
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state CustomFormat
 
-	state.write(ctx, response, &diag.Diagnostics{})
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
@@ -188,7 +188,7 @@ func (r *CustomFormatResource) Read(ctx context.Context, req resource.ReadReques
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state CustomFormat
 
-	state.write(ctx, response, &diag.Diagnostics{})
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 
@@ -217,7 +217,7 @@ func (r *CustomFormatResource) Update(ctx context.Context, req resource.UpdateRe
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state CustomFormat
 
-	state.write(ctx, response, &diag.Diagnostics{})
+	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
 

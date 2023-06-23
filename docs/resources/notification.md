@@ -101,7 +101,7 @@ resource "lidarr_notification" "example" {
 - `on_rename` (Boolean) On rename flag.
 - `on_track_retag` (Boolean) On track retag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `password` (String) password.
+- `password` (String, Sensitive) password.
 - `path` (String) Path.
 - `port` (Number) Port.
 - `priority` (Number) Priority.

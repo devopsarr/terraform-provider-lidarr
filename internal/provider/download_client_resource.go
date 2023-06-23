@@ -308,9 +308,10 @@ func (r *DownloadClientResource) Schema(ctx context.Context, req resource.Schema
 				Computed:            true,
 			},
 			"password": schema.StringAttribute{
-				MarkdownDescription: "Password.",
+				MarkdownDescription: "password.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"music_category": schema.StringAttribute{
 				MarkdownDescription: "Music category.",

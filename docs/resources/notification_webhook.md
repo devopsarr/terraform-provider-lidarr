@@ -59,7 +59,7 @@ resource "lidarr_notification_webhook" "example" {
 - `on_rename` (Boolean) On rename flag.
 - `on_track_retag` (Boolean) On track retag.
 - `on_upgrade` (Boolean) On upgrade flag.
-- `password` (String) password.
+- `password` (String, Sensitive) password.
 - `tags` (Set of Number) List of associated tags.
 - `username` (String) Username.
 
