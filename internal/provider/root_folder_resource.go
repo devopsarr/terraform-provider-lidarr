@@ -206,7 +206,7 @@ func (r *RootFolderResource) Update(ctx context.Context, req resource.UpdateRequ
 	tflog.Trace(ctx, "updated "+notificationResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	folder.write(ctx, response, &resp.Diagnostics)
-	resp.Diagnostics.Append(resp.State.Set(ctx, folder)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &folder)...)
 }
 
 func (r *RootFolderResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {

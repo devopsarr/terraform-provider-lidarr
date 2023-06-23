@@ -58,7 +58,7 @@ resource "lidarr_download_client" "example" {
 - `music_imported_category` (String) Music imported category.
 - `nzb_folder` (String) NZB folder.
 - `older_music_priority` (Number) Older Music priority. `0` Last, `1` First.
-- `password` (String) Password.
+- `password` (String, Sensitive) password.
 - `port` (Number) Port.
 - `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.

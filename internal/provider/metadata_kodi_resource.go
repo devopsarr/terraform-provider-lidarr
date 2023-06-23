@@ -156,7 +156,6 @@ func (r *MetadataKodiResource) Create(ctx context.Context, req resource.CreateRe
 	tflog.Trace(ctx, "created "+metadataKodiResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -207,7 +206,6 @@ func (r *MetadataKodiResource) Update(ctx context.Context, req resource.UpdateRe
 	tflog.Trace(ctx, "updated "+metadataKodiResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 

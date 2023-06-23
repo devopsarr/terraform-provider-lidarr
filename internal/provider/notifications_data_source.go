@@ -448,8 +448,8 @@ func (d *NotificationsDataSource) Read(ctx context.Context, req datasource.ReadR
 	tflog.Trace(ctx, "read "+notificationsDataSourceName)
 	// Map response body to resource schema attribute
 	notifications := make([]Notification, len(response))
-	for i, p := range response {
-		notifications[i].write(ctx, p, &resp.Diagnostics)
+	for i, n := range response {
+		notifications[i].write(ctx, n, &resp.Diagnostics)
 	}
 
 	notificationList, diags := types.SetValueFrom(ctx, Notification{}.getType(), notifications)

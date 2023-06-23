@@ -135,7 +135,6 @@ func (r *MetadataWdtvResource) Create(ctx context.Context, req resource.CreateRe
 	tflog.Trace(ctx, "created "+metadataWdtvResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -160,7 +159,6 @@ func (r *MetadataWdtvResource) Read(ctx context.Context, req resource.ReadReques
 	tflog.Trace(ctx, "read "+metadataWdtvResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -187,7 +185,6 @@ func (r *MetadataWdtvResource) Update(ctx context.Context, req resource.UpdateRe
 	tflog.Trace(ctx, "updated "+metadataWdtvResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 

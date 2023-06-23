@@ -149,7 +149,6 @@ func (r *MetadataRoksboxResource) Create(ctx context.Context, req resource.Creat
 	tflog.Trace(ctx, "created "+metadataRoksboxResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -174,7 +173,6 @@ func (r *MetadataRoksboxResource) Read(ctx context.Context, req resource.ReadReq
 	tflog.Trace(ctx, "read "+metadataRoksboxResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Map response body to resource schema attribute
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 
@@ -201,7 +199,6 @@ func (r *MetadataRoksboxResource) Update(ctx context.Context, req resource.Updat
 	tflog.Trace(ctx, "updated "+metadataRoksboxResourceName+": "+strconv.Itoa(int(response.GetId())))
 	// Generate resource state struct
 	metadata.write(ctx, response, &resp.Diagnostics)
-
 	resp.Diagnostics.Append(resp.State.Set(ctx, &metadata)...)
 }
 

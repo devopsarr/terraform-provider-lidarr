@@ -40,7 +40,7 @@ resource "lidarr_download_client_transmission" "example" {
 - `music_category` (String) Music category.
 - `music_directory` (String) Music directory.
 - `older_music_priority` (Number) Older Music priority. `0` Last, `1` First.
-- `password` (String) Password.
+- `password` (String, Sensitive) password.
 - `port` (Number) Port.
 - `priority` (Number) Priority.
 - `recent_music_priority` (Number) Recent Music priority. `0` Last, `1` First.
