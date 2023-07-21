@@ -98,11 +98,11 @@ func (n *NotificationJoin) fromNotification(notification *Notification) {
 	n.OnUpgrade = notification.OnUpgrade
 }
 
-func (r *NotificationJoinResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationJoinResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationJoinResourceName
 }
 
-func (r *NotificationJoinResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationJoinResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Join resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Join](https://wiki.servarr.com/lidarr/supported#join).",
 		Attributes: map[string]schema.Attribute{

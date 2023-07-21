@@ -32,11 +32,11 @@ type Artists struct {
 	ID      types.String `tfsdk:"id"`
 }
 
-func (d *ArtistsDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *ArtistsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + artistsDataSourceName
 }
 
-func (d *ArtistsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ArtistsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "<!-- subcategory:Artists -->List all available [Artists](../resources/artist).",
@@ -109,7 +109,7 @@ func (d *ArtistsDataSource) Configure(ctx context.Context, req datasource.Config
 	}
 }
 
-func (d *ArtistsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *ArtistsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get artists current value
 	response, _, err := d.client.ArtistApi.ListArtist(ctx).Execute()
 	if err != nil {

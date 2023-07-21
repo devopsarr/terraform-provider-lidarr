@@ -26,11 +26,11 @@ type PrimaryAlbumTypeDataSource struct {
 	client *lidarr.APIClient
 }
 
-func (d *PrimaryAlbumTypeDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *PrimaryAlbumTypeDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + primaryAlbumTypeDataSourceName
 }
 
-func (d *PrimaryAlbumTypeDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *PrimaryAlbumTypeDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Profiles -->Single available Primary Album Type.",
 		Attributes: map[string]schema.Attribute{

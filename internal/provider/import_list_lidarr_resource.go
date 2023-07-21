@@ -103,11 +103,11 @@ func (i *ImportListLidarr) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListLidarrResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *ImportListLidarrResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + importListLidarrResourceName
 }
 
-func (r *ImportListLidarrResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListLidarrResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Lidarr resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Lidarr](https://wiki.servarr.com/lidarr/supported#lidarrimport).",
 		Attributes: map[string]schema.Attribute{

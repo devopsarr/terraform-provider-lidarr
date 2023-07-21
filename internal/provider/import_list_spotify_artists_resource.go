@@ -100,11 +100,11 @@ func (i *ImportListSpotifyArtists) fromImportList(importList *ImportList) {
 	i.ShouldSearch = importList.ShouldSearch
 }
 
-func (r *ImportListSpotifyArtistsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *ImportListSpotifyArtistsResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + importListSpotifyArtistsResourceName
 }
 
-func (r *ImportListSpotifyArtistsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ImportListSpotifyArtistsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Spotify Artists resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Followed Artists](https://wiki.servarr.com/lidarr/supported#spotifyfollowedartists).",
 		Attributes: map[string]schema.Attribute{

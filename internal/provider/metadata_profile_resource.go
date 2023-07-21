@@ -74,7 +74,7 @@ type MetadataProfileElements struct {
 	ID       types.String `tfsdk:"id"`
 }
 
-func (r *MetadataProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *MetadataProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Profiles -->Metadata Profile resource.\nFor more information refer to [Metadata Profile](https://wiki.servarr.com/lidarr/settings#metadata-profiles) documentation.",
 		Attributes: map[string]schema.Attribute{
@@ -108,7 +108,7 @@ func (r *MetadataProfileResource) Schema(ctx context.Context, req resource.Schem
 	}
 }
 
-func (r *MetadataProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *MetadataProfileResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + metadataProfileResourceName
 }
 

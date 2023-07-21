@@ -96,11 +96,11 @@ func (i *IndexerRedacted) fromIndexer(indexer *Indexer) {
 	i.Tags = indexer.Tags
 }
 
-func (r *IndexerRedactedResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *IndexerRedactedResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + indexerRedactedResourceName
 }
 
-func (r *IndexerRedactedResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *IndexerRedactedResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Redacted resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Redacted](https://wiki.servarr.com/lidarr/supported#redacted).",
 		Attributes: map[string]schema.Attribute{

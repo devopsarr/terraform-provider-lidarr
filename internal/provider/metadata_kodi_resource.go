@@ -76,11 +76,11 @@ func (m *MetadataKodi) fromMetadata(metadata *Metadata) {
 	m.AlbumImages = metadata.AlbumImages
 }
 
-func (r *MetadataKodiResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *MetadataKodiResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + metadataKodiResourceName
 }
 
-func (r *MetadataKodiResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *MetadataKodiResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Metadata -->Metadata Kodi resource.\nFor more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#metadata) and [KODI](https://wiki.servarr.com/lidarr/supported#xbmcmetadata).",
 		Attributes: map[string]schema.Attribute{

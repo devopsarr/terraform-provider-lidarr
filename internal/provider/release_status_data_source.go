@@ -26,11 +26,11 @@ type ReleaseStatusDataSource struct {
 	client *lidarr.APIClient
 }
 
-func (d *ReleaseStatusDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *ReleaseStatusDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + releaseStatusDataSourceName
 }
 
-func (d *ReleaseStatusDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ReleaseStatusDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Profiles -->Single available Release Status.",
 		Attributes: map[string]schema.Attribute{
