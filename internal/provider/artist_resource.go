@@ -82,11 +82,11 @@ func (a Artist) getType() attr.Type {
 		})
 }
 
-func (r *ArtistResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *ArtistResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + artistResourceName
 }
 
-func (r *ArtistResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ArtistResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Artists -->Artist resource.\nFor more information refer to [Artists](https://wiki.servarr.com/lidarr/library#artists) documentation.",
 		Attributes: map[string]schema.Attribute{

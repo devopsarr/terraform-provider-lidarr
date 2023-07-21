@@ -26,11 +26,11 @@ type PrimaryAlbumTypesDataSource struct {
 	client *lidarr.APIClient
 }
 
-func (d *PrimaryAlbumTypesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *PrimaryAlbumTypesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + primaryAlbumTypesDataSourceName
 }
 
-func (d *PrimaryAlbumTypesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *PrimaryAlbumTypesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Primary Album Types](../data-sources/primary_album_type).",
 		Attributes: map[string]schema.Attribute{
@@ -64,7 +64,7 @@ func (d *PrimaryAlbumTypesDataSource) Configure(ctx context.Context, req datasou
 	}
 }
 
-func (d *PrimaryAlbumTypesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *PrimaryAlbumTypesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get primary album type current value
 	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {

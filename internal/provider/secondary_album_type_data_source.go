@@ -26,11 +26,11 @@ type SecondaryAlbumTypeDataSource struct {
 	client *lidarr.APIClient
 }
 
-func (d *SecondaryAlbumTypeDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *SecondaryAlbumTypeDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + secondaryAlbumTypeDataSourceName
 }
 
-func (d *SecondaryAlbumTypeDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *SecondaryAlbumTypeDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Profiles -->Single available Secondary Album Type.",
 		Attributes: map[string]schema.Attribute{

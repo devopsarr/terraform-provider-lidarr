@@ -73,11 +73,11 @@ func (m *MetadataRoksbox) fromMetadata(metadata *Metadata) {
 	m.TrackMetadata = metadata.TrackMetadata
 }
 
-func (r *MetadataRoksboxResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *MetadataRoksboxResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + metadataRoksboxResourceName
 }
 
-func (r *MetadataRoksboxResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *MetadataRoksboxResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Metadata -->Metadata Roksbox resource.\nFor more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#metadata) and [ROKSBOX](https://wiki.servarr.com/lidarr/supported#roksboxmetadata).",
 		Attributes: map[string]schema.Attribute{

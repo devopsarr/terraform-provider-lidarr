@@ -26,11 +26,11 @@ type MetadataProfileDataSource struct {
 	client *lidarr.APIClient
 }
 
-func (d *MetadataProfileDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *MetadataProfileDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + metadataProfileDataSourceName
 }
 
-func (d *MetadataProfileDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *MetadataProfileDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the metadata server.
 		MarkdownDescription: "<!-- subcategory:Profiles -->Single [Metadata Profile](../resources/metadata_profile).",

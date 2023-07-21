@@ -116,11 +116,11 @@ func (n *NotificationApprise) fromNotification(notification *Notification) {
 	n.OnImportFailure = notification.OnImportFailure
 }
 
-func (r *NotificationAppriseResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *NotificationAppriseResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + notificationAppriseResourceName
 }
 
-func (r *NotificationAppriseResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NotificationAppriseResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Apprise resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Apprise](https://wiki.servarr.com/lidarr/supported#apprise).",
 		Attributes: map[string]schema.Attribute{

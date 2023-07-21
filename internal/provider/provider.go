@@ -32,12 +32,12 @@ type Lidarr struct {
 	URL    types.String `tfsdk:"url"`
 }
 
-func (p *LidarrProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
+func (p *LidarrProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "lidarr"
 	resp.Version = p.version
 }
 
-func (p *LidarrProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
+func (p *LidarrProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "The Lidarr provider is used to interact with any [Lidarr](https://lidarr.audio/) installation. You must configure the provider with the proper credentials before you can use it. Use the left navigation to read about the available resources.",
 		Attributes: map[string]schema.Attribute{
@@ -129,7 +129,7 @@ func (p *LidarrProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	resp.ResourceData = client
 }
 
-func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resource {
+func (p *LidarrProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		// Artists
 		NewArtistResource,
@@ -236,7 +236,7 @@ func (p *LidarrProvider) Resources(ctx context.Context) []func() resource.Resour
 	}
 }
 
-func (p *LidarrProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
+func (p *LidarrProvider) DataSources(_ context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		// Artists
 		NewArtistDataSource,

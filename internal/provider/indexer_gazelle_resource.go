@@ -102,11 +102,11 @@ func (i *IndexerGazelle) fromIndexer(indexer *Indexer) {
 	i.Tags = indexer.Tags
 }
 
-func (r *IndexerGazelleResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *IndexerGazelleResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + indexerGazelleResourceName
 }
 
-func (r *IndexerGazelleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *IndexerGazelleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Gazelle resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Gazelle](https://wiki.servarr.com/lidarr/supported#gazelle).",
 		Attributes: map[string]schema.Attribute{

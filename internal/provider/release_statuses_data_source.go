@@ -26,11 +26,11 @@ type ReleaseStatusesDataSource struct {
 	client *lidarr.APIClient
 }
 
-func (d *ReleaseStatusesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *ReleaseStatusesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + releaseStatusesDataSourceName
 }
 
-func (d *ReleaseStatusesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ReleaseStatusesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Release Status](../data-sources/release_status).",
 		Attributes: map[string]schema.Attribute{
@@ -64,7 +64,7 @@ func (d *ReleaseStatusesDataSource) Configure(ctx context.Context, req datasourc
 	}
 }
 
-func (d *ReleaseStatusesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *ReleaseStatusesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get release status type current value
 	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {

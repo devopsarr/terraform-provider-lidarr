@@ -32,11 +32,11 @@ type MetadataProfiles struct {
 	ID               types.String `tfsdk:"id"`
 }
 
-func (d *MetadataProfilesDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+func (d *MetadataProfilesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
 	resp.TypeName = req.ProviderTypeName + "_" + metadataProfilesDataSourceName
 }
 
-func (d *MetadataProfilesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *MetadataProfilesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the metadata server.
 		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Metadata Profiles](../resources/metadata_profile).",
@@ -86,7 +86,7 @@ func (d *MetadataProfilesDataSource) Configure(ctx context.Context, req datasour
 	}
 }
 
-func (d *MetadataProfilesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+func (d *MetadataProfilesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get metadataprofiles current value
 	response, _, err := d.client.MetadataProfileApi.ListMetadataProfile(ctx).Execute()
 	if err != nil {
