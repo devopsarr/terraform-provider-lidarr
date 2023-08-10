@@ -41,17 +41,17 @@ type IndexerFilelistResource struct {
 
 // IndexerFilelist describes the Filelist indexer data model.
 type IndexerFilelist struct {
-	Tags                    types.Set     `tfsdk:"tags"`
+	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	Categories              types.Set     `tfsdk:"categories"`
+	Tags                    types.Set     `tfsdk:"tags"`
 	Name                    types.String  `tfsdk:"name"`
 	BaseURL                 types.String  `tfsdk:"base_url"`
 	Username                types.String  `tfsdk:"username"`
 	Passkey                 types.String  `tfsdk:"passkey"`
 	Priority                types.Int64   `tfsdk:"priority"`
-	ID                      types.Int64   `tfsdk:"id"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
 	SeedTime                types.Int64   `tfsdk:"seed_time"`
-	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
+	ID                      types.Int64   `tfsdk:"id"`
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
 	EnableRss               types.Bool    `tfsdk:"enable_rss"`
 	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`
