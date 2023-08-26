@@ -41,6 +41,7 @@ type IndexerNyaaResource struct {
 
 // IndexerNyaa describes the Nyaa indexer data model.
 type IndexerNyaa struct {
+	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	Tags                    types.Set     `tfsdk:"tags"`
 	Name                    types.String  `tfsdk:"name"`
 	BaseURL                 types.String  `tfsdk:"base_url"`
@@ -49,7 +50,6 @@ type IndexerNyaa struct {
 	ID                      types.Int64   `tfsdk:"id"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
 	SeedTime                types.Int64   `tfsdk:"seed_time"`
-	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
 	EnableRss               types.Bool    `tfsdk:"enable_rss"`
 	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`

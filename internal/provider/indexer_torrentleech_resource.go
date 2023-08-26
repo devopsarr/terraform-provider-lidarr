@@ -41,16 +41,16 @@ type IndexerTorrentleechResource struct {
 
 // IndexerTorrentleech describes the Torrentleech indexer data model.
 type IndexerTorrentleech struct {
+	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	Tags                    types.Set     `tfsdk:"tags"`
-	Name                    types.String  `tfsdk:"name"`
-	BaseURL                 types.String  `tfsdk:"base_url"`
 	APIKey                  types.String  `tfsdk:"api_key"`
+	BaseURL                 types.String  `tfsdk:"base_url"`
+	Name                    types.String  `tfsdk:"name"`
 	Priority                types.Int64   `tfsdk:"priority"`
 	ID                      types.Int64   `tfsdk:"id"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
 	DiscographySeedTime     types.Int64   `tfsdk:"discography_seed_time"`
 	SeedTime                types.Int64   `tfsdk:"seed_time"`
-	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
 	EnableRss               types.Bool    `tfsdk:"enable_rss"`
 	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`

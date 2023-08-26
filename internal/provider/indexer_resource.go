@@ -48,14 +48,14 @@ type IndexerResource struct {
 
 // Indexer describes the indexer data model.
 type Indexer struct {
+	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
 	Tags                    types.Set     `tfsdk:"tags"`
 	Categories              types.Set     `tfsdk:"categories"`
-	APIUser                 types.String  `tfsdk:"api_user"`
-	AdditionalParameters    types.String  `tfsdk:"additional_parameters"`
-	Name                    types.String  `tfsdk:"name"`
-	Implementation          types.String  `tfsdk:"implementation"`
-	RSSPasskey              types.String  `tfsdk:"rss_passkey"`
+	Password                types.String  `tfsdk:"password"`
 	UserID                  types.String  `tfsdk:"user_id"`
+	Passkey                 types.String  `tfsdk:"passkey"`
+	RSSPasskey              types.String  `tfsdk:"rss_passkey"`
+	APIUser                 types.String  `tfsdk:"api_user"`
 	CaptchaToken            types.String  `tfsdk:"captcha_token"`
 	Protocol                types.String  `tfsdk:"protocol"`
 	ConfigContract          types.String  `tfsdk:"config_contract"`
@@ -64,19 +64,19 @@ type Indexer struct {
 	Cookie                  types.String  `tfsdk:"cookie"`
 	BaseURL                 types.String  `tfsdk:"base_url"`
 	Username                types.String  `tfsdk:"username"`
-	Password                types.String  `tfsdk:"password"`
-	Passkey                 types.String  `tfsdk:"passkey"`
-	EarlyReleaseLimit       types.Int64   `tfsdk:"early_release_limit"`
-	SeedTime                types.Int64   `tfsdk:"seed_time"`
+	AdditionalParameters    types.String  `tfsdk:"additional_parameters"`
+	Implementation          types.String  `tfsdk:"implementation"`
+	Name                    types.String  `tfsdk:"name"`
+	Priority                types.Int64   `tfsdk:"priority"`
 	Delay                   types.Int64   `tfsdk:"delay"`
 	MinimumSeeders          types.Int64   `tfsdk:"minimum_seeders"`
 	ID                      types.Int64   `tfsdk:"id"`
-	SeedRatio               types.Float64 `tfsdk:"seed_ratio"`
-	Priority                types.Int64   `tfsdk:"priority"`
+	EarlyReleaseLimit       types.Int64   `tfsdk:"early_release_limit"`
+	SeedTime                types.Int64   `tfsdk:"seed_time"`
 	DiscographySeedTime     types.Int64   `tfsdk:"discography_seed_time"`
-	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`
-	EnableRss               types.Bool    `tfsdk:"enable_rss"`
 	EnableAutomaticSearch   types.Bool    `tfsdk:"enable_automatic_search"`
+	EnableRss               types.Bool    `tfsdk:"enable_rss"`
+	EnableInteractiveSearch types.Bool    `tfsdk:"enable_interactive_search"`
 	AllowZeroSize           types.Bool    `tfsdk:"allow_zero_size"`
 	UseFreeleechToken       types.Bool    `tfsdk:"use_freeleech_token"`
 	RankedOnly              types.Bool    `tfsdk:"ranked_only"`
