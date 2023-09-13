@@ -231,6 +231,9 @@ func (p *LidarrProvider) Resources(_ context.Context) []func() resource.Resource
 		NewReleaseProfileResource,
 		NewCustomFormatResource,
 
+		// System
+		NewHostResource,
+
 		// Tags
 		NewTagResource,
 	}
@@ -300,7 +303,8 @@ func (p *LidarrProvider) DataSources(_ context.Context) []func() datasource.Data
 		NewCustomFormatConditionReleaseTitleDataSource,
 		NewCustomFormatConditionSizeDataSource,
 
-		// System Status
+		// System
+		NewHostDataSource,
 		NewSystemStatusDataSource,
 
 		// Tags
