@@ -304,6 +304,7 @@ func (p *LidarrProvider) DataSources(_ context.Context) []func() datasource.Data
 		NewCustomFormatConditionSizeDataSource,
 
 		// System
+		NewHostDataSource,
 		NewSystemStatusDataSource,
 
 		// Tags
