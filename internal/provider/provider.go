@@ -231,6 +231,9 @@ func (p *LidarrProvider) Resources(_ context.Context) []func() resource.Resource
 		NewReleaseProfileResource,
 		NewCustomFormatResource,
 
+		// System
+		NewHostResource,
+
 		// Tags
 		NewTagResource,
 	}
