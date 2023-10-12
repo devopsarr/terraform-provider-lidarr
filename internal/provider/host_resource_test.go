@@ -24,7 +24,7 @@ func TestAccHostResource(t *testing.T) {
 			{
 				Config: testAccHostResourceConfig("lidarr", "test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("lidarr_host.test", "port", "8989"),
+					resource.TestCheckResourceAttr("lidarr_host.test", "port", "8686"),
 					resource.TestCheckResourceAttrSet("lidarr_host.test", "id"),
 				),
 			},
@@ -37,14 +37,14 @@ func TestAccHostResource(t *testing.T) {
 			{
 				Config: testAccHostResourceConfig("lidarrTest", "test"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("lidarr_host.test", "port", "8989"),
+					resource.TestCheckResourceAttr("lidarr_host.test", "port", "8686"),
 				),
 			},
 			// Update and Read testing
 			{
 				Config: testAccHostResourceConfig("lidarrTest", "test1234"),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("lidarr_host.test", "port", "8989"),
+					resource.TestCheckResourceAttr("lidarr_host.test", "port", "8686"),
 				),
 			},
 			// ImportState testing
@@ -63,7 +63,7 @@ func testAccHostResourceConfig(name, pass string) string {
 	return fmt.Sprintf(`
 	resource "lidarr_host" "test" {
 		launch_browser = true
-		port = 8989
+		port = 8686
 		url_base = ""
 		bind_address = "*"
 		application_url =  ""

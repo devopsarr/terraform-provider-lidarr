@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"strconv"
 
 	"github.com/devopsarr/lidarr-go/lidarr"
@@ -244,7 +243,7 @@ func (r *IndexerTorrentleechResource) Update(ctx context.Context, req resource.U
 
 	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
-		resp.Diagnostics.AddError(helpers.ClientError, fmt.Sprintf("Unable to update "+indexerTorrentleechResourceName+", got error: %s", err))
+		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerTorrentleechResourceName, err))
 
 		return
 	}
