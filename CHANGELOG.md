@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.10.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.9.0...v1.10.0) (2023-10-12)
+
+
+### Features
+
+* add missing use only ID for delete ([b9ff5d6](https://github.com/devopsarr/terraform-provider-lidarr/commit/b9ff5d6a8adf4c1087511016531ae1d072142f86))
+* **devopsarr/terraform-provider-radarr#203:** add host data source ([5421eeb](https://github.com/devopsarr/terraform-provider-lidarr/commit/5421eeb949f16afd3019e268d5e259428a912822))
+* **devopsarr/terraform-provider-radarr#203:** add host resource ([a8abc70](https://github.com/devopsarr/terraform-provider-lidarr/commit/a8abc70d55934b1d8d6eb719ff4f5f586cf5684d))
+* get back system status data source ([6b65de0](https://github.com/devopsarr/terraform-provider-lidarr/commit/6b65de0c630da4583edca0caa35588998ef31a0c))
+* improfe diagnostics and remove useless logic for data list and delete methods ([44c16ab](https://github.com/devopsarr/terraform-provider-lidarr/commit/44c16ab58ff8b228cb1d94aee073d0505e78cf99))
+* remove obsolete indexer rarbg ([3bd6db0](https://github.com/devopsarr/terraform-provider-lidarr/commit/3bd6db08e6180435ba48aabe0e9f6413425a3487))
+
+
+### Bug Fixes
+
+* quality profile use all formats and ordered quality groups ([b4d4a94](https://github.com/devopsarr/terraform-provider-lidarr/commit/b4d4a947e3dfa84c2feccb0e7ef05bee9fee2987))
+* remove useless type conversion ([ff23fec](https://github.com/devopsarr/terraform-provider-lidarr/commit/ff23fec5ce1a58e6209345cb6ae14c1ca499e0b9))
+
 ## [1.9.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.8.0...v1.9.0) (2023-05-29)
 
 
