@@ -43,9 +43,10 @@ func TestAccDownloadClientHadoukenResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_download_client_hadouken.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_download_client_hadouken.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},

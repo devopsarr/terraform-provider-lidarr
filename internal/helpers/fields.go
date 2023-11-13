@@ -12,11 +12,14 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+const SensitiveValue = "********"
+
 type fieldException struct {
 	apiName string
 	tfName  string
 }
 
+// getFieldExceptions identifies the fields resources in which TF and API name differs.
 func getFieldExceptions() []fieldException {
 	return []fieldException{
 		{
@@ -243,7 +246,6 @@ type Fields struct {
 	IntSlicesExceptions    []string
 	StringSlices           []string
 	StringSlicesExceptions []string
-	Sensitive              []string
 }
 
 // getList return a specific list of fields.
@@ -313,8 +315,11 @@ func WriteFields(ctx context.Context, fieldContainer interface{}, fields []*lida
 	// Loop over each field and populate the related container field with the corresponding write function.
 	for _, f := range fields {
 		fieldName := f.GetName()
-		if slices.Contains(fieldLists.Sensitive, fieldName) && f.GetValue() != nil {
-			continue
+		// Manage sensitive data.
+		if f.GetValue() == SensitiveValue {
+			if tempField := readStringField(fieldName, fieldContainer); tempField.GetValue() != nil {
+				f = tempField
+			}
 		}
 
 		for listName, writeFunc := range writeFuncs {

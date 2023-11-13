@@ -43,9 +43,10 @@ func TestAccImportListResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_import_list.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_import_list.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"api_key"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},

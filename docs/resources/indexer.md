@@ -42,7 +42,7 @@ resource "lidarr_indexer" "example" {
 
 - `additional_parameters` (String) Additional parameters.
 - `allow_zero_size` (Boolean) Allow zero size files.
-- `api_key` (String) API key.
+- `api_key` (String, Sensitive) API key.
 - `api_path` (String) API path.
 - `api_user` (String) API User.
 - `base_url` (String) Base URL.

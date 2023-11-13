@@ -43,9 +43,10 @@ func TestAccIndexerGazelleResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_indexer_gazelle.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_indexer_gazelle.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},

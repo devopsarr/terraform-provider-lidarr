@@ -42,9 +42,10 @@ func TestAccNotificationPlexResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_plex.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_plex.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"auth_token"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -58,9 +59,9 @@ func testAccNotificationPlexResourceConfig(name, token string) string {
 		on_rename         = false
 		on_track_retag    = false
 		on_release_import = false
-	  
+
 		name = "%s"
-	  
+
 		host = "plex.lcl"
 		port = 32400
 		auth_token = "%s"

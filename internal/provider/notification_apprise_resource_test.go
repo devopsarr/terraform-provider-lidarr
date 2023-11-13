@@ -42,9 +42,10 @@ func TestAccNotificationAppriseResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_apprise.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_apprise.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"auth_password"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -61,10 +62,10 @@ func testAccNotificationAppriseResourceConfig(name, token string) string {
 		on_release_import   	= false
 		on_health_issue         = false
 		on_application_update   = false
-	  
+
 		include_health_warnings = false
 		name                    = "%s"
-	  
+
 		notification_type = 1
 		server_url = "https://apprise.go"
 		auth_username = "User"
