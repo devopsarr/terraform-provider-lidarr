@@ -42,9 +42,10 @@ func TestAccNotificationTelegramResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_telegram.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_telegram.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"bot_token"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -61,10 +62,10 @@ func testAccNotificationTelegramResourceConfig(name, chat string) string {
 		on_release_import   	= false
 		on_health_issue       	= false
 		on_application_update  	= false
-	  
+
 		include_health_warnings = false
 		name                    = "%s"
-	  
+
 		chat_id = "%s"
 		bot_token = "Token"
 	}`, name, chat)

@@ -42,9 +42,10 @@ func TestAccNotificationPushbulletResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_pushbullet.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_pushbullet.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"api_key"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -61,10 +62,10 @@ func testAccNotificationPushbulletResourceConfig(name, key string) string {
 		on_release_import   	= false
 		on_health_issue   	    = false
 		on_application_update   = false
-	  
+
 		include_health_warnings = false
 		name                    = "%s"
-	  
+
 		api_key = "%s"
 		device_ids = ["test"]
 	}`, name, key)

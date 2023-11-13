@@ -42,9 +42,10 @@ func TestAccNotificationSignalResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_signal.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_signal.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"auth_password", "sender_number"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -61,10 +62,10 @@ func testAccNotificationSignalResourceConfig(name, chat string) string {
 		on_release_import   	= false
 		on_health_issue       	= false
 		on_application_update  	= false
-	  
+
 		include_health_warnings = false
 		name                    = "%s"
-	  
+
 		auth_username = "User"
 		auth_password = "%s"
 

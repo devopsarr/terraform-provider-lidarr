@@ -235,6 +235,7 @@ func (r *IndexerResource) Schema(_ context.Context, _ resource.SchemaRequest, re
 				MarkdownDescription: "API key.",
 				Optional:            true,
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"api_user": schema.StringAttribute{
 				MarkdownDescription: "API User.",
@@ -329,6 +330,7 @@ func (r *IndexerResource) Create(ctx context.Context, req resource.CreateRequest
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Indexer
 
+	state.writeSensitive(indexer)
 	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
@@ -356,6 +358,7 @@ func (r *IndexerResource) Read(ctx context.Context, req resource.ReadRequest, re
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Indexer
 
+	state.writeSensitive(indexer)
 	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
@@ -385,6 +388,7 @@ func (r *IndexerResource) Update(ctx context.Context, req resource.UpdateRequest
 	// this is needed because of many empty fields are unknown in both plan and read
 	var state Indexer
 
+	state.writeSensitive(indexer)
 	state.write(ctx, response, &resp.Diagnostics)
 	resp.Diagnostics.Append(resp.State.Set(ctx, state)...)
 }
@@ -449,4 +453,19 @@ func (i *Indexer) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.Ind
 	indexer.SetFields(helpers.ReadFields(ctx, i, indexerFields))
 
 	return indexer
+}
+
+// writeSensitive copy sensitive data from another resource.
+func (i *Indexer) writeSensitive(indexer *Indexer) {
+	if !indexer.Passkey.IsUnknown() {
+		i.Passkey = indexer.Passkey
+	}
+
+	if !indexer.Password.IsUnknown() {
+		i.Password = indexer.Password
+	}
+
+	if !indexer.APIKey.IsUnknown() {
+		i.APIKey = indexer.APIKey
+	}
 }

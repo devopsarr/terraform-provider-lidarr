@@ -43,7 +43,7 @@ resource "lidarr_download_client" "example" {
 - `add_paused` (Boolean) Add paused flag.
 - `add_stopped` (Boolean) Add stopped flag.
 - `additional_tags` (Set of Number) Additional tags, `0` TitleSlug, `1` Quality, `2` Language, `3` ReleaseGroup, `4` Year, `5` Indexer, `6` Network.
-- `api_key` (String) API key.
+- `api_key` (String, Sensitive) API key.
 - `category` (String) Category.
 - `destination` (String) Destination.
 - `enable` (Boolean) Enable flag.
@@ -58,7 +58,7 @@ resource "lidarr_download_client" "example" {
 - `music_imported_category` (String) Music imported category.
 - `nzb_folder` (String) NZB folder.
 - `older_music_priority` (Number) Older Music priority. `0` Last, `1` First.
-- `password` (String, Sensitive) password.
+- `password` (String, Sensitive) Password.
 - `port` (Number) Port.
 - `post_import_tags` (Set of String) Post import tags.
 - `priority` (Number) Priority.
@@ -68,7 +68,7 @@ resource "lidarr_download_client" "example" {
 - `remove_failed_downloads` (Boolean) Remove failed downloads flag.
 - `rpc_path` (String) RPC path.
 - `save_magnet_files` (Boolean) Save magnet files flag.
-- `secret_token` (String) Secret token.
+- `secret_token` (String, Sensitive) Secret token.
 - `sequential_order` (Boolean) Sequential order flag.
 - `start_on_add` (Boolean) Start on add flag.
 - `strm_folder` (String) STRM folder.

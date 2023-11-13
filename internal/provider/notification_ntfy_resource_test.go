@@ -42,9 +42,10 @@ func TestAccNotificationNtfyResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_ntfy.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_ntfy.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -61,10 +62,10 @@ func testAccNotificationNtfyResourceConfig(name, key string) string {
 		on_release_import   	= false
 		on_health_issue   	    = false
 		on_application_update   = false
-	  
+
 		include_health_warnings = false
 		name                    = "%s"
-	  
+
 		priority = 1
 		server_url = "https://ntfy.sh"
 		username = "User"

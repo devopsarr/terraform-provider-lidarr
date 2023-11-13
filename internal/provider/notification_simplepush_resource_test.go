@@ -42,9 +42,10 @@ func TestAccNotificationSimplepushResource(t *testing.T) {
 			},
 			// ImportState testing
 			{
-				ResourceName:      "lidarr_notification_simplepush.test",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "lidarr_notification_simplepush.test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"key"},
 			},
 			// Delete testing automatically occurs in TestCase
 		},
@@ -61,10 +62,10 @@ func testAccNotificationSimplepushResourceConfig(name, chat string) string {
 		on_release_import   	= false
 		on_health_issue       	= false
 		on_application_update  	= false
-	  
+
 		include_health_warnings = false
 		name                    = "%s"
-	  
+
 		key = "%s"
 		event = "Test"
 	}`, name, chat)
