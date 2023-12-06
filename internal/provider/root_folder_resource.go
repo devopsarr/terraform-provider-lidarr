@@ -146,7 +146,7 @@ func (r *RootFolderResource) Create(ctx context.Context, req resource.CreateRequ
 	// Create new RootFolder
 	request := folder.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.RootFolderApi.CreateRootFolder(ctx).RootFolderResource(*request).Execute()
+	response, _, err := r.client.RootFolderAPI.CreateRootFolder(ctx).RootFolderResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, rootFolderResourceName, err))
 
@@ -170,7 +170,7 @@ func (r *RootFolderResource) Read(ctx context.Context, req resource.ReadRequest,
 	}
 
 	// Get rootFolder current value
-	response, _, err := r.client.RootFolderApi.GetRootFolderById(ctx, int32(folder.ID.ValueInt64())).Execute()
+	response, _, err := r.client.RootFolderAPI.GetRootFolderById(ctx, int32(folder.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, rootFolderResourceName, err))
 
@@ -196,7 +196,7 @@ func (r *RootFolderResource) Update(ctx context.Context, req resource.UpdateRequ
 	// Update Notification
 	request := folder.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.RootFolderApi.UpdateRootFolder(ctx, strconv.Itoa(int(request.GetId()))).RootFolderResource(*request).Execute()
+	response, _, err := r.client.RootFolderAPI.UpdateRootFolder(ctx, strconv.Itoa(int(request.GetId()))).RootFolderResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationResourceName, err))
 
@@ -219,7 +219,7 @@ func (r *RootFolderResource) Delete(ctx context.Context, req resource.DeleteRequ
 	}
 
 	// Delete rootFolder current value
-	_, err := r.client.RootFolderApi.DeleteRootFolder(ctx, int32(ID)).Execute()
+	_, err := r.client.RootFolderAPI.DeleteRootFolder(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, rootFolderResourceName, err))
 

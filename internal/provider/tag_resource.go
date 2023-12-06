@@ -99,7 +99,7 @@ func (r *TagResource) Create(ctx context.Context, req resource.CreateRequest, re
 	// Create new Tag
 	request := tag.read()
 
-	response, _, err := r.client.TagApi.CreateTag(ctx).TagResource(*request).Execute()
+	response, _, err := r.client.TagAPI.CreateTag(ctx).TagResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, tagResourceName, err))
 
@@ -123,7 +123,7 @@ func (r *TagResource) Read(ctx context.Context, req resource.ReadRequest, resp *
 	}
 
 	// Get tag current value
-	response, _, err := r.client.TagApi.GetTagById(ctx, int32(tag.ID.ValueInt64())).Execute()
+	response, _, err := r.client.TagAPI.GetTagById(ctx, int32(tag.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, tagResourceName, err))
 
@@ -149,7 +149,7 @@ func (r *TagResource) Update(ctx context.Context, req resource.UpdateRequest, re
 	// Update Tag
 	tagResource := tag.read()
 
-	response, _, err := r.client.TagApi.UpdateTag(ctx, fmt.Sprint(tagResource.GetId())).TagResource(*tagResource).Execute()
+	response, _, err := r.client.TagAPI.UpdateTag(ctx, fmt.Sprint(tagResource.GetId())).TagResource(*tagResource).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, tagResourceName, err))
 
@@ -172,7 +172,7 @@ func (r *TagResource) Delete(ctx context.Context, req resource.DeleteRequest, re
 	}
 
 	// Delete tag current value
-	_, err := r.client.TagApi.DeleteTag(ctx, int32(ID)).Execute()
+	_, err := r.client.TagAPI.DeleteTag(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, tagResourceName, err))
 

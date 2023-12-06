@@ -222,7 +222,7 @@ func (r *ImportListSpotifyPlaylistsResource) Create(ctx context.Context, req res
 	// Create new ImportListSpotifyPlaylists
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListSpotifyPlaylistsResourceName, err))
 
@@ -246,7 +246,7 @@ func (r *ImportListSpotifyPlaylistsResource) Read(ctx context.Context, req resou
 	}
 
 	// Get ImportListSpotifyPlaylists current value
-	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ImportListAPI.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListSpotifyPlaylistsResourceName, err))
 
@@ -272,7 +272,7 @@ func (r *ImportListSpotifyPlaylistsResource) Update(ctx context.Context, req res
 	// Update ImportListSpotifyPlaylists
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListSpotifyPlaylistsResourceName, err))
 
@@ -295,7 +295,7 @@ func (r *ImportListSpotifyPlaylistsResource) Delete(ctx context.Context, req res
 	}
 
 	// Delete ImportListSpotifyPlaylists current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
+	_, err := r.client.ImportListAPI.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListSpotifyPlaylistsResourceName, err))
 

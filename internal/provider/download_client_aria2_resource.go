@@ -183,7 +183,7 @@ func (r *DownloadClientAria2Resource) Create(ctx context.Context, req resource.C
 	// Create new DownloadClientAria2
 	request := client.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.DownloadClientApi.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
+	response, _, err := r.client.DownloadClientAPI.CreateDownloadClient(ctx).DownloadClientResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, downloadClientAria2ResourceName, err))
 
@@ -207,7 +207,7 @@ func (r *DownloadClientAria2Resource) Read(ctx context.Context, req resource.Rea
 	}
 
 	// Get DownloadClientAria2 current value
-	response, _, err := r.client.DownloadClientApi.GetDownloadClientById(ctx, int32(client.ID.ValueInt64())).Execute()
+	response, _, err := r.client.DownloadClientAPI.GetDownloadClientById(ctx, int32(client.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientAria2ResourceName, err))
 
@@ -233,7 +233,7 @@ func (r *DownloadClientAria2Resource) Update(ctx context.Context, req resource.U
 	// Update DownloadClientAria2
 	request := client.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.DownloadClientApi.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
+	response, _, err := r.client.DownloadClientAPI.UpdateDownloadClient(ctx, strconv.Itoa(int(request.GetId()))).DownloadClientResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, downloadClientAria2ResourceName, err))
 
@@ -256,7 +256,7 @@ func (r *DownloadClientAria2Resource) Delete(ctx context.Context, req resource.D
 	}
 
 	// Delete DownloadClientAria2 current value
-	_, err := r.client.DownloadClientApi.DeleteDownloadClient(ctx, int32(ID)).Execute()
+	_, err := r.client.DownloadClientAPI.DeleteDownloadClient(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, downloadClientAria2ResourceName, err))
 

@@ -128,7 +128,7 @@ func (r *ReleaseProfileResource) Create(ctx context.Context, req resource.Create
 	request := profile.read(ctx, &resp.Diagnostics)
 
 	// Create new ReleaseProfile
-	response, _, err := r.client.ReleaseProfileApi.CreateReleaseProfile(ctx).ReleaseProfileResource(*request).Execute()
+	response, _, err := r.client.ReleaseProfileAPI.CreateReleaseProfile(ctx).ReleaseProfileResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, releaseProfileResourceName, err))
 
@@ -152,7 +152,7 @@ func (r *ReleaseProfileResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	// Get releaseprofile current value
-	response, _, err := r.client.ReleaseProfileApi.GetReleaseProfileById(ctx, int32(profile.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ReleaseProfileAPI.GetReleaseProfileById(ctx, int32(profile.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, releaseProfileResourceName, err))
 
@@ -179,7 +179,7 @@ func (r *ReleaseProfileResource) Update(ctx context.Context, req resource.Update
 	request := profile.read(ctx, &resp.Diagnostics)
 
 	// Update ReleaseProfile
-	response, _, err := r.client.ReleaseProfileApi.UpdateReleaseProfile(ctx, strconv.Itoa(int(request.GetId()))).ReleaseProfileResource(*request).Execute()
+	response, _, err := r.client.ReleaseProfileAPI.UpdateReleaseProfile(ctx, strconv.Itoa(int(request.GetId()))).ReleaseProfileResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, releaseProfileResourceName, err))
 
@@ -202,7 +202,7 @@ func (r *ReleaseProfileResource) Delete(ctx context.Context, req resource.Delete
 	}
 
 	// Delete releaseprofile current value
-	_, err := r.client.ReleaseProfileApi.DeleteReleaseProfile(ctx, int32(ID)).Execute()
+	_, err := r.client.ReleaseProfileAPI.DeleteReleaseProfile(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, releaseProfileResourceName, err))
 

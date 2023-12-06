@@ -73,7 +73,7 @@ func (d *TagsDataSource) Configure(ctx context.Context, req datasource.Configure
 
 func (d *TagsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get tags current value
-	response, _, err := d.client.TagApi.ListTag(ctx).Execute()
+	response, _, err := d.client.TagAPI.ListTag(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, tagsDataSourceName, err))
 

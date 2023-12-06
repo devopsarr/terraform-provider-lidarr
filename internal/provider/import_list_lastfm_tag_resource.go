@@ -205,7 +205,7 @@ func (r *ImportListLastFMTagResource) Create(ctx context.Context, req resource.C
 	// Create new ImportListLastFMTag
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListApi.CreateImportList(ctx).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.CreateImportList(ctx).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListLastFMTagResourceName, err))
 
@@ -229,7 +229,7 @@ func (r *ImportListLastFMTagResource) Read(ctx context.Context, req resource.Rea
 	}
 
 	// Get ImportListLastFMTag current value
-	response, _, err := r.client.ImportListApi.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ImportListAPI.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLastFMTagResourceName, err))
 
@@ -255,7 +255,7 @@ func (r *ImportListLastFMTagResource) Update(ctx context.Context, req resource.U
 	// Update ImportListLastFMTag
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListApi.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListLastFMTagResourceName, err))
 
@@ -278,7 +278,7 @@ func (r *ImportListLastFMTagResource) Delete(ctx context.Context, req resource.D
 	}
 
 	// Delete ImportListLastFMTag current value
-	_, err := r.client.ImportListApi.DeleteImportList(ctx, int32(ID)).Execute()
+	_, err := r.client.ImportListAPI.DeleteImportList(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListLastFMTagResourceName, err))
 

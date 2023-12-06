@@ -98,7 +98,7 @@ func (r *MetadataConfigResource) Create(ctx context.Context, req resource.Create
 	request.SetId(1)
 
 	// Create new MetadataConfig
-	response, _, err := r.client.MetadataProviderConfigApi.UpdateMetadataProviderConfig(ctx, strconv.Itoa(int(request.GetId()))).MetadataProviderConfigResource(*request).Execute()
+	response, _, err := r.client.MetadataProviderConfigAPI.UpdateMetadataProviderConfig(ctx, strconv.Itoa(int(request.GetId()))).MetadataProviderConfigResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, metadataConfigResourceName, err))
 
@@ -122,7 +122,7 @@ func (r *MetadataConfigResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	// Get metadataConfig current value
-	response, _, err := r.client.MetadataProviderConfigApi.GetMetadataProviderConfig(ctx).Execute()
+	response, _, err := r.client.MetadataProviderConfigAPI.GetMetadataProviderConfig(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataConfigResourceName, err))
 
@@ -149,7 +149,7 @@ func (r *MetadataConfigResource) Update(ctx context.Context, req resource.Update
 	request := config.read()
 
 	// Update MetadataConfig
-	response, _, err := r.client.MetadataProviderConfigApi.UpdateMetadataProviderConfig(ctx, strconv.Itoa(int(request.GetId()))).MetadataProviderConfigResource(*request).Execute()
+	response, _, err := r.client.MetadataProviderConfigAPI.UpdateMetadataProviderConfig(ctx, strconv.Itoa(int(request.GetId()))).MetadataProviderConfigResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, metadataConfigResourceName, err))
 

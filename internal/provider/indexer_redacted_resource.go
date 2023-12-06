@@ -199,7 +199,7 @@ func (r *IndexerRedactedResource) Create(ctx context.Context, req resource.Creat
 	// Create new IndexerRedacted
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerApi.CreateIndexer(ctx).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.CreateIndexer(ctx).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerRedactedResourceName, err))
 
@@ -223,7 +223,7 @@ func (r *IndexerRedactedResource) Read(ctx context.Context, req resource.ReadReq
 	}
 
 	// Get IndexerRedacted current value
-	response, _, err := r.client.IndexerApi.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
+	response, _, err := r.client.IndexerAPI.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerRedactedResourceName, err))
 
@@ -249,7 +249,7 @@ func (r *IndexerRedactedResource) Update(ctx context.Context, req resource.Updat
 	// Update IndexerRedacted
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerApi.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerRedactedResourceName, err))
 
@@ -272,7 +272,7 @@ func (r *IndexerRedactedResource) Delete(ctx context.Context, req resource.Delet
 	}
 
 	// Delete IndexerRedacted current value
-	_, err := r.client.IndexerApi.DeleteIndexer(ctx, int32(ID)).Execute()
+	_, err := r.client.IndexerAPI.DeleteIndexer(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerRedactedResourceName, err))
 

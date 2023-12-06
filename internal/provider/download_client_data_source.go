@@ -231,7 +231,7 @@ func (d *DownloadClientDataSource) Read(ctx context.Context, req datasource.Read
 		return
 	}
 	// Get downloadClient current value
-	response, _, err := d.client.DownloadClientApi.ListDownloadClient(ctx).Execute()
+	response, _, err := d.client.DownloadClientAPI.ListDownloadClient(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, downloadClientDataSourceName, err))
 

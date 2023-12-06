@@ -77,7 +77,7 @@ func (d *QualityDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 	// Get qualitys current value
-	response, _, err := d.client.QualityDefinitionApi.ListQualityDefinition(ctx).Execute()
+	response, _, err := d.client.QualityDefinitionAPI.ListQualityDefinition(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, qualityDataSourceName, err))
 
