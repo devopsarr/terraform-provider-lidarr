@@ -626,6 +626,7 @@ func (a *AuthConfig) read(host *lidarr.HostConfigResource) {
 	host.SetAuthenticationMethod(lidarr.AuthenticationType(a.Method.ValueString()))
 	host.SetUsername(a.Username.ValueString())
 	host.SetPassword(a.Password.ValueString())
+	host.SetPasswordConfirmation(a.Password.ValueString())
 }
 
 func (s *SSLConfig) read(host *lidarr.HostConfigResource) {
