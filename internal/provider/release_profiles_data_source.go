@@ -92,7 +92,7 @@ func (d *ReleaseProfilesDataSource) Configure(ctx context.Context, req datasourc
 
 func (d *ReleaseProfilesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get releaseprofiles current value
-	response, _, err := d.client.ReleaseProfileApi.ListReleaseProfile(ctx).Execute()
+	response, _, err := d.client.ReleaseProfileAPI.ListReleaseProfile(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, releaseProfileResourceName, err))
 

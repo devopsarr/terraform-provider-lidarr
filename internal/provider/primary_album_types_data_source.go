@@ -66,7 +66,7 @@ func (d *PrimaryAlbumTypesDataSource) Configure(ctx context.Context, req datasou
 
 func (d *PrimaryAlbumTypesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get primary album type current value
-	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
+	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, primaryAlbumTypesDataSourceName, err))
 

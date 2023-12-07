@@ -198,7 +198,7 @@ func (d *IndexersDataSource) Configure(ctx context.Context, req datasource.Confi
 
 func (d *IndexersDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get indexers current value
-	response, _, err := d.client.IndexerApi.ListIndexer(ctx).Execute()
+	response, _, err := d.client.IndexerAPI.ListIndexer(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexersDataSourceName, err))
 

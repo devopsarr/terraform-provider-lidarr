@@ -66,7 +66,7 @@ func (d *ReleaseStatusesDataSource) Configure(ctx context.Context, req datasourc
 
 func (d *ReleaseStatusesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get release status type current value
-	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
+	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, releaseStatusesDataSourceName, err))
 

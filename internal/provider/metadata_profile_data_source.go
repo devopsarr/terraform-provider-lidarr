@@ -77,7 +77,7 @@ func (d *MetadataProfileDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 	// Get metadataprofiles current value
-	response, _, err := d.client.MetadataProfileApi.ListMetadataProfile(ctx).Execute()
+	response, _, err := d.client.MetadataProfileAPI.ListMetadataProfile(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataProfileDataSourceName, err))
 

@@ -62,7 +62,7 @@ func (d *SecondaryAlbumTypeDataSource) Read(ctx context.Context, req datasource.
 	}
 
 	// Get secondary album type current value
-	response, _, err := d.client.MetadataProfileSchemaApi.GetMetadataprofileSchema(ctx).Execute()
+	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, secondaryAlbumTypesDataSourceName, err))
 

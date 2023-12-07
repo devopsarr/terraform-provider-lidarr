@@ -100,7 +100,7 @@ func (d *ArtistDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 	// Get artists current value
-	response, _, err := d.client.ArtistApi.ListArtist(ctx).Execute()
+	response, _, err := d.client.ArtistAPI.ListArtist(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, artistDataSourceName, err))
 

@@ -131,7 +131,7 @@ func (r *MetadataProfileResource) Create(ctx context.Context, req resource.Creat
 	// Create new MetadataProfile
 	request := profile.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.MetadataProfileApi.CreateMetadataProfile(ctx).MetadataProfileResource(*request).Execute()
+	response, _, err := r.client.MetadataProfileAPI.CreateMetadataProfile(ctx).MetadataProfileResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, metadataProfileResourceName, err))
 
@@ -155,7 +155,7 @@ func (r *MetadataProfileResource) Read(ctx context.Context, req resource.ReadReq
 	}
 
 	// Get metadataProfile current value
-	response, _, err := r.client.MetadataProfileApi.GetMetadataProfileById(ctx, int32(profile.ID.ValueInt64())).Execute()
+	response, _, err := r.client.MetadataProfileAPI.GetMetadataProfileById(ctx, int32(profile.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataProfileResourceName, err))
 
@@ -181,7 +181,7 @@ func (r *MetadataProfileResource) Update(ctx context.Context, req resource.Updat
 	// Update MetadataProfile
 	request := profile.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.MetadataProfileApi.UpdateMetadataProfile(ctx, strconv.Itoa(int(request.GetId()))).MetadataProfileResource(*request).Execute()
+	response, _, err := r.client.MetadataProfileAPI.UpdateMetadataProfile(ctx, strconv.Itoa(int(request.GetId()))).MetadataProfileResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, metadataProfileResourceName, err))
 
@@ -204,7 +204,7 @@ func (r *MetadataProfileResource) Delete(ctx context.Context, req resource.Delet
 	}
 
 	// Delete metadataProfile current value
-	_, err := r.client.MetadataProfileApi.DeleteMetadataProfile(ctx, int32(ID)).Execute()
+	_, err := r.client.MetadataProfileAPI.DeleteMetadataProfile(ctx, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, metadataProfileResourceName, err))
 

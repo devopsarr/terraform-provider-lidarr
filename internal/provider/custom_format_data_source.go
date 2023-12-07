@@ -102,7 +102,7 @@ func (d *CustomFormatDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 	// Get customFormat current value
-	response, _, err := d.client.CustomFormatApi.ListCustomFormat(ctx).Execute()
+	response, _, err := d.client.CustomFormatAPI.ListCustomFormat(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, customFormatDataSourceName, err))
 

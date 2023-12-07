@@ -111,7 +111,7 @@ func (d *ArtistsDataSource) Configure(ctx context.Context, req datasource.Config
 
 func (d *ArtistsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get artists current value
-	response, _, err := d.client.ArtistApi.ListArtist(ctx).Execute()
+	response, _, err := d.client.ArtistAPI.ListArtist(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.List, artistsDataSourceName, err))
 

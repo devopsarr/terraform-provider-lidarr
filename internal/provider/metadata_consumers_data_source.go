@@ -111,7 +111,7 @@ func (d *MetadataConsumersDataSource) Configure(ctx context.Context, req datasou
 
 func (d *MetadataConsumersDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get metadataConsumers current value
-	response, _, err := d.client.MetadataApi.ListMetadata(ctx).Execute()
+	response, _, err := d.client.MetadataAPI.ListMetadata(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.List, metadataConsumersDataSourceName, err))
 

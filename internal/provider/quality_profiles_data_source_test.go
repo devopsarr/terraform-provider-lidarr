@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"context"
 	"regexp"
 	"testing"
 
@@ -22,8 +21,7 @@ func TestAccQualityProfilesDataSource(t *testing.T) {
 			},
 			// Read testing
 			{
-				PreConfig: qualityprofilesDSInit,
-				Config:    testAccQualityProfilesDataSourceConfig,
+				Config: testAccQualityProfilesDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckTypeSetElemNestedAttrs("data.lidarr_quality_profiles.test", "quality_profiles.*", map[string]string{"name": "Any"}),
 				),
@@ -36,11 +34,3 @@ const testAccQualityProfilesDataSourceConfig = `
 data "lidarr_quality_profiles" "test" {
 }
 `
-
-func qualityprofilesDSInit() {
-	// keep only first two profiles to avoid longer tests
-	client := testAccAPIClient()
-	for i := 3; i < 7; i++ {
-		_, _ = client.QualityProfileApi.DeleteQualityProfile(context.TODO(), int32(i)).Execute()
-	}
-}

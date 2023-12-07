@@ -185,7 +185,7 @@ func (d *ImportListsDataSource) Configure(ctx context.Context, req datasource.Co
 
 func (d *ImportListsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get import lists current value
-	response, _, err := d.client.ImportListApi.ListImportList(ctx).Execute()
+	response, _, err := d.client.ImportListAPI.ListImportList(ctx).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListsDataSourceName, err))
 
