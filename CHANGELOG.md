@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.11.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.10.0...v1.11.0) (2023-12-07)
+
+
+### Features
+
+* **#202:** manage v2 sensitive values ([3a326f9](https://github.com/devopsarr/terraform-provider-lidarr/commit/3a326f91eacd785082cb4b9c4192a096c074b9fb))
+* add host required password confirmation ([28067fa](https://github.com/devopsarr/terraform-provider-lidarr/commit/28067faf6f721df0734ec692a783ae6faa07cdd4))
+* remove obsolete boxcar notification ([b78ff69](https://github.com/devopsarr/terraform-provider-lidarr/commit/b78ff691f4ec83f1d861618c2797b7267a8f58be))
+* update api methods ([a3bd437](https://github.com/devopsarr/terraform-provider-lidarr/commit/a3bd4374c0d98f2289862b199d0d6e99bbd7d4c0))
+* update to go 1.21 ([c8c7cc8](https://github.com/devopsarr/terraform-provider-lidarr/commit/c8c7cc8cf88ad8fdc24c090c0763f18c540a3937))
+
 ## [1.10.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.9.0...v1.10.0) (2023-10-12)
 
 
