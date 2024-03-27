@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_iptorrents Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer IP Torrents resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and IP Torrents https://wiki.servarr.com/lidarr/supported#iptorrents.
 ---
 
 # lidarr_indexer_iptorrents (Resource)
 
-<!-- subcategory:Indexers -->Indexer IP Torrents resource.
+<!-- subcategory:Indexers -->
+Indexer IP Torrents resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [IP Torrents](https://wiki.servarr.com/lidarr/supported#iptorrents).
 
 ## Example Usage

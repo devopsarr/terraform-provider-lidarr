@@ -3,13 +3,16 @@
 page_title: "lidarr_metadata_profile Resource - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Metadata Profile resource.
   For more information refer to Metadata Profile https://wiki.servarr.com/lidarr/settings#metadata-profiles documentation.
 ---
 
 # lidarr_metadata_profile (Resource)
 
-<!-- subcategory:Profiles -->Metadata Profile resource.
+<!-- subcategory:Profiles -->
+Metadata Profile resource.
 For more information refer to [Metadata Profile](https://wiki.servarr.com/lidarr/settings#metadata-profiles) documentation.
 
 ## Example Usage

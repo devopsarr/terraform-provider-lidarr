@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_custom_script Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Custom Script resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Custom Script https://wiki.servarr.com/lidarr/supported#customscript.
 ---
 
 # lidarr_notification_custom_script (Resource)
 
-<!-- subcategory:Notifications -->Notification Custom Script resource.
+<!-- subcategory:Notifications -->
+Notification Custom Script resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Custom Script](https://wiki.servarr.com/lidarr/supported#customscript).
 
 ## Example Usage

@@ -43,7 +43,7 @@ type ImportListSpotifyPlaylistsResource struct {
 // ImportListSpotifyPlaylists describes the import list data model.
 type ImportListSpotifyPlaylists struct {
 	Tags                  types.Set    `tfsdk:"tags"`
-	PlaylistIds           types.Set    `tfsdk:"playlist_ids"`
+	PlaylistIDs           types.Set    `tfsdk:"playlist_ids"`
 	Name                  types.String `tfsdk:"name"`
 	AccessToken           types.String `tfsdk:"access_token"`
 	RefreshToken          types.String `tfsdk:"refresh_token"`
@@ -63,7 +63,7 @@ type ImportListSpotifyPlaylists struct {
 func (i ImportListSpotifyPlaylists) toImportList() *ImportList {
 	return &ImportList{
 		Tags:                  i.Tags,
-		PlaylistIds:           i.PlaylistIds,
+		PlaylistIDs:           i.PlaylistIDs,
 		Name:                  i.Name,
 		MonitorNewItems:       i.MonitorNewItems,
 		ShouldMonitor:         i.ShouldMonitor,
@@ -86,7 +86,7 @@ func (i ImportListSpotifyPlaylists) toImportList() *ImportList {
 
 func (i *ImportListSpotifyPlaylists) fromImportList(importList *ImportList) {
 	i.Tags = importList.Tags
-	i.PlaylistIds = importList.PlaylistIds
+	i.PlaylistIDs = importList.PlaylistIDs
 	i.Name = importList.Name
 	i.MonitorNewItems = importList.MonitorNewItems
 	i.ShouldMonitor = importList.ShouldMonitor
@@ -109,7 +109,7 @@ func (r *ImportListSpotifyPlaylistsResource) Metadata(_ context.Context, req res
 
 func (r *ImportListSpotifyPlaylistsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Spotify Playlist resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Playlists](https://wiki.servarr.com/lidarr/supported#spotifyplaylist).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nImport List Spotify Playlist resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Playlists](https://wiki.servarr.com/lidarr/supported#spotifyplaylist).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",

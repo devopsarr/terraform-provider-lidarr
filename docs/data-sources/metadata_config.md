@@ -3,12 +3,15 @@
 page_title: "lidarr_metadata_config Data Source - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Metadata Config ../resources/metadata_config.
 ---
 
 # lidarr_metadata_config (Data Source)
 
-<!-- subcategory:Metadata -->[Metadata Config](../resources/metadata_config).
+<!-- subcategory:Metadata -->
+[Metadata Config](../resources/metadata_config).
 
 ## Example Usage
 

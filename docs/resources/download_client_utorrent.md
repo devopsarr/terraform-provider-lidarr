@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_utorrent Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client uTorrent resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and uTorrent https://wiki.servarr.com/lidarr/supported#utorrent.
 ---
 
 # lidarr_download_client_utorrent (Resource)
 
-<!-- subcategory:Download Clients -->Download Client uTorrent resource.
+<!-- subcategory:Download Clients -->
+Download Client uTorrent resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [uTorrent](https://wiki.servarr.com/lidarr/supported#utorrent).
 
 ## Example Usage

@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_slack Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Slack resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Slack https://wiki.servarr.com/lidarr/supported#slack.
 ---
 
 # lidarr_notification_slack (Resource)
 
-<!-- subcategory:Notifications -->Notification Slack resource.
+<!-- subcategory:Notifications -->
+Notification Slack resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Slack](https://wiki.servarr.com/lidarr/supported#slack).
 
 ## Example Usage

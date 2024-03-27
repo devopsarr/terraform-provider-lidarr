@@ -33,7 +33,7 @@ func (d *RemotePathMappingDataSource) Metadata(_ context.Context, req datasource
 func (d *RemotePathMappingDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Single [Remote Path Mapping](../resources/remote_path_mapping).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nSingle [Remote Path Mapping](../resources/remote_path_mapping).",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Remote Path Mapping ID.",
@@ -83,10 +83,10 @@ func (d *RemotePathMappingDataSource) Read(ctx context.Context, req datasource.R
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (r *RemotePathMapping) find(id int64, mappings []*lidarr.RemotePathMappingResource, diags *diag.Diagnostics) {
+func (r *RemotePathMapping) find(id int64, mappings []lidarr.RemotePathMappingResource, diags *diag.Diagnostics) {
 	for _, m := range mappings {
 		if int64(m.GetId()) == id {
-			r.write(m)
+			r.write(&m)
 
 			return
 		}

@@ -3,12 +3,15 @@
 page_title: "lidarr_artists Data Source - terraform-provider-lidarr"
 subcategory: "Artists"
 description: |-
+  <!-- subcategory:Artists -->
+  
   List all available Artists ../resources/artist.
 ---
 
 # lidarr_artists (Data Source)
 
-<!-- subcategory:Artists -->List all available [Artists](../resources/artist).
+<!-- subcategory:Artists -->
+List all available [Artists](../resources/artist).
 
 ## Example Usage
 

@@ -57,7 +57,7 @@ func (r *RemotePathMappingResource) Metadata(_ context.Context, req resource.Met
 
 func (r *RemotePathMappingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Remote Path Mapping resource.\nFor more information refer to [Remote Path Mapping](https://wiki.servarr.com/lidarr/settings#remote-path-mappings) documentation.",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nRemote Path Mapping resource.\nFor more information refer to [Remote Path Mapping](https://wiki.servarr.com/lidarr/settings#remote-path-mappings) documentation.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Remote Path Mapping ID.",

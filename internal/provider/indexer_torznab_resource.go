@@ -104,7 +104,7 @@ func (r *IndexerTorznabResource) Metadata(_ context.Context, req resource.Metada
 
 func (r *IndexerTorznabResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Torznab resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torznab](https://wiki.servarr.com/lidarr/supported#torznab).",
+		MarkdownDescription: "<!-- subcategory:Indexers -->\nIndexer Torznab resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torznab](https://wiki.servarr.com/lidarr/supported#torznab).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_search": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic search flag.",

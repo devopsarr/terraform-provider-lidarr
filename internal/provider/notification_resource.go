@@ -51,7 +51,7 @@ type Notification struct {
 	FieldTags             types.Set    `tfsdk:"field_tags"`
 	Recipients            types.Set    `tfsdk:"recipients"`
 	Devices               types.Set    `tfsdk:"devices"`
-	DeviceIds             types.Set    `tfsdk:"device_ids"`
+	DeviceIDs             types.Set    `tfsdk:"device_ids"`
 	To                    types.Set    `tfsdk:"to"`
 	Cc                    types.Set    `tfsdk:"cc"`
 	Bcc                   types.Set    `tfsdk:"bcc"`
@@ -239,7 +239,7 @@ func (r *NotificationResource) Metadata(_ context.Context, req resource.Metadata
 
 func (r *NotificationResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Generic Notification resource. When possible use a specific resource instead.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->\nGeneric Notification resource. When possible use a specific resource instead.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
@@ -865,7 +865,7 @@ func (n *Notification) write(ctx context.Context, notification *lidarr.Notificat
 	n.GrabFields = types.SetValueMust(types.Int64Type, nil)
 	n.ImportFields = types.SetValueMust(types.Int64Type, nil)
 	n.ChannelTags = types.SetValueMust(types.StringType, nil)
-	n.DeviceIds = types.SetValueMust(types.StringType, nil)
+	n.DeviceIDs = types.SetValueMust(types.StringType, nil)
 	n.Devices = types.SetValueMust(types.StringType, nil)
 	n.Recipients = types.SetValueMust(types.StringType, nil)
 	n.To = types.SetValueMust(types.StringType, nil)

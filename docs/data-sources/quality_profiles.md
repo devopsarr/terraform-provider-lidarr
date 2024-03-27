@@ -3,12 +3,15 @@
 page_title: "lidarr_quality_profiles Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   List all available Quality Profiles ../resources/quality_profile.
 ---
 
 # lidarr_quality_profiles (Data Source)
 
-<!-- subcategory:Profiles -->List all available [Quality Profiles](../resources/quality_profile).
+<!-- subcategory:Profiles -->
+List all available [Quality Profiles](../resources/quality_profile).
 
 ## Example Usage
 

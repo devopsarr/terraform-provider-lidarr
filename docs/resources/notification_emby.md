@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_emby Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Emby resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Emby https://wiki.servarr.com/lidarr/supported#mediabrowser.
 ---
 
 # lidarr_notification_emby (Resource)
 
-<!-- subcategory:Notifications -->Notification Emby resource.
+<!-- subcategory:Notifications -->
+Notification Emby resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Emby](https://wiki.servarr.com/lidarr/supported#mediabrowser).
 
 ## Example Usage

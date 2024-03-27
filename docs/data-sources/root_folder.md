@@ -3,12 +3,15 @@
 page_title: "lidarr_root_folder Data Source - terraform-provider-lidarr"
 subcategory: "Media Management"
 description: |-
+  <!-- subcategory:Media Management -->
+  
   Single Root Folder ../resources/root_folder.
 ---
 
 # lidarr_root_folder (Data Source)
 
-<!-- subcategory:Media Management -->Single [Root Folder](../resources/root_folder).
+<!-- subcategory:Media Management -->
+Single [Root Folder](../resources/root_folder).
 
 ## Example Usage
 

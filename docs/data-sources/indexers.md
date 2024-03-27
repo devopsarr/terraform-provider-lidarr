@@ -3,12 +3,15 @@
 page_title: "lidarr_indexers Data Source - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   List all available Indexers ../resources/indexer.
 ---
 
 # lidarr_indexers (Data Source)
 
-<!-- subcategory:Indexers -->List all available [Indexers](../resources/indexer).
+<!-- subcategory:Indexers -->
+List all available [Indexers](../resources/indexer).
 
 ## Example Usage
 

@@ -31,7 +31,7 @@ func (d *ImportListExclusionDataSource) Metadata(_ context.Context, req datasour
 
 func (d *ImportListExclusionDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Single [Import List Exclusion](../resources/import_list_exclusion).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nSingle [Import List Exclusion](../resources/import_list_exclusion).",
 		Attributes: map[string]schema.Attribute{
 			"foreign_id": schema.StringAttribute{
 				MarkdownDescription: "Musicbrainz ID.",
@@ -78,10 +78,10 @@ func (d *ImportListExclusionDataSource) Read(ctx context.Context, req datasource
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (i *ImportListExclusion) find(foreignID string, importListExclusions []*lidarr.ImportListExclusionResource, diags *diag.Diagnostics) {
+func (i *ImportListExclusion) find(foreignID string, importListExclusions []lidarr.ImportListExclusionResource, diags *diag.Diagnostics) {
 	for _, t := range importListExclusions {
 		if t.GetForeignId() == foreignID {
-			i.write(t)
+			i.write(&t)
 
 			return
 		}

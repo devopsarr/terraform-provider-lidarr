@@ -3,13 +3,16 @@
 page_title: "lidarr_release_profile Resource - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Release Profile resource.
   For more information refer to Release Profiles https://wiki.servarr.com/lidarr/settings#release-profiles documentation.
 ---
 
 # lidarr_release_profile (Resource)
 
-<!-- subcategory:Profiles -->Release Profile resource.
+<!-- subcategory:Profiles -->
+Release Profile resource.
 For more information refer to [Release Profiles](https://wiki.servarr.com/lidarr/settings#release-profiles) documentation.
 
 ## Example Usage

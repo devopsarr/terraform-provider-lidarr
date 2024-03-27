@@ -3,12 +3,15 @@
 page_title: "lidarr_release_profile Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Single Release Profile ../resources/release_profile.
 ---
 
 # lidarr_release_profile (Data Source)
 
-<!-- subcategory:Profiles -->Single [Release Profile](../resources/release_profile).
+<!-- subcategory:Profiles -->
+Single [Release Profile](../resources/release_profile).
 
 ## Example Usage
 

@@ -88,7 +88,7 @@ func (r *ArtistResource) Metadata(_ context.Context, req resource.MetadataReques
 
 func (r *ArtistResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Artists -->Artist resource.\nFor more information refer to [Artists](https://wiki.servarr.com/lidarr/library#artists) documentation.",
+		MarkdownDescription: "<!-- subcategory:Artists -->\nArtist resource.\nFor more information refer to [Artists](https://wiki.servarr.com/lidarr/library#artists) documentation.",
 		Attributes: map[string]schema.Attribute{
 			"monitored": schema.BoolAttribute{
 				MarkdownDescription: "Monitored flag.",

@@ -3,12 +3,15 @@
 page_title: "lidarr_notifications Data Source - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   List all available Notifications ../resources/notification.
 ---
 
 # lidarr_notifications (Data Source)
 
-<!-- subcategory:Notifications -->List all available [Notifications](../resources/notification).
+<!-- subcategory:Notifications -->
+List all available [Notifications](../resources/notification).
 
 ## Example Usage
 

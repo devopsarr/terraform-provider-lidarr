@@ -3,12 +3,15 @@
 page_title: "lidarr_download_client Data Source - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Single Download Client ../resources/download_client.
 ---
 
 # lidarr_download_client (Data Source)
 
-<!-- subcategory:Download Clients -->Single [Download Client](../resources/download_client).
+<!-- subcategory:Download Clients -->
+Single [Download Client](../resources/download_client).
 
 ## Example Usage
 

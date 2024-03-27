@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_discord Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Discord resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Discord https://wiki.servarr.com/lidarr/supported#discord.
 ---
 
 # lidarr_notification_discord (Resource)
 
-<!-- subcategory:Notifications -->Notification Discord resource.
+<!-- subcategory:Notifications -->
+Notification Discord resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Discord](https://wiki.servarr.com/lidarr/supported#discord).
 
 ## Example Usage

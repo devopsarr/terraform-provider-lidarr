@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_flood Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Flood resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Flood https://wiki.servarr.com/lidarr/supported#flood.
 ---
 
 # lidarr_download_client_flood (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Flood resource.
+<!-- subcategory:Download Clients -->
+Download Client Flood resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Flood](https://wiki.servarr.com/lidarr/supported#flood).
 
 ## Example Usage

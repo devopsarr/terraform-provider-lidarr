@@ -100,7 +100,7 @@ func (r *QualityProfileResource) Metadata(_ context.Context, req resource.Metada
 
 func (r *QualityProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->Quality Profile resource.\nFor more information refer to [Quality Profile](https://wiki.servarr.com/lidarr/settings#quality-profiles) documentation.",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nQuality Profile resource.\nFor more information refer to [Quality Profile](https://wiki.servarr.com/lidarr/settings#quality-profiles) documentation.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Quality Profile ID.",
@@ -347,7 +347,7 @@ func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfi
 	for _, g := range profile.GetItems() {
 		if g.GetAllowed() {
 			group := QualityGroup{}
-			group.write(ctx, g, diags)
+			group.write(ctx, &g, diags)
 			qualityGroups = append(qualityGroups, group)
 		}
 	}
@@ -357,7 +357,7 @@ func (p *QualityProfile) write(ctx context.Context, profile *lidarr.QualityProfi
 	for _, f := range profile.GetFormatItems() {
 		if f.GetScore() != 0 {
 			format := FormatItem{}
-			format.write(f)
+			format.write(&f)
 			formatItems = append(formatItems, format)
 		}
 	}
@@ -378,7 +378,7 @@ func (g *QualityGroup) write(ctx context.Context, group *lidarr.QualityProfileQu
 
 	qualities := make([]Quality, len(group.GetItems()))
 	for m, q := range group.GetItems() {
-		qualities[m].write(q)
+		qualities[m].write(&q)
 	}
 
 	if len(group.GetItems()) == 0 {
@@ -414,9 +414,9 @@ func (p *QualityProfile) read(ctx context.Context, qualitiesIDs []int32, formatI
 	diags.Append(p.QualityGroups.ElementsAs(ctx, &groups, false)...)
 
 	// Read allowed qualities
-	qualities := make([]*lidarr.QualityProfileQualityItemResource, 0, len(groups))
+	qualities := make([]lidarr.QualityProfileQualityItemResource, 0, len(groups))
 	for _, g := range groups {
-		qualities = append(qualities, g.read(ctx, &allowedQualities, diags))
+		qualities = append(qualities, *g.read(ctx, &allowedQualities, diags))
 	}
 
 	// Fill qualities with not allowed ones
@@ -425,9 +425,9 @@ func (p *QualityProfile) read(ctx context.Context, qualitiesIDs []int32, formatI
 			quality := lidarr.NewQuality()
 			quality.SetId(id)
 
-			item := lidarr.NewQualityProfileQualityItemResource()
+			item := *lidarr.NewQualityProfileQualityItemResource()
 			item.SetAllowed(false)
-			item.SetItems([]*lidarr.QualityProfileQualityItemResource{})
+			item.SetItems([]lidarr.QualityProfileQualityItemResource{})
 			item.SetQuality(*quality)
 
 			qualities = append(qualities, item)
@@ -441,15 +441,15 @@ func (p *QualityProfile) read(ctx context.Context, qualitiesIDs []int32, formatI
 	diags.Append(p.FormatItems.ElementsAs(ctx, &formats, true)...)
 
 	// Read relevant formats
-	formatItems := make([]*lidarr.ProfileFormatItemResource, 0, len(formats))
+	formatItems := make([]lidarr.ProfileFormatItemResource, 0, len(formats))
 	for _, f := range formats {
-		formatItems = append(formatItems, f.read())
+		formatItems = append(formatItems, *f.read())
 	}
 
 	// Fill with irrelevant formats
 	for _, id := range formatIDs {
 		if !slices.Contains(allowedFormats, id) {
-			format := lidarr.NewProfileFormatItemResource()
+			format := *lidarr.NewProfileFormatItemResource()
 			format.SetFormat(id)
 			format.SetScore(0)
 			formatItems = append(formatItems, format)
@@ -487,9 +487,9 @@ func (g *QualityGroup) read(ctx context.Context, allowedQualities *[]int32, diag
 		return item
 	}
 
-	items := make([]*lidarr.QualityProfileQualityItemResource, len(q))
+	items := make([]lidarr.QualityProfileQualityItemResource, len(q))
 	for m, q := range q {
-		items[m] = q.read()
+		items[m] = *q.read()
 		*allowedQualities = append(*allowedQualities, items[m].Quality.GetId())
 	}
 

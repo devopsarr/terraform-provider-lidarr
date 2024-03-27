@@ -3,13 +3,16 @@
 page_title: "lidarr_import_list_lastfm_tag Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Import List Last.fm Tag resource.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists and Last.fm Tag https://wiki.servarr.com/lidarr/supported#lastfmtag.
 ---
 
 # lidarr_import_list_lastfm_tag (Resource)
 
-<!-- subcategory:Import Lists -->Import List Last.fm Tag resource.
+<!-- subcategory:Import Lists -->
+Import List Last.fm Tag resource.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Last.fm Tag](https://wiki.servarr.com/lidarr/supported#lastfmtag).
 
 ## Example Usage

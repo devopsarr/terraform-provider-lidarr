@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_config Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Config resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#options documentation.
 ---
 
 # lidarr_indexer_config (Resource)
 
-<!-- subcategory:Indexers -->Indexer Config resource.
+<!-- subcategory:Indexers -->
+Indexer Config resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#options) documentation.
 
 ## Example Usage

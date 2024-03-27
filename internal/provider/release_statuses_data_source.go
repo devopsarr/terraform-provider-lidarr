@@ -32,7 +32,7 @@ func (d *ReleaseStatusesDataSource) Metadata(_ context.Context, req datasource.M
 
 func (d *ReleaseStatusesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Release Status](../data-sources/release_status).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nList all available [Release Status](../data-sources/release_status).",
 		Attributes: map[string]schema.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": schema.StringAttribute{

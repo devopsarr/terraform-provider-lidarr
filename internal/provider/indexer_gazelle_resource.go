@@ -107,7 +107,7 @@ func (r *IndexerGazelleResource) Metadata(_ context.Context, req resource.Metada
 
 func (r *IndexerGazelleResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Gazelle resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Gazelle](https://wiki.servarr.com/lidarr/supported#gazelle).",
+		MarkdownDescription: "<!-- subcategory:Indexers -->\nIndexer Gazelle resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Gazelle](https://wiki.servarr.com/lidarr/supported#gazelle).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_search": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic search flag.",

@@ -3,13 +3,16 @@
 page_title: "lidarr_system_status Data Source - terraform-provider-lidarr"
 subcategory: "System"
 description: |-
+  <!-- subcategory:System -->
+  
   System Status resource. User must have rights to read config.xml.
   For more information refer to System Status https://wiki.servarr.com/lidarr/system#status documentation.
 ---
 
 # lidarr_system_status (Data Source)
 
-<!-- subcategory:System -->System Status resource. User must have rights to read `config.xml`.
+<!-- subcategory:System -->
+System Status resource. User must have rights to read `config.xml`.
 For more information refer to [System Status](https://wiki.servarr.com/lidarr/system#status) documentation.
 
 ## Example Usage

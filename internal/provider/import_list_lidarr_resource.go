@@ -42,8 +42,8 @@ type ImportListLidarrResource struct {
 
 // ImportListLidarr describes the import list data model.
 type ImportListLidarr struct {
-	ProfileIds            types.Set    `tfsdk:"profile_ids"`
-	TagIds                types.Set    `tfsdk:"tag_ids"`
+	ProfileIDs            types.Set    `tfsdk:"profile_ids"`
+	TagIDs                types.Set    `tfsdk:"tag_ids"`
 	Tags                  types.Set    `tfsdk:"tags"`
 	Name                  types.String `tfsdk:"name"`
 	MonitorNewItems       types.String `tfsdk:"monitor_new_items"`
@@ -62,8 +62,8 @@ type ImportListLidarr struct {
 
 func (i ImportListLidarr) toImportList() *ImportList {
 	return &ImportList{
-		ProfileIds:            i.ProfileIds,
-		TagIds:                i.TagIds,
+		ProfileIDs:            i.ProfileIDs,
+		TagIDs:                i.TagIDs,
 		Tags:                  i.Tags,
 		Name:                  i.Name,
 		MonitorNewItems:       i.MonitorNewItems,
@@ -85,8 +85,8 @@ func (i ImportListLidarr) toImportList() *ImportList {
 }
 
 func (i *ImportListLidarr) fromImportList(importList *ImportList) {
-	i.ProfileIds = importList.ProfileIds
-	i.TagIds = importList.TagIds
+	i.ProfileIDs = importList.ProfileIDs
+	i.TagIDs = importList.TagIDs
 	i.Tags = importList.Tags
 	i.Name = importList.Name
 	i.MonitorNewItems = importList.MonitorNewItems
@@ -109,7 +109,7 @@ func (r *ImportListLidarrResource) Metadata(_ context.Context, req resource.Meta
 
 func (r *ImportListLidarrResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Lidarr resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Lidarr](https://wiki.servarr.com/lidarr/supported#lidarrimport).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nImport List Lidarr resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Lidarr](https://wiki.servarr.com/lidarr/supported#lidarrimport).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",

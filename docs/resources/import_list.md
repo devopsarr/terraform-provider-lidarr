@@ -3,13 +3,16 @@
 page_title: "lidarr_import_list Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Generic Import List resource. When possible use a specific resource instead.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists.
 ---
 
 # lidarr_import_list (Resource)
 
-<!-- subcategory:Import Lists -->Generic Import List resource. When possible use a specific resource instead.
+<!-- subcategory:Import Lists -->
+Generic Import List resource. When possible use a specific resource instead.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists).
 
 ## Example Usage

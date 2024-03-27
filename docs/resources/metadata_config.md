@@ -3,13 +3,16 @@
 page_title: "lidarr_metadata_config Resource - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Metadata Config resource.
   For more information refer to Metadata https://wiki.servarr.com/lidarr/settings#options documentation.
 ---
 
 # lidarr_metadata_config (Resource)
 
-<!-- subcategory:Metadata -->Metadata Config resource.
+<!-- subcategory:Metadata -->
+Metadata Config resource.
 For more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#options) documentation.
 
 ## Example Usage

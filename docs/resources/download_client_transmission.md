@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_transmission Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Transmission resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Transmission https://wiki.servarr.com/lidarr/supported#transmission.
 ---
 
 # lidarr_download_client_transmission (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Transmission resource.
+<!-- subcategory:Download Clients -->
+Download Client Transmission resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Transmission](https://wiki.servarr.com/lidarr/supported#transmission).
 
 ## Example Usage

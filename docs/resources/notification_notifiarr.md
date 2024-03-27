@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_notifiarr Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Notifiarr resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Notifiarr https://wiki.servarr.com/lidarr/supported#notifiarr.
 ---
 
 # lidarr_notification_notifiarr (Resource)
 
-<!-- subcategory:Notifications -->Notification Notifiarr resource.
+<!-- subcategory:Notifications -->
+Notification Notifiarr resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Notifiarr](https://wiki.servarr.com/lidarr/supported#notifiarr).
 
 ## Example Usage

@@ -3,13 +3,16 @@
 page_title: "lidarr_import_list_exclusion Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Import List Exclusion resource.
   For more information refer to ImportListExclusions https://wiki.servarr.com/lidarr/settings#list-exclusions documentation.
 ---
 
 # lidarr_import_list_exclusion (Resource)
 
-<!-- subcategory:Import Lists -->Import List Exclusion resource.
+<!-- subcategory:Import Lists -->
+Import List Exclusion resource.
 For more information refer to [ImportListExclusions](https://wiki.servarr.com/lidarr/settings#list-exclusions) documentation.
 
 ## Example Usage

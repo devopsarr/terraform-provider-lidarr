@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_pneumatic Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Pneumatic resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Pneumatic https://wiki.servarr.com/lidarr/supported#pneumatic.
 ---
 
 # lidarr_download_client_pneumatic (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Pneumatic resource.
+<!-- subcategory:Download Clients -->
+Download Client Pneumatic resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Pneumatic](https://wiki.servarr.com/lidarr/supported#pneumatic).
 
 ## Example Usage

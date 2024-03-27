@@ -3,13 +3,16 @@
 page_title: "lidarr_custom_format Resource - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Custom Format resource.
   For more information refer to Custom Format https://wiki.servarr.com/lidarr/settings#custom-formats.
 ---
 
 # lidarr_custom_format (Resource)
 
-<!-- subcategory:Profiles -->Custom Format resource.
+<!-- subcategory:Profiles -->
+Custom Format resource.
 For more information refer to [Custom Format](https://wiki.servarr.com/lidarr/settings#custom-formats).
 
 ## Example Usage

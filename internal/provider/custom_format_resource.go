@@ -58,7 +58,7 @@ func (r *CustomFormatResource) Metadata(_ context.Context, req resource.Metadata
 
 func (r *CustomFormatResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->Custom Format resource.\nFor more information refer to [Custom Format](https://wiki.servarr.com/lidarr/settings#custom-formats).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nCustom Format resource.\nFor more information refer to [Custom Format](https://wiki.servarr.com/lidarr/settings#custom-formats).",
 		Attributes: map[string]schema.Attribute{
 			"include_custom_format_when_renaming": schema.BoolAttribute{
 				MarkdownDescription: "Include custom format when renaming flag.",
@@ -252,7 +252,7 @@ func (c *CustomFormat) write(ctx context.Context, customFormat *lidarr.CustomFor
 
 	specs := make([]CustomFormatCondition, len(customFormat.Specifications))
 	for n, s := range customFormat.Specifications {
-		specs[n].write(ctx, s)
+		specs[n].write(ctx, &s)
 	}
 
 	c.ID = types.Int64Value(int64(customFormat.GetId()))
@@ -265,10 +265,10 @@ func (c *CustomFormat) write(ctx context.Context, customFormat *lidarr.CustomFor
 func (c *CustomFormat) read(ctx context.Context, diags *diag.Diagnostics) *lidarr.CustomFormatResource {
 	specifications := make([]CustomFormatCondition, len(c.Specifications.Elements()))
 	diags.Append(c.Specifications.ElementsAs(ctx, &specifications, false)...)
-	specs := make([]*lidarr.CustomFormatSpecificationSchema, len(specifications))
+	specs := make([]lidarr.CustomFormatSpecificationSchema, len(specifications))
 
 	for n, s := range specifications {
-		specs[n] = s.read(ctx)
+		specs[n] = *s.read(ctx)
 	}
 
 	format := lidarr.NewCustomFormatResource()

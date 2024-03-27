@@ -32,7 +32,7 @@ func (d *PrimaryAlbumTypeDataSource) Metadata(_ context.Context, req datasource.
 
 func (d *PrimaryAlbumTypeDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single available Primary Album Type.",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle available Primary Album Type.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "PrimaryAlbumType ID.",
@@ -80,7 +80,7 @@ func (e *MetadataProfileElement) writePrimary(element *lidarr.PrimaryAlbumType) 
 	e.ID = types.Int64Value(int64(element.GetId()))
 }
 
-func (e *MetadataProfileElement) findPrimary(name string, types []*lidarr.ProfilePrimaryAlbumTypeItemResource, diags *diag.Diagnostics) {
+func (e *MetadataProfileElement) findPrimary(name string, types []lidarr.ProfilePrimaryAlbumTypeItemResource, diags *diag.Diagnostics) {
 	for _, t := range types {
 		if t.AlbumType.GetName() == name {
 			e.writePrimary(t.AlbumType)

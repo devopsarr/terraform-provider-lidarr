@@ -3,13 +3,16 @@
 page_title: "lidarr_import_list_music_brainz Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Import List MusicBrainz resource.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists and MusicBrainz https://wiki.servarr.com/lidarr/supported#musicbrainzseries.
 ---
 
 # lidarr_import_list_music_brainz (Resource)
 
-<!-- subcategory:Import Lists -->Import List MusicBrainz resource.
+<!-- subcategory:Import Lists -->
+Import List MusicBrainz resource.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [MusicBrainz](https://wiki.servarr.com/lidarr/supported#musicbrainzseries).
 
 ## Example Usage

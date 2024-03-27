@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_newznab Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Newznab resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Newznab https://wiki.servarr.com/lidarr/supported#newznab.
 ---
 
 # lidarr_indexer_newznab (Resource)
 
-<!-- subcategory:Indexers -->Indexer Newznab resource.
+<!-- subcategory:Indexers -->
+Indexer Newznab resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Newznab](https://wiki.servarr.com/lidarr/supported#newznab).
 
 ## Example Usage

@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_join Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Join resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Join https://wiki.servarr.com/lidarr/supported#join.
 ---
 
 # lidarr_notification_join (Resource)
 
-<!-- subcategory:Notifications -->Notification Join resource.
+<!-- subcategory:Notifications -->
+Notification Join resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Join](https://wiki.servarr.com/lidarr/supported#join).
 
 ## Example Usage

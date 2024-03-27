@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_usenet_download_station Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client UsenetDownloadStation resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and UsenetDownloadStation https://wiki.servarr.com/lidarr/supported#usenetdownloadstation.
 ---
 
 # lidarr_download_client_usenet_download_station (Resource)
 
-<!-- subcategory:Download Clients -->Download Client UsenetDownloadStation resource.
+<!-- subcategory:Download Clients -->
+Download Client UsenetDownloadStation resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [UsenetDownloadStation](https://wiki.servarr.com/lidarr/supported#usenetdownloadstation).
 
 ## Example Usage

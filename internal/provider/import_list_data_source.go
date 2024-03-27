@@ -33,7 +33,7 @@ func (d *ImportListDataSource) Metadata(_ context.Context, req datasource.Metada
 func (d *ImportListDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Single [Import List](../resources/import_list).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nSingle [Import List](../resources/import_list).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",
@@ -187,10 +187,10 @@ func (d *ImportListDataSource) Read(ctx context.Context, req datasource.ReadRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (i *ImportList) find(ctx context.Context, name string, importLists []*lidarr.ImportListResource, diags *diag.Diagnostics) {
+func (i *ImportList) find(ctx context.Context, name string, importLists []lidarr.ImportListResource, diags *diag.Diagnostics) {
 	for _, list := range importLists {
 		if list.GetName() == name {
-			i.write(ctx, list, diags)
+			i.write(ctx, &list, diags)
 
 			return
 		}

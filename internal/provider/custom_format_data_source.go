@@ -32,7 +32,7 @@ func (d *CustomFormatDataSource) Metadata(_ context.Context, req datasource.Meta
 func (d *CustomFormatDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single [Custom Format](../resources/custom_format).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle [Custom Format](../resources/custom_format).",
 		Attributes: map[string]schema.Attribute{
 			"include_custom_format_when_renaming": schema.BoolAttribute{
 				MarkdownDescription: "Include custom format when renaming flag.",
@@ -114,10 +114,10 @@ func (d *CustomFormatDataSource) Read(ctx context.Context, req datasource.ReadRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (c *CustomFormat) find(ctx context.Context, name string, customFormats []*lidarr.CustomFormatResource, diags *diag.Diagnostics) {
+func (c *CustomFormat) find(ctx context.Context, name string, customFormats []lidarr.CustomFormatResource, diags *diag.Diagnostics) {
 	for _, i := range customFormats {
 		if i.GetName() == name {
-			c.write(ctx, i, diags)
+			c.write(ctx, &i, diags)
 
 			return
 		}

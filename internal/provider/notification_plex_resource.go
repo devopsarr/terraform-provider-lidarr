@@ -97,7 +97,7 @@ func (r *NotificationPlexResource) Metadata(_ context.Context, req resource.Meta
 
 func (r *NotificationPlexResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Plex resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Plex](https://wiki.servarr.com/lidarr/supported#plexserver).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->\nNotification Plex resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Plex](https://wiki.servarr.com/lidarr/supported#plexserver).",
 		Attributes: map[string]schema.Attribute{
 			"on_upgrade": schema.BoolAttribute{
 				MarkdownDescription: "On upgrade flag.",

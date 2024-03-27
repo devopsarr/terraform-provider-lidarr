@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_plex Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Plex resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Plex https://wiki.servarr.com/lidarr/supported#plexserver.
 ---
 
 # lidarr_notification_plex (Resource)
 
-<!-- subcategory:Notifications -->Notification Plex resource.
+<!-- subcategory:Notifications -->
+Notification Plex resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Plex](https://wiki.servarr.com/lidarr/supported#plexserver).
 
 ## Example Usage

@@ -33,7 +33,7 @@ func (d *ArtistDataSource) Metadata(_ context.Context, req datasource.MetadataRe
 func (d *ArtistDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "<!-- subcategory:Artists -->Single [Artist](../resources/artist).",
+		MarkdownDescription: "<!-- subcategory:Artists -->\nSingle [Artist](../resources/artist).",
 		Attributes: map[string]schema.Attribute{
 			"monitored": schema.BoolAttribute{
 				MarkdownDescription: "Monitored flag.",
@@ -113,10 +113,10 @@ func (d *ArtistDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (a *Artist) find(ctx context.Context, ID string, artists []*lidarr.ArtistResource, diags *diag.Diagnostics) {
+func (a *Artist) find(ctx context.Context, ID string, artists []lidarr.ArtistResource, diags *diag.Diagnostics) {
 	for _, artist := range artists {
 		if artist.GetForeignArtistId() == ID {
-			a.write(ctx, artist, diags)
+			a.write(ctx, &artist, diags)
 
 			return
 		}

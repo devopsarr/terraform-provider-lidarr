@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_kodi Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Kodi resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Kodi https://wiki.servarr.com/lidarr/supported#xbmc.
 ---
 
 # lidarr_notification_kodi (Resource)
 
-<!-- subcategory:Notifications -->Notification Kodi resource.
+<!-- subcategory:Notifications -->
+Notification Kodi resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Kodi](https://wiki.servarr.com/lidarr/supported#xbmc).
 
 ## Example Usage

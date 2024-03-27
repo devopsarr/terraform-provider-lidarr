@@ -39,7 +39,7 @@ func (d *DownloadClientsDataSource) Metadata(_ context.Context, req datasource.M
 func (d *DownloadClientsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Download Clients -->List all available [DownloadClients](../resources/download_client).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nList all available [DownloadClients](../resources/download_client).",
 		Attributes: map[string]schema.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": schema.StringAttribute{
@@ -253,7 +253,7 @@ func (d *DownloadClientsDataSource) Read(ctx context.Context, _ datasource.ReadR
 	// Map response body to resource schema attribute
 	clients := make([]DownloadClient, len(response))
 	for i, d := range response {
-		clients[i].write(ctx, d, &resp.Diagnostics)
+		clients[i].write(ctx, &d, &resp.Diagnostics)
 	}
 
 	clientList, diags := types.SetValueFrom(ctx, DownloadClient{}.getType(), clients)

@@ -3,13 +3,16 @@
 page_title: "lidarr_tag Resource - terraform-provider-lidarr"
 subcategory: "Tags"
 description: |-
+  <!-- subcategory:Tags -->
+  
   Tag resource.
   For more information refer to Tags https://wiki.servarr.com/lidarr/settings#tags documentation.
 ---
 
 # lidarr_tag (Resource)
 
-<!-- subcategory:Tags -->Tag resource.
+<!-- subcategory:Tags -->
+Tag resource.
 For more information refer to [Tags](https://wiki.servarr.com/lidarr/settings#tags) documentation.
 
 ## Example Usage

@@ -38,7 +38,7 @@ func (d *ImportListExclusionsDataSource) Metadata(_ context.Context, req datasou
 
 func (d *ImportListExclusionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->List all available [Import List Exclusions](../resources/importListExclusion).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nList all available [Import List Exclusions](../resources/importListExclusion).",
 		Attributes: map[string]schema.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": schema.StringAttribute{
@@ -87,7 +87,7 @@ func (d *ImportListExclusionsDataSource) Read(ctx context.Context, _ datasource.
 	// Map response body to resource schema attribute
 	importListExclusions := make([]ImportListExclusion, len(response))
 	for i, t := range response {
-		importListExclusions[i].write(t)
+		importListExclusions[i].write(&t)
 	}
 
 	exclusionList, diags := types.SetValueFrom(ctx, ImportListExclusion{}.getType(), importListExclusions)

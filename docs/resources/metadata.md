@@ -3,13 +3,16 @@
 page_title: "lidarr_metadata Resource - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Generic Metadata resource. When possible use a specific resource instead.
   For more information refer to Metadata https://wiki.servarr.com/lidarr/settings#metadata documentation.
 ---
 
 # lidarr_metadata (Resource)
 
-<!-- subcategory:Metadata -->Generic Metadata resource. When possible use a specific resource instead.
+<!-- subcategory:Metadata -->
+Generic Metadata resource. When possible use a specific resource instead.
 For more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#metadata) documentation.
 
 ## Example Usage

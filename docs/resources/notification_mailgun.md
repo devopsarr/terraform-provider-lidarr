@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_mailgun Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Mailgun resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Mailgun https://wiki.servarr.com/lidarr/supported#mailgun.
 ---
 
 # lidarr_notification_mailgun (Resource)
 
-<!-- subcategory:Notifications -->Notification Mailgun resource.
+<!-- subcategory:Notifications -->
+Notification Mailgun resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Mailgun](https://wiki.servarr.com/lidarr/supported#mailgun).
 
 ## Example Usage

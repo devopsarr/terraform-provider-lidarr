@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_torrent_rss Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Torrent RSS resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Torrent RSS https://wiki.servarr.com/lidarr/supported#torrentrssindexer.
 ---
 
 # lidarr_indexer_torrent_rss (Resource)
 
-<!-- subcategory:Indexers -->Indexer Torrent RSS resource.
+<!-- subcategory:Indexers -->
+Indexer Torrent RSS resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torrent RSS](https://wiki.servarr.com/lidarr/supported#torrentrssindexer).
 
 ## Example Usage

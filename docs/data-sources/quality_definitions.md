@@ -3,12 +3,15 @@
 page_title: "lidarr_quality_definitions Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   List all available Quality Definitions ../resources/quality_definition.
 ---
 
 # lidarr_quality_definitions (Data Source)
 
-<!-- subcategory:Profiles -->List all available [Quality Definitions](../resources/quality_definition).
+<!-- subcategory:Profiles -->
+List all available [Quality Definitions](../resources/quality_definition).
 
 ## Example Usage
 

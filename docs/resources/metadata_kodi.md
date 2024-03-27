@@ -3,13 +3,16 @@
 page_title: "lidarr_metadata_kodi Resource - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Metadata Kodi resource.
   For more information refer to Metadata https://wiki.servarr.com/lidarr/settings#metadata and KODI https://wiki.servarr.com/lidarr/supported#xbmcmetadata.
 ---
 
 # lidarr_metadata_kodi (Resource)
 
-<!-- subcategory:Metadata -->Metadata Kodi resource.
+<!-- subcategory:Metadata -->
+Metadata Kodi resource.
 For more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#metadata) and [KODI](https://wiki.servarr.com/lidarr/supported#xbmcmetadata).
 
 ## Example Usage

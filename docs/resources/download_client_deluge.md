@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_deluge Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Deluge resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Deluge https://wiki.servarr.com/lidarr/supported#deluge.
 ---
 
 # lidarr_download_client_deluge (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Deluge resource.
+<!-- subcategory:Download Clients -->
+Download Client Deluge resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Deluge](https://wiki.servarr.com/lidarr/supported#deluge).
 
 ## Example Usage

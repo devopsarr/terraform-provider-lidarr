@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_synology_indexer Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Synology Indexer resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Synology https://wiki.servarr.com/lidarr/supported#synologyindexer.
 ---
 
 # lidarr_notification_synology_indexer (Resource)
 
-<!-- subcategory:Notifications -->Notification Synology Indexer resource.
+<!-- subcategory:Notifications -->
+Notification Synology Indexer resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Synology](https://wiki.servarr.com/lidarr/supported#synologyindexer).
 
 ## Example Usage

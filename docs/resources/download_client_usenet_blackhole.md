@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_usenet_blackhole Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Usenet Blackhole resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and UsenetBlackhole https://wiki.servarr.com/lidarr/supported#usenetblackhole.
 ---
 
 # lidarr_download_client_usenet_blackhole (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Usenet Blackhole resource.
+<!-- subcategory:Download Clients -->
+Download Client Usenet Blackhole resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [UsenetBlackhole](https://wiki.servarr.com/lidarr/supported#usenetblackhole).
 
 ## Example Usage
