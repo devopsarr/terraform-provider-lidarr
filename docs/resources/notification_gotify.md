@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_gotify Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Gotify resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Gotify https://wiki.servarr.com/lidarr/supported#gotify.
 ---
 
 # lidarr_notification_gotify (Resource)
 
-<!-- subcategory:Notifications -->Notification Gotify resource.
+<!-- subcategory:Notifications -->
+Notification Gotify resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Gotify](https://wiki.servarr.com/lidarr/supported#gotify).
 
 ## Example Usage

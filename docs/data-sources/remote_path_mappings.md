@@ -3,12 +3,15 @@
 page_title: "lidarr_remote_path_mappings Data Source - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   List all available Remote Path Mappings ../resources/remote_path_mapping.
 ---
 
 # lidarr_remote_path_mappings (Data Source)
 
-<!-- subcategory:Download Clients -->List all available [Remote Path Mappings](../resources/remote_path_mapping).
+<!-- subcategory:Download Clients -->
+List all available [Remote Path Mappings](../resources/remote_path_mapping).
 
 ## Example Usage
 

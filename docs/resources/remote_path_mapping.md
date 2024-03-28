@@ -3,13 +3,16 @@
 page_title: "lidarr_remote_path_mapping Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Remote Path Mapping resource.
   For more information refer to Remote Path Mapping https://wiki.servarr.com/lidarr/settings#remote-path-mappings documentation.
 ---
 
 # lidarr_remote_path_mapping (Resource)
 
-<!-- subcategory:Download Clients -->Remote Path Mapping resource.
+<!-- subcategory:Download Clients -->
+Remote Path Mapping resource.
 For more information refer to [Remote Path Mapping](https://wiki.servarr.com/lidarr/settings#remote-path-mappings) documentation.
 
 ## Example Usage

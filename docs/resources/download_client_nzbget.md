@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_nzbget Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client NZBGet resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and NZBGet https://wiki.servarr.com/lidarr/supported#nzbget.
 ---
 
 # lidarr_download_client_nzbget (Resource)
 
-<!-- subcategory:Download Clients -->Download Client NZBGet resource.
+<!-- subcategory:Download Clients -->
+Download Client NZBGet resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [NZBGet](https://wiki.servarr.com/lidarr/supported#nzbget).
 
 ## Example Usage

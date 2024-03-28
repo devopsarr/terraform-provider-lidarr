@@ -3,13 +3,16 @@
 page_title: "lidarr_custom_format_condition_size Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Custom Format Condition Size data source.
   For more information refer to Custom Format Conditions https://wiki.servarr.com/lidarr/settings#conditions.
 ---
 
 # lidarr_custom_format_condition_size (Data Source)
 
-<!-- subcategory:Profiles --> Custom Format Condition Size data source.
+<!-- subcategory:Profiles -->
+ Custom Format Condition Size data source.
 For more information refer to [Custom Format Conditions](https://wiki.servarr.com/lidarr/settings#conditions).
 
 ## Example Usage

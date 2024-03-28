@@ -106,7 +106,7 @@ func (r *ImportListSpotifyAlbumsResource) Metadata(_ context.Context, req resour
 
 func (r *ImportListSpotifyAlbumsResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Spotify Albums resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Albums](https://wiki.servarr.com/lidarr/supported#spotifysavedalbums).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nImport List Spotify Albums resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Spotify Albums](https://wiki.servarr.com/lidarr/supported#spotifysavedalbums).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",

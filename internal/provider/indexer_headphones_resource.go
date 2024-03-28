@@ -92,7 +92,7 @@ func (r *IndexerHeadphonesResource) Metadata(_ context.Context, req resource.Met
 
 func (r *IndexerHeadphonesResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Headphones resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Headphones](https://wiki.servarr.com/lidarr/supported#headphones).",
+		MarkdownDescription: "<!-- subcategory:Indexers -->\nIndexer Headphones resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Headphones](https://wiki.servarr.com/lidarr/supported#headphones).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_search": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic search flag.",

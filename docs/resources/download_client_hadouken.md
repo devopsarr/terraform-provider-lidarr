@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_hadouken Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Hadouken resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Hadouken https://wiki.servarr.com/lidarr/supported#hadouken.
 ---
 
 # lidarr_download_client_hadouken (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Hadouken resource.
+<!-- subcategory:Download Clients -->
+Download Client Hadouken resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Hadouken](https://wiki.servarr.com/lidarr/supported#hadouken).
 
 ## Example Usage

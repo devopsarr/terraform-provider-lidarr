@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_torrent_download_station Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client TorrentDownloadStation resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and TorrentDownloadStation https://wiki.servarr.com/lidarr/supported#torrentdownloadstation.
 ---
 
 # lidarr_download_client_torrent_download_station (Resource)
 
-<!-- subcategory:Download Clients -->Download Client TorrentDownloadStation resource.
+<!-- subcategory:Download Clients -->
+Download Client TorrentDownloadStation resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [TorrentDownloadStation](https://wiki.servarr.com/lidarr/supported#torrentdownloadstation).
 
 ## Example Usage

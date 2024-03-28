@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_signal Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Signal resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Signal https://wiki.servarr.com/lidarr/supported#signal.
 ---
 
 # lidarr_notification_signal (Resource)
 
-<!-- subcategory:Notifications -->Notification Signal resource.
+<!-- subcategory:Notifications -->
+Notification Signal resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Signal](https://wiki.servarr.com/lidarr/supported#signal).
 
 ## Example Usage

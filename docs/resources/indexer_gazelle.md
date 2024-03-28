@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_gazelle Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Gazelle resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Gazelle https://wiki.servarr.com/lidarr/supported#gazelle.
 ---
 
 # lidarr_indexer_gazelle (Resource)
 
-<!-- subcategory:Indexers -->Indexer Gazelle resource.
+<!-- subcategory:Indexers -->
+Indexer Gazelle resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Gazelle](https://wiki.servarr.com/lidarr/supported#gazelle).
 
 ## Example Usage

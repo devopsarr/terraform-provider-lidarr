@@ -3,13 +3,16 @@
 page_title: "lidarr_delay_profile Resource - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Delay Profile resource.
   For more information refer to Delay Profiles https://wiki.servarr.com/lidarr/settings#delay-profiles documentation.
 ---
 
 # lidarr_delay_profile (Resource)
 
-<!-- subcategory:Profiles -->Delay Profile resource.
+<!-- subcategory:Profiles -->
+Delay Profile resource.
 For more information refer to [Delay Profiles](https://wiki.servarr.com/lidarr/settings#delay-profiles) documentation.
 
 ## Example Usage

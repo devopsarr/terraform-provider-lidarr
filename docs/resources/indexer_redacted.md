@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_redacted Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Redacted resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Redacted https://wiki.servarr.com/lidarr/supported#redacted.
 ---
 
 # lidarr_indexer_redacted (Resource)
 
-<!-- subcategory:Indexers -->Indexer Redacted resource.
+<!-- subcategory:Indexers -->
+Indexer Redacted resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Redacted](https://wiki.servarr.com/lidarr/supported#redacted).
 
 ## Example Usage

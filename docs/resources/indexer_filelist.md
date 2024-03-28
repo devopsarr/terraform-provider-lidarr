@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_filelist Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer FileList resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and FileList https://wiki.servarr.com/lidarr/supported#filelist.
 ---
 
 # lidarr_indexer_filelist (Resource)
 
-<!-- subcategory:Indexers -->Indexer FileList resource.
+<!-- subcategory:Indexers -->
+Indexer FileList resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [FileList](https://wiki.servarr.com/lidarr/supported#filelist).
 
 ## Example Usage

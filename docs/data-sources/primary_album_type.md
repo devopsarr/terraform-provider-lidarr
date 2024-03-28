@@ -3,12 +3,15 @@
 page_title: "lidarr_primary_album_type Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Single available Primary Album Type.
 ---
 
 # lidarr_primary_album_type (Data Source)
 
-<!-- subcategory:Profiles -->Single available Primary Album Type.
+<!-- subcategory:Profiles -->
+Single available Primary Album Type.
 
 ## Example Usage
 

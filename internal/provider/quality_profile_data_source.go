@@ -32,7 +32,7 @@ func (d *QualityProfileDataSource) Metadata(_ context.Context, req datasource.Me
 func (d *QualityProfileDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the quality server.
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single [Quality Profile](../resources/quality_profile).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle [Quality Profile](../resources/quality_profile).",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Quality Profile ID.",
@@ -143,10 +143,10 @@ func (d *QualityProfileDataSource) Read(ctx context.Context, req datasource.Read
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (p *QualityProfile) find(ctx context.Context, name string, profiles []*lidarr.QualityProfileResource, diags *diag.Diagnostics) {
+func (p *QualityProfile) find(ctx context.Context, name string, profiles []lidarr.QualityProfileResource, diags *diag.Diagnostics) {
 	for _, profile := range profiles {
 		if profile.GetName() == name {
-			p.write(ctx, profile, diags)
+			p.write(ctx, &profile, diags)
 
 			return
 		}

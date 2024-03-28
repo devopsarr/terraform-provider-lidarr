@@ -39,7 +39,7 @@ func (d *ArtistsDataSource) Metadata(_ context.Context, req datasource.MetadataR
 func (d *ArtistsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "<!-- subcategory:Artists -->List all available [Artists](../resources/artist).",
+		MarkdownDescription: "<!-- subcategory:Artists -->\nList all available [Artists](../resources/artist).",
 		Attributes: map[string]schema.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": schema.StringAttribute{
@@ -122,7 +122,7 @@ func (d *ArtistsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, 
 	// Map response body to resource schema attribute
 	artists := make([]Artist, len(response))
 	for i, m := range response {
-		artists[i].write(ctx, m, &resp.Diagnostics)
+		artists[i].write(ctx, &m, &resp.Diagnostics)
 	}
 
 	artistList, diags := types.SetValueFrom(ctx, Artist{}.getType(), artists)

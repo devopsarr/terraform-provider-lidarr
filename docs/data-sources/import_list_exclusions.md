@@ -3,12 +3,15 @@
 page_title: "lidarr_import_list_exclusions Data Source - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   List all available Import List Exclusions ../resources/importListExclusion.
 ---
 
 # lidarr_import_list_exclusions (Data Source)
 
-<!-- subcategory:Import Lists -->List all available [Import List Exclusions](../resources/importListExclusion).
+<!-- subcategory:Import Lists -->
+List all available [Import List Exclusions](../resources/importListExclusion).
 
 ## Example Usage
 

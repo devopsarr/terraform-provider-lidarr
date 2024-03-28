@@ -33,7 +33,7 @@ func (d *RootFolderDataSource) Metadata(_ context.Context, req datasource.Metada
 func (d *RootFolderDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Media Management -->Single [Root Folder](../resources/root_folder).",
+		MarkdownDescription: "<!-- subcategory:Media Management -->\nSingle [Root Folder](../resources/root_folder).",
 		Attributes: map[string]schema.Attribute{
 			"path": schema.StringAttribute{
 				MarkdownDescription: "Root Folder absolute path.",
@@ -105,10 +105,10 @@ func (d *RootFolderDataSource) Read(ctx context.Context, req datasource.ReadRequ
 	resp.Diagnostics.Append(resp.State.Set(ctx, &folder)...)
 }
 
-func (r *RootFolder) find(ctx context.Context, path string, folders []*lidarr.RootFolderResource, diags *diag.Diagnostics) {
+func (r *RootFolder) find(ctx context.Context, path string, folders []lidarr.RootFolderResource, diags *diag.Diagnostics) {
 	for _, folder := range folders {
 		if folder.GetPath() == path {
-			r.write(ctx, folder, diags)
+			r.write(ctx, &folder, diags)
 
 			return
 		}

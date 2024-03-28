@@ -32,7 +32,7 @@ func (d *SecondaryAlbumTypeDataSource) Metadata(_ context.Context, req datasourc
 
 func (d *SecondaryAlbumTypeDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single available Secondary Album Type.",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle available Secondary Album Type.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "SecondaryAlbumType ID.",
@@ -80,7 +80,7 @@ func (e *MetadataProfileElement) writeSecondary(element *lidarr.SecondaryAlbumTy
 	e.ID = types.Int64Value(int64(element.GetId()))
 }
 
-func (e *MetadataProfileElement) findSecondary(name string, types []*lidarr.ProfileSecondaryAlbumTypeItemResource, diags *diag.Diagnostics) {
+func (e *MetadataProfileElement) findSecondary(name string, types []lidarr.ProfileSecondaryAlbumTypeItemResource, diags *diag.Diagnostics) {
 	for _, t := range types {
 		if t.AlbumType.GetName() == name {
 			e.writeSecondary(t.AlbumType)

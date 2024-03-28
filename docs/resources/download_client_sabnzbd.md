@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_sabnzbd Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Sabnzbd resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Sabnzbd https://wiki.servarr.com/lidarr/supported#sabnzbd.
 ---
 
 # lidarr_download_client_sabnzbd (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Sabnzbd resource.
+<!-- subcategory:Download Clients -->
+Download Client Sabnzbd resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Sabnzbd](https://wiki.servarr.com/lidarr/supported#sabnzbd).
 
 ## Example Usage

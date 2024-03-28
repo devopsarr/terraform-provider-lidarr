@@ -115,7 +115,7 @@ func (r *DownloadClientUtorrentResource) Metadata(_ context.Context, req resourc
 
 func (r *DownloadClientUtorrentResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Download Client uTorrent resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [uTorrent](https://wiki.servarr.com/lidarr/supported#utorrent).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nDownload Client uTorrent resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [uTorrent](https://wiki.servarr.com/lidarr/supported#utorrent).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",

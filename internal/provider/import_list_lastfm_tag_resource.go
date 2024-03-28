@@ -103,7 +103,7 @@ func (r *ImportListLastFMTagResource) Metadata(_ context.Context, req resource.M
 
 func (r *ImportListLastFMTagResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List Last.fm Tag resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Last.fm Tag](https://wiki.servarr.com/lidarr/supported#lastfmtag).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nImport List Last.fm Tag resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Last.fm Tag](https://wiki.servarr.com/lidarr/supported#lastfmtag).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",

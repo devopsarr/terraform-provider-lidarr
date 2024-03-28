@@ -3,12 +3,15 @@
 page_title: "lidarr_import_list Data Source - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Single Import List ../resources/import_list.
 ---
 
 # lidarr_import_list (Data Source)
 
-<!-- subcategory:Import Lists -->Single [Import List](../resources/import_list).
+<!-- subcategory:Import Lists -->
+Single [Import List](../resources/import_list).
 
 ## Example Usage
 

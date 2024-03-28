@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_telegram Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Telegram resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Telegram https://wiki.servarr.com/lidarr/supported#telegram.
 ---
 
 # lidarr_notification_telegram (Resource)
 
-<!-- subcategory:Notifications -->Notification Telegram resource.
+<!-- subcategory:Notifications -->
+Notification Telegram resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Telegram](https://wiki.servarr.com/lidarr/supported#telegram).
 
 ## Example Usage

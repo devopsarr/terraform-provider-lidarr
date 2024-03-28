@@ -3,13 +3,16 @@
 page_title: "lidarr_import_list_lastfm_user Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Import List Last.fm User resource.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists and Last.fm User https://wiki.servarr.com/lidarr/supported#lastfmuser.
 ---
 
 # lidarr_import_list_lastfm_user (Resource)
 
-<!-- subcategory:Import Lists -->Import List Last.fm User resource.
+<!-- subcategory:Import Lists -->
+Import List Last.fm User resource.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Last.fm User](https://wiki.servarr.com/lidarr/supported#lastfmuser).
 
 ## Example Usage

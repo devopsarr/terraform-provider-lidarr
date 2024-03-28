@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_simplepush Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Simplepush resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Simplepush https://wiki.servarr.com/lidarr/supported#simplepush.
 ---
 
 # lidarr_notification_simplepush (Resource)
 
-<!-- subcategory:Notifications -->Notification Simplepush resource.
+<!-- subcategory:Notifications -->
+Notification Simplepush resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Simplepush](https://wiki.servarr.com/lidarr/supported#simplepush).
 
 ## Example Usage

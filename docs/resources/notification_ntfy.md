@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_ntfy Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Ntfy resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Ntfy https://wiki.servarr.com/lidarr/supported#ntfy.
 ---
 
 # lidarr_notification_ntfy (Resource)
 
-<!-- subcategory:Notifications -->Notification Ntfy resource.
+<!-- subcategory:Notifications -->
+Notification Ntfy resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Ntfy](https://wiki.servarr.com/lidarr/supported#ntfy).
 
 ## Example Usage

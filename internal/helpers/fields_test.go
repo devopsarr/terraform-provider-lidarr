@@ -46,11 +46,13 @@ func TestWriteStringField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := lidarr.NewField()
-			field.SetName("str")
 			if test.value != nil {
 				field.SetValue(*test.value)
 			}
+
+			field.SetName("str")
 			writeStringField(field, &test.written)
 			assert.Equal(t, test.expected, test.written)
 		})
@@ -83,11 +85,13 @@ func TestWriteBoolField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := lidarr.NewField()
-			field.SetName("boo")
 			if test.value != nil {
 				field.SetValue(*test.value)
 			}
+
+			field.SetName("boo")
 			writeBoolField(field, &test.written)
 			assert.Equal(t, test.expected, test.written)
 		})
@@ -130,11 +134,13 @@ func TestWriteIntField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := lidarr.NewField()
-			field.SetName(test.name)
 			if test.value != nil {
 				field.SetValue(*test.value)
 			}
+
+			field.SetName(test.name)
 			writeIntField(field, &test.written)
 			assert.Equal(t, test.expected, test.written)
 		})
@@ -163,11 +169,13 @@ func TestWriteFloatField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := lidarr.NewField()
-			field.SetName("fl")
 			if test.value != nil {
 				field.SetValue(*test.value)
 			}
+
+			field.SetName("fl")
 			writeFloatField(field, &test.written)
 			assert.Equal(t, test.expected, test.written)
 		})
@@ -200,6 +208,7 @@ func TestWriteIntSliceField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			tfsdk.ValueFrom(context.Background(), test.set, test.expected.Set.Type(context.Background()), &test.expected.Set)
 			writeIntSliceField(context.Background(), &test.fieldOutput, &test.written)
 			assert.Equal(t, test.expected, test.written)
@@ -233,6 +242,7 @@ func TestWriteStringSliceField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			tfsdk.ValueFrom(context.Background(), test.set, test.expected.Set.Type(context.Background()), &test.expected.Set)
 			writeStringSliceField(context.Background(), &test.fieldOutput, &test.written)
 			assert.Equal(t, test.expected, test.written)
@@ -248,7 +258,7 @@ func TestReadStringField(t *testing.T) {
 	field.SetValue("string")
 
 	tests := map[string]struct {
-		expected  *lidarr.Field
+		expected  lidarr.Field
 		name      string
 		fieldCase Test
 	}{
@@ -257,12 +267,12 @@ func TestReadStringField(t *testing.T) {
 				Str: types.StringValue("string"),
 			},
 			name:     "str",
-			expected: field,
+			expected: *field,
 		},
 		"nil": {
 			fieldCase: Test{},
 			name:      "str",
-			expected:  nil,
+			expected:  *lidarr.NewField(),
 		},
 	}
 	for name, test := range tests {
@@ -270,6 +280,7 @@ func TestReadStringField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := readStringField(test.name, &test.fieldCase)
 			assert.Equal(t, test.expected, field)
 		})
@@ -311,16 +322,15 @@ func TestReadIntField(t *testing.T) {
 	for name, test := range tests {
 		test := test
 
-		expected := lidarr.NewField()
-		expected.SetName(test.name)
-		expected.SetValue(int64(test.value))
-
-		if test.value == 0 {
-			expected = nil
+		expected := *lidarr.NewField()
+		if test.value != 0 {
+			expected.SetName(test.name)
+			expected.SetValue(int64(test.value))
 		}
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := readIntField(test.tfName, &test.fieldCase)
 			assert.Equal(t, expected, field)
 		})
@@ -335,7 +345,7 @@ func TestReadBoolField(t *testing.T) {
 	field.SetValue(true)
 
 	tests := map[string]struct {
-		expected  *lidarr.Field
+		expected  lidarr.Field
 		name      string
 		fieldCase Test
 	}{
@@ -344,12 +354,12 @@ func TestReadBoolField(t *testing.T) {
 				Boo: types.BoolValue(true),
 			},
 			name:     "boo",
-			expected: field,
+			expected: *field,
 		},
 		"nil": {
 			fieldCase: Test{},
 			name:      "boo",
-			expected:  nil,
+			expected:  *lidarr.NewField(),
 		},
 	}
 	for name, test := range tests {
@@ -357,6 +367,7 @@ func TestReadBoolField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := readBoolField(test.name, &test.fieldCase)
 			assert.Equal(t, test.expected, field)
 		})
@@ -371,7 +382,7 @@ func TestReadFloatField(t *testing.T) {
 	field.SetValue(3.5)
 
 	tests := map[string]struct {
-		expected  *lidarr.Field
+		expected  lidarr.Field
 		name      string
 		fieldCase Test
 	}{
@@ -380,12 +391,12 @@ func TestReadFloatField(t *testing.T) {
 				Fl: types.Float64Value(3.5),
 			},
 			name:     "fl",
-			expected: field,
+			expected: *field,
 		},
 		"nil": {
 			fieldCase: Test{},
 			name:      "fl",
-			expected:  nil,
+			expected:  *lidarr.NewField(),
 		},
 	}
 	for name, test := range tests {
@@ -393,6 +404,7 @@ func TestReadFloatField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			field := readFloatField(test.name, &test.fieldCase)
 			assert.Equal(t, test.expected, field)
 		})
@@ -407,7 +419,7 @@ func TestReadStringSliceField(t *testing.T) {
 	field.SetValue([]string{"test1", "test2"})
 
 	tests := map[string]struct {
-		expected  *lidarr.Field
+		expected  lidarr.Field
 		name      string
 		set       []string
 		fieldCase Test
@@ -417,7 +429,7 @@ func TestReadStringSliceField(t *testing.T) {
 				Set: types.SetValueMust(types.StringType, nil),
 			},
 			name:     "set",
-			expected: field,
+			expected: *field,
 			set:      []string{"test1", "test2"},
 		},
 		"nil": {
@@ -425,7 +437,7 @@ func TestReadStringSliceField(t *testing.T) {
 				Set: types.SetValueMust(types.StringType, nil),
 			},
 			name:     "set",
-			expected: nil,
+			expected: *lidarr.NewField(),
 			set:      []string{},
 		},
 	}
@@ -434,6 +446,7 @@ func TestReadStringSliceField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			tfsdk.ValueFrom(context.Background(), test.set, test.fieldCase.Set.Type(context.Background()), &test.fieldCase.Set)
 			field := readStringSliceField(context.Background(), test.name, &test.fieldCase)
 			assert.Equal(t, test.expected, field)
@@ -449,7 +462,7 @@ func TestReadIntSliceField(t *testing.T) {
 	field.SetValue([]int64{1, 2})
 
 	tests := map[string]struct {
-		expected  *lidarr.Field
+		expected  lidarr.Field
 		name      string
 		set       []int64
 		fieldCase Test
@@ -459,7 +472,7 @@ func TestReadIntSliceField(t *testing.T) {
 				Set: types.SetValueMust(types.Int64Type, nil),
 			},
 			name:     "set",
-			expected: field,
+			expected: *field,
 			set:      []int64{1, 2},
 		},
 		"nil": {
@@ -467,7 +480,7 @@ func TestReadIntSliceField(t *testing.T) {
 				Set: types.SetValueMust(types.Int64Type, nil),
 			},
 			name:     "set",
-			expected: nil,
+			expected: *lidarr.NewField(),
 			set:      []int64{},
 		},
 	}
@@ -476,6 +489,7 @@ func TestReadIntSliceField(t *testing.T) {
 
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
+
 			tfsdk.ValueFrom(context.Background(), test.set, test.fieldCase.Set.Type(context.Background()), &test.fieldCase.Set)
 			field := readIntSliceField(context.Background(), test.name, &test.fieldCase)
 			assert.Equal(t, test.expected, field)
@@ -539,8 +553,8 @@ func TestReadFields(t *testing.T) {
 				tfsdk.ValueFrom(context.Background(), test.value, test.testData.Set.Type(context.Background()), &test.testData.Set)
 			}
 
-			expectedFields := make([]*lidarr.Field, 1)
-			expectedFields[0] = lidarr.NewField()
+			expectedFields := make([]lidarr.Field, 1)
+			expectedFields[0] = *lidarr.NewField()
 			expectedFields[0].SetName(test.name)
 			expectedFields[0].SetValue(test.value)
 
@@ -614,6 +628,7 @@ func TestWriteFields(t *testing.T) {
 			fieldContainer: Test{Str: types.StringValue("String")},
 		},
 	}
+
 	for name, test := range tests {
 		test := test
 
@@ -624,8 +639,8 @@ func TestWriteFields(t *testing.T) {
 				tfsdk.ValueFrom(context.Background(), test.value, test.fieldContainer.Set.Type(context.Background()), &test.fieldContainer.Set)
 			}
 
-			fields := make([]*lidarr.Field, 1)
-			fields[0] = lidarr.NewField()
+			fields := make([]lidarr.Field, 1)
+			fields[0] = *lidarr.NewField()
 			fields[0].SetName(test.name)
 			fields[0].SetValue(test.value)
 

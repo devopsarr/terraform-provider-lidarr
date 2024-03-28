@@ -3,12 +3,15 @@
 page_title: "lidarr_custom_format Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Single Custom Format ../resources/custom_format.
 ---
 
 # lidarr_custom_format (Data Source)
 
-<!-- subcategory:Profiles -->Single [Custom Format](../resources/custom_format).
+<!-- subcategory:Profiles -->
+Single [Custom Format](../resources/custom_format).
 
 ## Example Usage
 

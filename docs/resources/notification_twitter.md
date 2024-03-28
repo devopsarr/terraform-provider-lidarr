@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_twitter Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Twitter resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Twitter https://wiki.servarr.com/lidarr/supported#twitter.
 ---
 
 # lidarr_notification_twitter (Resource)
 
-<!-- subcategory:Notifications -->Notification Twitter resource.
+<!-- subcategory:Notifications -->
+Notification Twitter resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Twitter](https://wiki.servarr.com/lidarr/supported#twitter).
 
 ## Example Usage

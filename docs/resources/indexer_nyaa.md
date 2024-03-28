@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_nyaa Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Nyaa resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Nyaa https://wiki.servarr.com/lidarr/supported#nyaa.
 ---
 
 # lidarr_indexer_nyaa (Resource)
 
-<!-- subcategory:Indexers -->Indexer Nyaa resource.
+<!-- subcategory:Indexers -->
+Indexer Nyaa resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Nyaa](https://wiki.servarr.com/lidarr/supported#nyaa).
 
 ## Example Usage

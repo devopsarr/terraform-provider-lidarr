@@ -101,7 +101,7 @@ func (r *DownloadClientHadoukenResource) Metadata(_ context.Context, req resourc
 
 func (r *DownloadClientHadoukenResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Download Client Hadouken resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Hadouken](https://wiki.servarr.com/lidarr/supported#hadouken).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nDownload Client Hadouken resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Hadouken](https://wiki.servarr.com/lidarr/supported#hadouken).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",

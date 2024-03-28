@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_torrent_blackhole Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Torrent Blackhole resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and TorrentBlackhole https://wiki.servarr.com/lidarr/supported#torrentblackhole.
 ---
 
 # lidarr_download_client_torrent_blackhole (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Torrent Blackhole resource.
+<!-- subcategory:Download Clients -->
+Download Client Torrent Blackhole resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [TorrentBlackhole](https://wiki.servarr.com/lidarr/supported#torrentblackhole).
 
 ## Example Usage

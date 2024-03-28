@@ -3,13 +3,16 @@
 page_title: "lidarr_metadata_wdtv Resource - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Metadata Wdtv resource.
   For more information refer to Metadata https://wiki.servarr.com/lidarr/settings#metadata and WDTV https://wiki.servarr.com/lidarr/supported#wdtvmetadata.
 ---
 
 # lidarr_metadata_wdtv (Resource)
 
-<!-- subcategory:Metadata -->Metadata Wdtv resource.
+<!-- subcategory:Metadata -->
+Metadata Wdtv resource.
 For more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#metadata) and [WDTV](https://wiki.servarr.com/lidarr/supported#wdtvmetadata).
 
 ## Example Usage

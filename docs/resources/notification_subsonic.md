@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_subsonic Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Subsonic resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Subsonic https://wiki.servarr.com/lidarr/supported#xbmc.
 ---
 
 # lidarr_notification_subsonic (Resource)
 
-<!-- subcategory:Notifications -->Notification Subsonic resource.
+<!-- subcategory:Notifications -->
+Notification Subsonic resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Subsonic](https://wiki.servarr.com/lidarr/supported#xbmc).
 
 ## Example Usage

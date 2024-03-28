@@ -3,13 +3,16 @@
 page_title: "lidarr_root_folder Resource - terraform-provider-lidarr"
 subcategory: "Media Management"
 description: |-
+  <!-- subcategory:Media Management -->
+  
   Root Folder resource.
   For more information refer to Root Folders https://wiki.servarr.com/lidarr/settings#root-folders documentation.
 ---
 
 # lidarr_root_folder (Resource)
 
-<!-- subcategory:Media Management -->Root Folder resource.
+<!-- subcategory:Media Management -->
+Root Folder resource.
 For more information refer to [Root Folders](https://wiki.servarr.com/lidarr/settings#root-folders) documentation.
 
 ## Example Usage

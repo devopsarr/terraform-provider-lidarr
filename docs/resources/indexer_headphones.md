@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_headphones Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Headphones resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Headphones https://wiki.servarr.com/lidarr/supported#headphones.
 ---
 
 # lidarr_indexer_headphones (Resource)
 
-<!-- subcategory:Indexers -->Indexer Headphones resource.
+<!-- subcategory:Indexers -->
+Indexer Headphones resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Headphones](https://wiki.servarr.com/lidarr/supported#headphones).
 
 ## Example Usage

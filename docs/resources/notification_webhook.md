@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_webhook Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Webhook resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Webhook https://wiki.servarr.com/lidarr/supported#webhook.
 ---
 
 # lidarr_notification_webhook (Resource)
 
-<!-- subcategory:Notifications -->Notification Webhook resource.
+<!-- subcategory:Notifications -->
+Notification Webhook resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Webhook](https://wiki.servarr.com/lidarr/supported#webhook).
 
 ## Example Usage

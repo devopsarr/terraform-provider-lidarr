@@ -3,12 +3,15 @@
 page_title: "lidarr_tags Data Source - terraform-provider-lidarr"
 subcategory: "Tags"
 description: |-
+  <!-- subcategory:Tags -->
+  
   List all available Tags ../resources/tag.
 ---
 
 # lidarr_tags (Data Source)
 
-<!-- subcategory:Tags -->List all available [Tags](../resources/tag).
+<!-- subcategory:Tags -->
+List all available [Tags](../resources/tag).
 
 ## Example Usage
 

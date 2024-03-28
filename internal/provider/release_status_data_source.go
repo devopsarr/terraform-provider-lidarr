@@ -32,7 +32,7 @@ func (d *ReleaseStatusDataSource) Metadata(_ context.Context, req datasource.Met
 
 func (d *ReleaseStatusDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single available Release Status.",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle available Release Status.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Release Status ID.",
@@ -81,7 +81,7 @@ func (e *MetadataProfileElement) writeRelease(element *lidarr.ReleaseStatus) {
 	e.ID = types.Int64Value(int64(element.GetId()))
 }
 
-func (e *MetadataProfileElement) find(name string, types []*lidarr.ProfileReleaseStatusItemResource, diags *diag.Diagnostics) {
+func (e *MetadataProfileElement) find(name string, types []lidarr.ProfileReleaseStatusItemResource, diags *diag.Diagnostics) {
 	for _, t := range types {
 		if t.ReleaseStatus.GetName() == name {
 			e.writeRelease(t.ReleaseStatus)

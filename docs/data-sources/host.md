@@ -3,12 +3,15 @@
 page_title: "lidarr_host Data Source - terraform-provider-lidarr"
 subcategory: "System"
 description: |-
+  <!-- subcategory:System -->
+  
   Host ../resources/host.
 ---
 
 # lidarr_host (Data Source)
 
-<!-- subcategory:System -->[Host](../resources/host).
+<!-- subcategory:System -->
+[Host](../resources/host).
 
 ## Example Usage
 

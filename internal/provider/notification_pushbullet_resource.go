@@ -40,7 +40,7 @@ type NotificationPushbulletResource struct {
 // NotificationPushbullet describes the notification data model.
 type NotificationPushbullet struct {
 	Tags                  types.Set    `tfsdk:"tags"`
-	DeviceIds             types.Set    `tfsdk:"device_ids"`
+	DeviceIDs             types.Set    `tfsdk:"device_ids"`
 	ChannelTags           types.Set    `tfsdk:"channel_tags"`
 	SenderID              types.String `tfsdk:"sender_id"`
 	Name                  types.String `tfsdk:"name"`
@@ -62,7 +62,7 @@ type NotificationPushbullet struct {
 func (n NotificationPushbullet) toNotification() *Notification {
 	return &Notification{
 		Tags:                  n.Tags,
-		DeviceIds:             n.DeviceIds,
+		DeviceIDs:             n.DeviceIDs,
 		ChannelTags:           n.ChannelTags,
 		SenderID:              n.SenderID,
 		APIKey:                n.APIKey,
@@ -86,7 +86,7 @@ func (n NotificationPushbullet) toNotification() *Notification {
 
 func (n *NotificationPushbullet) fromNotification(notification *Notification) {
 	n.Tags = notification.Tags
-	n.DeviceIds = notification.DeviceIds
+	n.DeviceIDs = notification.DeviceIDs
 	n.ChannelTags = notification.ChannelTags
 	n.SenderID = notification.SenderID
 	n.APIKey = notification.APIKey
@@ -111,7 +111,7 @@ func (r *NotificationPushbulletResource) Metadata(_ context.Context, req resourc
 
 func (r *NotificationPushbulletResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Pushbullet resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Pushbullet](https://wiki.servarr.com/lidarr/supported#pushbullet).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->\nNotification Pushbullet resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Pushbullet](https://wiki.servarr.com/lidarr/supported#pushbullet).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",

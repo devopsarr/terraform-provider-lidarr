@@ -3,12 +3,15 @@
 page_title: "lidarr_metadata_profile Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Single Metadata Profile ../resources/metadata_profile.
 ---
 
 # lidarr_metadata_profile (Data Source)
 
-<!-- subcategory:Profiles -->Single [Metadata Profile](../resources/metadata_profile).
+<!-- subcategory:Profiles -->
+Single [Metadata Profile](../resources/metadata_profile).
 
 ## Example Usage
 

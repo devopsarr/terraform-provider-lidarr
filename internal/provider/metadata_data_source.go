@@ -33,7 +33,7 @@ func (d *MetadataDataSource) Metadata(_ context.Context, req datasource.Metadata
 func (d *MetadataDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Metadata -->Single [Metadata](../resources/metadata).",
+		MarkdownDescription: "<!-- subcategory:Metadata -->\nSingle [Metadata](../resources/metadata).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
@@ -113,10 +113,10 @@ func (d *MetadataDataSource) Read(ctx context.Context, req datasource.ReadReques
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (m *Metadata) find(ctx context.Context, name string, metadatas []*lidarr.MetadataResource, diags *diag.Diagnostics) {
+func (m *Metadata) find(ctx context.Context, name string, metadatas []lidarr.MetadataResource, diags *diag.Diagnostics) {
 	for _, metadata := range metadatas {
 		if metadata.GetName() == name {
-			m.write(ctx, metadata, diags)
+			m.write(ctx, &metadata, diags)
 
 			return
 		}

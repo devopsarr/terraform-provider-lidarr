@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_email Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Email resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Email https://wiki.servarr.com/lidarr/supported#email.
 ---
 
 # lidarr_notification_email (Resource)
 
-<!-- subcategory:Notifications -->Notification Email resource.
+<!-- subcategory:Notifications -->
+Notification Email resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Email](https://wiki.servarr.com/lidarr/supported#email).
 
 ## Example Usage

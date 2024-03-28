@@ -33,7 +33,7 @@ func (d *NotificationDataSource) Metadata(_ context.Context, req datasource.Meta
 func (d *NotificationDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Notifications -->Single [Notification](../resources/notification).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->\nSingle [Notification](../resources/notification).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",
@@ -440,10 +440,10 @@ func (d *NotificationDataSource) Read(ctx context.Context, req datasource.ReadRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (n *Notification) find(ctx context.Context, name string, notifications []*lidarr.NotificationResource, diags *diag.Diagnostics) {
+func (n *Notification) find(ctx context.Context, name string, notifications []lidarr.NotificationResource, diags *diag.Diagnostics) {
 	for _, notification := range notifications {
 		if notification.GetName() == name {
-			n.write(ctx, notification, diags)
+			n.write(ctx, &notification, diags)
 
 			return
 		}

@@ -3,13 +3,16 @@
 page_title: "lidarr_quality_definition Resource - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Quality Definition resource.
   For more information refer to Quality Definition https://wiki.servarr.com/lidarr/settings#quality-1 documentation.
 ---
 
 # lidarr_quality_definition (Resource)
 
-<!-- subcategory:Profiles -->Quality Definition resource.
+<!-- subcategory:Profiles -->
+Quality Definition resource.
 For more information refer to [Quality Definition](https://wiki.servarr.com/lidarr/settings#quality-1) documentation.
 
 ## Example Usage

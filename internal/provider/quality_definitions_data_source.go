@@ -39,7 +39,7 @@ func (d *QualityDefinitionsDataSource) Metadata(_ context.Context, req datasourc
 func (d *QualityDefinitionsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the quality server.
-		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Quality Definitions](../resources/quality_definition).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nList all available [Quality Definitions](../resources/quality_definition).",
 		Attributes: map[string]schema.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": schema.StringAttribute{
@@ -101,7 +101,7 @@ func (d *QualityDefinitionsDataSource) Read(ctx context.Context, _ datasource.Re
 	// Map response body to resource schema attribute
 	definitions := make([]QualityDefinition, len(response))
 	for i, p := range response {
-		definitions[i].write(p)
+		definitions[i].write(&p)
 	}
 
 	qualityList, diags := types.SetValueFrom(ctx, QualityDefinition{}.getType(), definitions)

@@ -3,13 +3,16 @@
 page_title: "lidarr_import_list_headphones Resource - terraform-provider-lidarr"
 subcategory: "Import Lists"
 description: |-
+  <!-- subcategory:Import Lists -->
+  
   Import List Headphones resource.
   For more information refer to Import List https://wiki.servarr.com/lidarr/settings#import-lists and Headphones https://wiki.servarr.com/lidarr/supported#headphonesimport.
 ---
 
 # lidarr_import_list_headphones (Resource)
 
-<!-- subcategory:Import Lists -->Import List Headphones resource.
+<!-- subcategory:Import Lists -->
+Import List Headphones resource.
 For more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [Headphones](https://wiki.servarr.com/lidarr/supported#headphonesimport).
 
 ## Example Usage

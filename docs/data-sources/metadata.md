@@ -3,12 +3,15 @@
 page_title: "lidarr_metadata Data Source - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Single Metadata ../resources/metadata.
 ---
 
 # lidarr_metadata (Data Source)
 
-<!-- subcategory:Metadata -->Single [Metadata](../resources/metadata).
+<!-- subcategory:Metadata -->
+Single [Metadata](../resources/metadata).
 
 ## Example Usage
 

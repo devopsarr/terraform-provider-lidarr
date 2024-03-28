@@ -45,9 +45,9 @@ type ImportListResource struct {
 
 // ImportList describes the download client data model.
 type ImportList struct {
-	ProfileIds            types.Set    `tfsdk:"profile_ids"`
-	TagIds                types.Set    `tfsdk:"tag_ids"`
-	PlaylistIds           types.Set    `tfsdk:"playlist_ids"`
+	ProfileIDs            types.Set    `tfsdk:"profile_ids"`
+	TagIDs                types.Set    `tfsdk:"tag_ids"`
+	PlaylistIDs           types.Set    `tfsdk:"playlist_ids"`
 	Tags                  types.Set    `tfsdk:"tags"`
 	Name                  types.String `tfsdk:"name"`
 	ConfigContract        types.String `tfsdk:"config_contract"`
@@ -115,7 +115,7 @@ func (r *ImportListResource) Metadata(_ context.Context, req resource.MetadataRe
 
 func (r *ImportListResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Generic Import List resource. When possible use a specific resource instead.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nGeneric Import List resource. When possible use a specific resource instead.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",
@@ -417,9 +417,9 @@ func (i *ImportList) write(ctx context.Context, importList *lidarr.ImportListRes
 	i.RootFolderPath = types.StringValue(importList.GetRootFolderPath())
 	i.ListType = types.StringValue(string(importList.GetListType()))
 	i.Name = types.StringValue(importList.GetName())
-	i.ProfileIds = types.SetValueMust(types.Int64Type, nil)
-	i.TagIds = types.SetValueMust(types.Int64Type, nil)
-	i.PlaylistIds = types.SetValueMust(types.StringType, nil)
+	i.ProfileIDs = types.SetValueMust(types.Int64Type, nil)
+	i.TagIDs = types.SetValueMust(types.Int64Type, nil)
+	i.PlaylistIDs = types.SetValueMust(types.StringType, nil)
 	helpers.WriteFields(ctx, i, importList.GetFields(), importListFields)
 }
 

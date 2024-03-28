@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_pushbullet Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Pushbullet resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Pushbullet https://wiki.servarr.com/lidarr/supported#pushbullet.
 ---
 
 # lidarr_notification_pushbullet (Resource)
 
-<!-- subcategory:Notifications -->Notification Pushbullet resource.
+<!-- subcategory:Notifications -->
+Notification Pushbullet resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Pushbullet](https://wiki.servarr.com/lidarr/supported#pushbullet).
 
 ## Example Usage

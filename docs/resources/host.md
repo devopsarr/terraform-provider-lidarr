@@ -3,13 +3,16 @@
 page_title: "lidarr_host Resource - terraform-provider-lidarr"
 subcategory: "System"
 description: |-
+  <!-- subcategory:System -->
+  
   Host resource.
   For more information refer to Host https://wiki.servarr.com/lidarr/settings#general documentation.
 ---
 
 # lidarr_host (Resource)
 
-<!-- subcategory:System -->Host resource.
+<!-- subcategory:System -->
+Host resource.
 For more information refer to [Host](https://wiki.servarr.com/lidarr/settings#general) documentation.
 
 ## Example Usage

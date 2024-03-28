@@ -3,13 +3,16 @@
 page_title: "lidarr_artist Resource - terraform-provider-lidarr"
 subcategory: "Artists"
 description: |-
+  <!-- subcategory:Artists -->
+  
   Artist resource.
   For more information refer to Artists https://wiki.servarr.com/lidarr/library#artists documentation.
 ---
 
 # lidarr_artist (Resource)
 
-<!-- subcategory:Artists -->Artist resource.
+<!-- subcategory:Artists -->
+Artist resource.
 For more information refer to [Artists](https://wiki.servarr.com/lidarr/library#artists) documentation.
 
 ## Example Usage

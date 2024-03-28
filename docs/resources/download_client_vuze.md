@@ -3,13 +3,16 @@
 page_title: "lidarr_download_client_vuze Resource - terraform-provider-lidarr"
 subcategory: "Download Clients"
 description: |-
+  <!-- subcategory:Download Clients -->
+  
   Download Client Vuze resource.
   For more information refer to Download Client https://wiki.servarr.com/lidarr/settings#download-clients and Vuze https://wiki.servarr.com/lidarr/supported#vuze.
 ---
 
 # lidarr_download_client_vuze (Resource)
 
-<!-- subcategory:Download Clients -->Download Client Vuze resource.
+<!-- subcategory:Download Clients -->
+Download Client Vuze resource.
 For more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Vuze](https://wiki.servarr.com/lidarr/supported#vuze).
 
 ## Example Usage

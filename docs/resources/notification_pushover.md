@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_pushover Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Pushover resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Pushover https://wiki.servarr.com/lidarr/supported#pushover.
 ---
 
 # lidarr_notification_pushover (Resource)
 
-<!-- subcategory:Notifications -->Notification Pushover resource.
+<!-- subcategory:Notifications -->
+Notification Pushover resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Pushover](https://wiki.servarr.com/lidarr/supported#pushover).
 
 ## Example Usage

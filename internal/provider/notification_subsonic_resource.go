@@ -117,7 +117,7 @@ func (r *NotificationSubsonicResource) Metadata(_ context.Context, req resource.
 
 func (r *NotificationSubsonicResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Notifications -->Notification Subsonic resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Subsonic](https://wiki.servarr.com/lidarr/supported#xbmc).",
+		MarkdownDescription: "<!-- subcategory:Notifications -->\nNotification Subsonic resource.\nFor more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Subsonic](https://wiki.servarr.com/lidarr/supported#xbmc).",
 		Attributes: map[string]schema.Attribute{
 			"on_grab": schema.BoolAttribute{
 				MarkdownDescription: "On grab flag.",

@@ -3,12 +3,15 @@
 page_title: "lidarr_delay_profiles Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   List all available Delay Profiles ../resources/delay_profile.
 ---
 
 # lidarr_delay_profiles (Data Source)
 
-<!-- subcategory:Profiles -->List all available [Delay Profiles](../resources/delay_profile).
+<!-- subcategory:Profiles -->
+List all available [Delay Profiles](../resources/delay_profile).
 
 ## Example Usage
 

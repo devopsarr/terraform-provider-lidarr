@@ -33,7 +33,7 @@ func (d *DownloadClientDataSource) Metadata(_ context.Context, req datasource.Me
 func (d *DownloadClientDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the delay server.
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Single [Download Client](../resources/download_client).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nSingle [Download Client](../resources/download_client).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",
@@ -244,10 +244,10 @@ func (d *DownloadClientDataSource) Read(ctx context.Context, req datasource.Read
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (d *DownloadClient) find(ctx context.Context, name string, downloadClients []*lidarr.DownloadClientResource, diags *diag.Diagnostics) {
+func (d *DownloadClient) find(ctx context.Context, name string, downloadClients []lidarr.DownloadClientResource, diags *diag.Diagnostics) {
 	for _, client := range downloadClients {
 		if client.GetName() == name {
-			d.write(ctx, client, diags)
+			d.write(ctx, &client, diags)
 
 			return
 		}

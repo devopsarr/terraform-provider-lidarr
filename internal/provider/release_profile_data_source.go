@@ -34,7 +34,7 @@ func (d *ReleaseProfileDataSource) Metadata(_ context.Context, req datasource.Me
 func (d *ReleaseProfileDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the release server.
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single [Release Profile](../resources/release_profile).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle [Release Profile](../resources/release_profile).",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Release Profile ID.",
@@ -96,10 +96,10 @@ func (d *ReleaseProfileDataSource) Read(ctx context.Context, req datasource.Read
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (p *ReleaseProfile) find(ctx context.Context, id int64, profiles []*lidarr.ReleaseProfileResource, diags *diag.Diagnostics) {
+func (p *ReleaseProfile) find(ctx context.Context, id int64, profiles []lidarr.ReleaseProfileResource, diags *diag.Diagnostics) {
 	for _, profile := range profiles {
 		if int64(profile.GetId()) == id {
-			p.write(ctx, profile, diags)
+			p.write(ctx, &profile, diags)
 
 			return
 		}

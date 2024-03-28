@@ -3,12 +3,15 @@
 page_title: "lidarr_secondary_album_types Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   List all available Secondary Album Types ../data-sources/secondary_album_type.
 ---
 
 # lidarr_secondary_album_types (Data Source)
 
-<!-- subcategory:Profiles -->List all available [Secondary Album Types](../data-sources/secondary_album_type).
+<!-- subcategory:Profiles -->
+List all available [Secondary Album Types](../data-sources/secondary_album_type).
 
 ## Example Usage
 

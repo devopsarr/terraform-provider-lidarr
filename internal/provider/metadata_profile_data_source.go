@@ -33,7 +33,7 @@ func (d *MetadataProfileDataSource) Metadata(_ context.Context, req datasource.M
 func (d *MetadataProfileDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the metadata server.
-		MarkdownDescription: "<!-- subcategory:Profiles -->Single [Metadata Profile](../resources/metadata_profile).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nSingle [Metadata Profile](../resources/metadata_profile).",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Metadata Profile ID.",
@@ -90,10 +90,10 @@ func (d *MetadataProfileDataSource) Read(ctx context.Context, req datasource.Rea
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 
-func (m *MetadataProfile) find(ctx context.Context, name string, profiles []*lidarr.MetadataProfileResource, diags *diag.Diagnostics) {
+func (m *MetadataProfile) find(ctx context.Context, name string, profiles []lidarr.MetadataProfileResource, diags *diag.Diagnostics) {
 	for _, p := range profiles {
 		if p.GetName() == name {
-			m.write(ctx, p, diags)
+			m.write(ctx, &p, diags)
 
 			return
 		}

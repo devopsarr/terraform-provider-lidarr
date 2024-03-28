@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_prowl Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Prowl resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Prowl https://wiki.servarr.com/lidarr/supported#prowl.
 ---
 
 # lidarr_notification_prowl (Resource)
 
-<!-- subcategory:Notifications -->Notification Prowl resource.
+<!-- subcategory:Notifications -->
+Notification Prowl resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Prowl](https://wiki.servarr.com/lidarr/supported#prowl).
 
 ## Example Usage

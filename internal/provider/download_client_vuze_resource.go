@@ -115,7 +115,7 @@ func (r *DownloadClientVuzeResource) Metadata(_ context.Context, req resource.Me
 
 func (r *DownloadClientVuzeResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Download Clients -->Download Client Vuze resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Vuze](https://wiki.servarr.com/lidarr/supported#vuze).",
+		MarkdownDescription: "<!-- subcategory:Download Clients -->\nDownload Client Vuze resource.\nFor more information refer to [Download Client](https://wiki.servarr.com/lidarr/settings#download-clients) and [Vuze](https://wiki.servarr.com/lidarr/supported#vuze).",
 		Attributes: map[string]schema.Attribute{
 			"enable": schema.BoolAttribute{
 				MarkdownDescription: "Enable flag.",

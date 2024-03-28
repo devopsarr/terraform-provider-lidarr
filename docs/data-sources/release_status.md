@@ -3,12 +3,15 @@
 page_title: "lidarr_release_status Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Single available Release Status.
 ---
 
 # lidarr_release_status (Data Source)
 
-<!-- subcategory:Profiles -->Single available Release Status.
+<!-- subcategory:Profiles -->
+Single available Release Status.
 
 ## Example Usage
 

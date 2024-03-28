@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_torznab Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Torznab resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Torznab https://wiki.servarr.com/lidarr/supported#torznab.
 ---
 
 # lidarr_indexer_torznab (Resource)
 
-<!-- subcategory:Indexers -->Indexer Torznab resource.
+<!-- subcategory:Indexers -->
+Indexer Torznab resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torznab](https://wiki.servarr.com/lidarr/supported#torznab).
 
 ## Example Usage

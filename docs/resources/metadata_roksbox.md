@@ -3,13 +3,16 @@
 page_title: "lidarr_metadata_roksbox Resource - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   Metadata Roksbox resource.
   For more information refer to Metadata https://wiki.servarr.com/lidarr/settings#metadata and ROKSBOX https://wiki.servarr.com/lidarr/supported#roksboxmetadata.
 ---
 
 # lidarr_metadata_roksbox (Resource)
 
-<!-- subcategory:Metadata -->Metadata Roksbox resource.
+<!-- subcategory:Metadata -->
+Metadata Roksbox resource.
 For more information refer to [Metadata](https://wiki.servarr.com/lidarr/settings#metadata) and [ROKSBOX](https://wiki.servarr.com/lidarr/supported#roksboxmetadata).
 
 ## Example Usage

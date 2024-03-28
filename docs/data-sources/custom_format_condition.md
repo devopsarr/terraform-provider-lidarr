@@ -3,6 +3,8 @@
 page_title: "lidarr_custom_format_condition Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Generic Custom Format Condition data source. When possible use a specific data source instead.
   For more information refer to Custom Format Conditions https://wiki.servarr.com/lidarr/settings#conditions.
    To be used in conjunction with Custom Format ../resources/custom_format.
@@ -10,7 +12,8 @@ description: |-
 
 # lidarr_custom_format_condition (Data Source)
 
-<!-- subcategory:Profiles --> Generic Custom Format Condition data source. When possible use a specific data source instead.
+<!-- subcategory:Profiles -->
+ Generic Custom Format Condition data source. When possible use a specific data source instead.
 For more information refer to [Custom Format Conditions](https://wiki.servarr.com/lidarr/settings#conditions).
  To be used in conjunction with [Custom Format](../resources/custom_format).
 

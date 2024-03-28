@@ -92,7 +92,7 @@ func (r *IndexerTorrentRssResource) Metadata(_ context.Context, req resource.Met
 
 func (r *IndexerTorrentRssResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Indexers -->Indexer Torrent RSS resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torrent RSS](https://wiki.servarr.com/lidarr/supported#torrentrssindexer).",
+		MarkdownDescription: "<!-- subcategory:Indexers -->\nIndexer Torrent RSS resource.\nFor more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torrent RSS](https://wiki.servarr.com/lidarr/supported#torrentrssindexer).",
 		Attributes: map[string]schema.Attribute{
 			"enable_rss": schema.BoolAttribute{
 				MarkdownDescription: "Enable RSS flag.",

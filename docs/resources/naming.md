@@ -3,13 +3,16 @@
 page_title: "lidarr_naming Resource - terraform-provider-lidarr"
 subcategory: "Media Management"
 description: |-
+  <!-- subcategory:Media Management -->
+  
   Naming resource.
   For more information refer to Naming https://wiki.servarr.com/lidarr/settings#community-naming-suggestions documentation.
 ---
 
 # lidarr_naming (Resource)
 
-<!-- subcategory:Media Management -->Naming resource.
+<!-- subcategory:Media Management -->
+Naming resource.
 For more information refer to [Naming](https://wiki.servarr.com/lidarr/settings#community-naming-suggestions) documentation.
 
 ## Example Usage

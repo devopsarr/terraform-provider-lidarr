@@ -39,7 +39,7 @@ func (d *ReleaseProfilesDataSource) Metadata(_ context.Context, req datasource.M
 func (d *ReleaseProfilesDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the release server.
-		MarkdownDescription: "<!-- subcategory:Profiles -->List all available [Release Profiles](../resources/release_profile).",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nList all available [Release Profiles](../resources/release_profile).",
 		Attributes: map[string]schema.Attribute{
 			// TODO: remove ID once framework support tests without ID https://www.terraform.io/plugin/framework/acctests#implement-id-attribute
 			"id": schema.StringAttribute{
@@ -103,7 +103,7 @@ func (d *ReleaseProfilesDataSource) Read(ctx context.Context, _ datasource.ReadR
 	// Map response body to resource schema attribute
 	profiles := make([]ReleaseProfile, len(response))
 	for i, p := range response {
-		profiles[i].write(ctx, p, &resp.Diagnostics)
+		profiles[i].write(ctx, &p, &resp.Diagnostics)
 	}
 
 	profileList, diags := types.SetValueFrom(ctx, ReleaseProfile{}.getType(), profiles)

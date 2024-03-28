@@ -3,12 +3,15 @@
 page_title: "lidarr_naming Data Source - terraform-provider-lidarr"
 subcategory: "Media Management"
 description: |-
+  <!-- subcategory:Media Management -->
+  
   Naming ../resources/naming.
 ---
 
 # lidarr_naming (Data Source)
 
-<!-- subcategory:Media Management -->[Naming](../resources/naming).
+<!-- subcategory:Media Management -->
+[Naming](../resources/naming).
 
 ## Example Usage
 

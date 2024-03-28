@@ -3,13 +3,16 @@
 page_title: "lidarr_indexer_torrentleech Resource - terraform-provider-lidarr"
 subcategory: "Indexers"
 description: |-
+  <!-- subcategory:Indexers -->
+  
   Indexer Torrentleech resource.
   For more information refer to Indexer https://wiki.servarr.com/lidarr/settings#indexers and Torrentleech https://wiki.servarr.com/lidarr/supported#torrentleech.
 ---
 
 # lidarr_indexer_torrentleech (Resource)
 
-<!-- subcategory:Indexers -->Indexer Torrentleech resource.
+<!-- subcategory:Indexers -->
+Indexer Torrentleech resource.
 For more information refer to [Indexer](https://wiki.servarr.com/lidarr/settings#indexers) and [Torrentleech](https://wiki.servarr.com/lidarr/supported#torrentleech).
 
 ## Example Usage

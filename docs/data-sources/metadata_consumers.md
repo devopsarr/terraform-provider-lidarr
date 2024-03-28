@@ -3,12 +3,15 @@
 page_title: "lidarr_metadata_consumers Data Source - terraform-provider-lidarr"
 subcategory: "Metadata"
 description: |-
+  <!-- subcategory:Metadata -->
+  
   List all available Metadata Consumers ../resources/metadata.
 ---
 
 # lidarr_metadata_consumers (Data Source)
 
-<!-- subcategory:Metadata -->List all available [Metadata Consumers](../resources/metadata).
+<!-- subcategory:Metadata -->
+List all available [Metadata Consumers](../resources/metadata).
 
 ## Example Usage
 

@@ -100,7 +100,7 @@ func (r *ImportListMusicBrainzResource) Metadata(_ context.Context, req resource
 
 func (r *ImportListMusicBrainzResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Import Lists -->Import List MusicBrainz resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [MusicBrainz](https://wiki.servarr.com/lidarr/supported#musicbrainzseries).",
+		MarkdownDescription: "<!-- subcategory:Import Lists -->\nImport List MusicBrainz resource.\nFor more information refer to [Import List](https://wiki.servarr.com/lidarr/settings#import-lists) and [MusicBrainz](https://wiki.servarr.com/lidarr/supported#musicbrainzseries).",
 		Attributes: map[string]schema.Attribute{
 			"enable_automatic_add": schema.BoolAttribute{
 				MarkdownDescription: "Enable automatic add flag.",

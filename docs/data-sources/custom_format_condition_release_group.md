@@ -3,13 +3,16 @@
 page_title: "lidarr_custom_format_condition_release_group Data Source - terraform-provider-lidarr"
 subcategory: "Profiles"
 description: |-
+  <!-- subcategory:Profiles -->
+  
   Custom Format Condition Release Group data source.
   For more information refer to Custom Format Conditions https://wiki.servarr.com/lidarr/settings#conditions.
 ---
 
 # lidarr_custom_format_condition_release_group (Data Source)
 
-<!-- subcategory:Profiles --> Custom Format Condition Release Group data source.
+<!-- subcategory:Profiles -->
+ Custom Format Condition Release Group data source.
 For more information refer to [Custom Format Conditions](https://wiki.servarr.com/lidarr/settings#conditions).
 
 ## Example Usage

@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_apprise Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Apprise resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Apprise https://wiki.servarr.com/lidarr/supported#apprise.
 ---
 
 # lidarr_notification_apprise (Resource)
 
-<!-- subcategory:Notifications -->Notification Apprise resource.
+<!-- subcategory:Notifications -->
+Notification Apprise resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Apprise](https://wiki.servarr.com/lidarr/supported#apprise).
 
 ## Example Usage

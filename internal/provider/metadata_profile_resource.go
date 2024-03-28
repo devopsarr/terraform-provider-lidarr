@@ -76,7 +76,7 @@ type MetadataProfileElements struct {
 
 func (r *MetadataProfileResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
-		MarkdownDescription: "<!-- subcategory:Profiles -->Metadata Profile resource.\nFor more information refer to [Metadata Profile](https://wiki.servarr.com/lidarr/settings#metadata-profiles) documentation.",
+		MarkdownDescription: "<!-- subcategory:Profiles -->\nMetadata Profile resource.\nFor more information refer to [Metadata Profile](https://wiki.servarr.com/lidarr/settings#metadata-profiles) documentation.",
 		Attributes: map[string]schema.Attribute{
 			"id": schema.Int64Attribute{
 				MarkdownDescription: "Metadata Profile ID.",
@@ -262,27 +262,27 @@ func (p *MetadataProfile) read(ctx context.Context, diags *diag.Diagnostics) *li
 	diags.Append(p.SecondaryAlbumTypes.ElementsAs(ctx, &secondary, true)...)
 	diags.Append(p.ReleaseStatuses.ElementsAs(ctx, &release, true)...)
 
-	primaryTypes := make([]*lidarr.ProfilePrimaryAlbumTypeItemResource, len(primary))
+	primaryTypes := make([]lidarr.ProfilePrimaryAlbumTypeItemResource, len(primary))
 	for i, e := range primary {
-		primaryTypes[i] = lidarr.NewProfilePrimaryAlbumTypeItemResource()
+		primaryTypes[i] = *lidarr.NewProfilePrimaryAlbumTypeItemResource()
 		element := lidarr.NewPrimaryAlbumType()
 		element.SetId(int32(*e))
 		primaryTypes[i].SetAlbumType(*element)
 		primaryTypes[i].SetAllowed(true)
 	}
 
-	secondaryTypes := make([]*lidarr.ProfileSecondaryAlbumTypeItemResource, len(secondary))
+	secondaryTypes := make([]lidarr.ProfileSecondaryAlbumTypeItemResource, len(secondary))
 	for i, e := range secondary {
-		secondaryTypes[i] = lidarr.NewProfileSecondaryAlbumTypeItemResource()
+		secondaryTypes[i] = *lidarr.NewProfileSecondaryAlbumTypeItemResource()
 		element := lidarr.NewSecondaryAlbumType()
 		element.SetId(int32(*e))
 		secondaryTypes[i].SetAlbumType(*element)
 		secondaryTypes[i].SetAllowed(true)
 	}
 
-	releaseStatuses := make([]*lidarr.ProfileReleaseStatusItemResource, len(release))
+	releaseStatuses := make([]lidarr.ProfileReleaseStatusItemResource, len(release))
 	for i, e := range release {
-		releaseStatuses[i] = lidarr.NewProfileReleaseStatusItemResource()
+		releaseStatuses[i] = *lidarr.NewProfileReleaseStatusItemResource()
 		element := lidarr.NewReleaseStatus()
 		element.SetId(int32(*e))
 		releaseStatuses[i].SetReleaseStatus(*element)

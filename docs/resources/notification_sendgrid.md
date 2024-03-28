@@ -3,13 +3,16 @@
 page_title: "lidarr_notification_sendgrid Resource - terraform-provider-lidarr"
 subcategory: "Notifications"
 description: |-
+  <!-- subcategory:Notifications -->
+  
   Notification Sendgrid resource.
   For more information refer to Notification https://wiki.servarr.com/lidarr/settings#connect and Sendgrid https://wiki.servarr.com/lidarr/supported#sendgrid.
 ---
 
 # lidarr_notification_sendgrid (Resource)
 
-<!-- subcategory:Notifications -->Notification Sendgrid resource.
+<!-- subcategory:Notifications -->
+Notification Sendgrid resource.
 For more information refer to [Notification](https://wiki.servarr.com/lidarr/settings#connect) and [Sendgrid](https://wiki.servarr.com/lidarr/supported#sendgrid).
 
 ## Example Usage
