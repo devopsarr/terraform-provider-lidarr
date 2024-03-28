@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.11.0...v1.12.0) (2024-03-28)
+
+
+### Features
+
+* align with sdk v1.x and correct lint ([735ad86](https://github.com/devopsarr/terraform-provider-lidarr/commit/735ad86a4de63837a2afe54e452d1f0ce3b0b331))
+
 ## [1.11.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.10.0...v1.11.0) (2023-12-07)
 
 
