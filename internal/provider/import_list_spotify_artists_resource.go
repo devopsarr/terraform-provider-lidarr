@@ -38,6 +38,7 @@ func NewImportListSpotifyArtistsResource() resource.Resource {
 // ImportListSpotifyArtistsResource defines the import list implementation.
 type ImportListSpotifyArtistsResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // ImportListSpotifyArtists describes the import list data model.
@@ -196,8 +197,9 @@ func (r *ImportListSpotifyArtistsResource) Schema(_ context.Context, _ resource.
 }
 
 func (r *ImportListSpotifyArtistsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -214,7 +216,7 @@ func (r *ImportListSpotifyArtistsResource) Create(ctx context.Context, req resou
 	// Create new ImportListSpotifyArtists
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListAPI.CreateImportList(ctx).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.CreateImportList(r.auth).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListSpotifyArtistsResourceName, err))
 
@@ -238,7 +240,7 @@ func (r *ImportListSpotifyArtistsResource) Read(ctx context.Context, req resourc
 	}
 
 	// Get ImportListSpotifyArtists current value
-	response, _, err := r.client.ImportListAPI.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ImportListAPI.GetImportListById(r.auth, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListSpotifyArtistsResourceName, err))
 
@@ -264,7 +266,7 @@ func (r *ImportListSpotifyArtistsResource) Update(ctx context.Context, req resou
 	// Update ImportListSpotifyArtists
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListAPI.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.UpdateImportList(r.auth, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListSpotifyArtistsResourceName, err))
 
@@ -287,7 +289,7 @@ func (r *ImportListSpotifyArtistsResource) Delete(ctx context.Context, req resou
 	}
 
 	// Delete ImportListSpotifyArtists current value
-	_, err := r.client.ImportListAPI.DeleteImportList(ctx, int32(ID)).Execute()
+	_, err := r.client.ImportListAPI.DeleteImportList(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListSpotifyArtistsResourceName, err))
 

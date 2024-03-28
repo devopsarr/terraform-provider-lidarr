@@ -36,6 +36,7 @@ func NewIndexerHeadphonesResource() resource.Resource {
 // IndexerHeadphonesResource defines the Headphones indexer implementation.
 type IndexerHeadphonesResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // IndexerHeadphones describes the Headphones indexer data model.
@@ -156,8 +157,9 @@ func (r *IndexerHeadphonesResource) Schema(_ context.Context, _ resource.SchemaR
 }
 
 func (r *IndexerHeadphonesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -174,7 +176,7 @@ func (r *IndexerHeadphonesResource) Create(ctx context.Context, req resource.Cre
 	// Create new IndexerHeadphones
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerAPI.CreateIndexer(ctx).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.CreateIndexer(r.auth).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerHeadphonesResourceName, err))
 
@@ -198,7 +200,7 @@ func (r *IndexerHeadphonesResource) Read(ctx context.Context, req resource.ReadR
 	}
 
 	// Get IndexerHeadphones current value
-	response, _, err := r.client.IndexerAPI.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
+	response, _, err := r.client.IndexerAPI.GetIndexerById(r.auth, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerHeadphonesResourceName, err))
 
@@ -224,7 +226,7 @@ func (r *IndexerHeadphonesResource) Update(ctx context.Context, req resource.Upd
 	// Update IndexerHeadphones
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerAPI.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.UpdateIndexer(r.auth, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerHeadphonesResourceName, err))
 
@@ -247,7 +249,7 @@ func (r *IndexerHeadphonesResource) Delete(ctx context.Context, req resource.Del
 	}
 
 	// Delete IndexerHeadphones current value
-	_, err := r.client.IndexerAPI.DeleteIndexer(ctx, int32(ID)).Execute()
+	_, err := r.client.IndexerAPI.DeleteIndexer(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerHeadphonesResourceName, err))
 

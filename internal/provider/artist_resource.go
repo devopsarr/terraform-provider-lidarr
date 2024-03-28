@@ -33,6 +33,7 @@ func NewArtistResource() resource.Resource {
 // ArtistResource defines the artist implementation.
 type ArtistResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // Artist describes the artist data model.
@@ -145,8 +146,9 @@ func (r *ArtistResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 }
 
 func (r *ArtistResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -167,7 +169,7 @@ func (r *ArtistResource) Create(ctx context.Context, req resource.CreateRequest,
 	options.SetMonitor(lidarr.MONITORTYPES_ALL)
 	options.SetSearchForMissingAlbums(true)
 
-	response, _, err := r.client.ArtistAPI.CreateArtist(ctx).ArtistResource(*request).Execute()
+	response, _, err := r.client.ArtistAPI.CreateArtist(r.auth).ArtistResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, artistResourceName, err))
 
@@ -191,7 +193,7 @@ func (r *ArtistResource) Read(ctx context.Context, req resource.ReadRequest, res
 	}
 
 	// Get artist current value
-	response, _, err := r.client.ArtistAPI.GetArtistById(ctx, int32(artist.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ArtistAPI.GetArtistById(r.auth, int32(artist.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, artistResourceName, err))
 
@@ -217,7 +219,7 @@ func (r *ArtistResource) Update(ctx context.Context, req resource.UpdateRequest,
 	// Update Artist
 	request := artist.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ArtistAPI.UpdateArtist(ctx, fmt.Sprint(request.GetId())).ArtistResource(*request).Execute()
+	response, _, err := r.client.ArtistAPI.UpdateArtist(r.auth, fmt.Sprint(request.GetId())).ArtistResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, artistResourceName, err))
 
@@ -240,7 +242,7 @@ func (r *ArtistResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	}
 
 	// Delete artist current value
-	_, err := r.client.ArtistAPI.DeleteArtist(ctx, int32(ID)).Execute()
+	_, err := r.client.ArtistAPI.DeleteArtist(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, artistResourceName, err))
 

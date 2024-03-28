@@ -35,6 +35,7 @@ func NewMetadataRoksboxResource() resource.Resource {
 // MetadataRoksboxResource defines the Roksbox metadata implementation.
 type MetadataRoksboxResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // MetadataRoksbox describes the Roksbox metadata data model.
@@ -120,8 +121,9 @@ func (r *MetadataRoksboxResource) Schema(_ context.Context, _ resource.SchemaReq
 }
 
 func (r *MetadataRoksboxResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -138,7 +140,7 @@ func (r *MetadataRoksboxResource) Create(ctx context.Context, req resource.Creat
 	// Create new MetadataRoksbox
 	request := metadata.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.MetadataAPI.CreateMetadata(ctx).MetadataResource(*request).Execute()
+	response, _, err := r.client.MetadataAPI.CreateMetadata(r.auth).MetadataResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, metadataRoksboxResourceName, err))
 
@@ -162,7 +164,7 @@ func (r *MetadataRoksboxResource) Read(ctx context.Context, req resource.ReadReq
 	}
 
 	// Get MetadataRoksbox current value
-	response, _, err := r.client.MetadataAPI.GetMetadataById(ctx, int32(metadata.ID.ValueInt64())).Execute()
+	response, _, err := r.client.MetadataAPI.GetMetadataById(r.auth, int32(metadata.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataRoksboxResourceName, err))
 
@@ -188,7 +190,7 @@ func (r *MetadataRoksboxResource) Update(ctx context.Context, req resource.Updat
 	// Update MetadataRoksbox
 	request := metadata.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.MetadataAPI.UpdateMetadata(ctx, strconv.Itoa(int(request.GetId()))).MetadataResource(*request).Execute()
+	response, _, err := r.client.MetadataAPI.UpdateMetadata(r.auth, strconv.Itoa(int(request.GetId()))).MetadataResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, metadataRoksboxResourceName, err))
 
@@ -211,7 +213,7 @@ func (r *MetadataRoksboxResource) Delete(ctx context.Context, req resource.Delet
 	}
 
 	// Delete MetadataRoksbox current value
-	_, err := r.client.MetadataAPI.DeleteMetadata(ctx, int32(ID)).Execute()
+	_, err := r.client.MetadataAPI.DeleteMetadata(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, metadataRoksboxResourceName, err))
 

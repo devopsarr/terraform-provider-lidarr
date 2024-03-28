@@ -22,6 +22,7 @@ func NewMetadataConfigDataSource() datasource.DataSource {
 // MetadataConfigDataSource defines the metadata config implementation.
 type MetadataConfigDataSource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 func (d *MetadataConfigDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -54,14 +55,15 @@ func (d *MetadataConfigDataSource) Schema(_ context.Context, _ datasource.Schema
 }
 
 func (d *MetadataConfigDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := dataSourceConfigure(ctx, req, resp); client != nil {
 		d.client = client
+		d.auth = auth
 	}
 }
 
 func (d *MetadataConfigDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get metadata config current value
-	response, _, err := d.client.MetadataProviderConfigAPI.GetMetadataProviderConfig(ctx).Execute()
+	response, _, err := d.client.MetadataProviderConfigAPI.GetMetadataProviderConfig(d.auth).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataConfigDataSourceName, err))
 

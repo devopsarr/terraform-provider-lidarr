@@ -24,6 +24,7 @@ func NewReleaseStatusDataSource() datasource.DataSource {
 // ReleaseStatusDataSource defines the release status type implementation.
 type ReleaseStatusDataSource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 func (d *ReleaseStatusDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -47,8 +48,9 @@ func (d *ReleaseStatusDataSource) Schema(_ context.Context, _ datasource.SchemaR
 }
 
 func (d *ReleaseStatusDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := dataSourceConfigure(ctx, req, resp); client != nil {
 		d.client = client
+		d.auth = auth
 	}
 }
 
@@ -62,7 +64,7 @@ func (d *ReleaseStatusDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	// Get release status type current value
-	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(ctx).Execute()
+	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(d.auth).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, releaseStatusesDataSourceName, err))
 

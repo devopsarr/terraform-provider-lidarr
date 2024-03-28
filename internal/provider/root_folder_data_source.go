@@ -24,6 +24,7 @@ func NewRootFolderDataSource() datasource.DataSource {
 // RootFolderDataSource defines the root folders implementation.
 type RootFolderDataSource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 func (d *RootFolderDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -77,8 +78,9 @@ func (d *RootFolderDataSource) Schema(_ context.Context, _ datasource.SchemaRequ
 }
 
 func (d *RootFolderDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := dataSourceConfigure(ctx, req, resp); client != nil {
 		d.client = client
+		d.auth = auth
 	}
 }
 
@@ -91,7 +93,7 @@ func (d *RootFolderDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 	// Get rootfolders current value
-	response, _, err := d.client.RootFolderAPI.ListRootFolder(ctx).Execute()
+	response, _, err := d.client.RootFolderAPI.ListRootFolder(d.auth).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, rootFolderDataSourceName, err))
 

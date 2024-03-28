@@ -38,6 +38,7 @@ func NewImportListHeadphonesResource() resource.Resource {
 // ImportListHeadphonesResource defines the import list implementation.
 type ImportListHeadphonesResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // ImportListHeadphones describes the import list data model.
@@ -188,8 +189,9 @@ func (r *ImportListHeadphonesResource) Schema(_ context.Context, _ resource.Sche
 }
 
 func (r *ImportListHeadphonesResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -206,7 +208,7 @@ func (r *ImportListHeadphonesResource) Create(ctx context.Context, req resource.
 	// Create new ImportListHeadphones
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListAPI.CreateImportList(ctx).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.CreateImportList(r.auth).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListHeadphonesResourceName, err))
 
@@ -230,7 +232,7 @@ func (r *ImportListHeadphonesResource) Read(ctx context.Context, req resource.Re
 	}
 
 	// Get ImportListHeadphones current value
-	response, _, err := r.client.ImportListAPI.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ImportListAPI.GetImportListById(r.auth, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListHeadphonesResourceName, err))
 
@@ -256,7 +258,7 @@ func (r *ImportListHeadphonesResource) Update(ctx context.Context, req resource.
 	// Update ImportListHeadphones
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListAPI.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.UpdateImportList(r.auth, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListHeadphonesResourceName, err))
 
@@ -279,7 +281,7 @@ func (r *ImportListHeadphonesResource) Delete(ctx context.Context, req resource.
 	}
 
 	// Delete ImportListHeadphones current value
-	_, err := r.client.ImportListAPI.DeleteImportList(ctx, int32(ID)).Execute()
+	_, err := r.client.ImportListAPI.DeleteImportList(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListHeadphonesResourceName, err))
 
