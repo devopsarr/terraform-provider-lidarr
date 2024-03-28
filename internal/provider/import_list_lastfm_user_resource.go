@@ -38,6 +38,7 @@ func NewImportListLastFMUserResource() resource.Resource {
 // ImportListLastFMUserResource defines the import list implementation.
 type ImportListLastFMUserResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // ImportListLastFMUser describes the import list data model.
@@ -187,8 +188,9 @@ func (r *ImportListLastFMUserResource) Schema(_ context.Context, _ resource.Sche
 }
 
 func (r *ImportListLastFMUserResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -205,7 +207,7 @@ func (r *ImportListLastFMUserResource) Create(ctx context.Context, req resource.
 	// Create new ImportListLastFMUser
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListAPI.CreateImportList(ctx).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.CreateImportList(r.auth).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, importListLastFMUserResourceName, err))
 
@@ -229,7 +231,7 @@ func (r *ImportListLastFMUserResource) Read(ctx context.Context, req resource.Re
 	}
 
 	// Get ImportListLastFMUser current value
-	response, _, err := r.client.ImportListAPI.GetImportListById(ctx, int32(importList.ID.ValueInt64())).Execute()
+	response, _, err := r.client.ImportListAPI.GetImportListById(r.auth, int32(importList.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, importListLastFMUserResourceName, err))
 
@@ -255,7 +257,7 @@ func (r *ImportListLastFMUserResource) Update(ctx context.Context, req resource.
 	// Update ImportListLastFMUser
 	request := importList.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.ImportListAPI.UpdateImportList(ctx, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
+	response, _, err := r.client.ImportListAPI.UpdateImportList(r.auth, strconv.Itoa(int(request.GetId()))).ImportListResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, importListLastFMUserResourceName, err))
 
@@ -278,7 +280,7 @@ func (r *ImportListLastFMUserResource) Delete(ctx context.Context, req resource.
 	}
 
 	// Delete ImportListLastFMUser current value
-	_, err := r.client.ImportListAPI.DeleteImportList(ctx, int32(ID)).Execute()
+	_, err := r.client.ImportListAPI.DeleteImportList(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, importListLastFMUserResourceName, err))
 

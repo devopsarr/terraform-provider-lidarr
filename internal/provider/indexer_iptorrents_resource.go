@@ -36,6 +36,7 @@ func NewIndexerIptorrentsResource() resource.Resource {
 // IndexerIptorrentsResource defines the Iptorrents indexer implementation.
 type IndexerIptorrentsResource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // IndexerIptorrents describes the Iptorrents indexer data model.
@@ -140,8 +141,9 @@ func (r *IndexerIptorrentsResource) Schema(_ context.Context, _ resource.SchemaR
 }
 
 func (r *IndexerIptorrentsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
-	if client := helpers.ResourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := resourceConfigure(ctx, req, resp); client != nil {
 		r.client = client
+		r.auth = auth
 	}
 }
 
@@ -158,7 +160,7 @@ func (r *IndexerIptorrentsResource) Create(ctx context.Context, req resource.Cre
 	// Create new IndexerIptorrents
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerAPI.CreateIndexer(ctx).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.CreateIndexer(r.auth).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Create, indexerIptorrentsResourceName, err))
 
@@ -182,7 +184,7 @@ func (r *IndexerIptorrentsResource) Read(ctx context.Context, req resource.ReadR
 	}
 
 	// Get IndexerIptorrents current value
-	response, _, err := r.client.IndexerAPI.GetIndexerById(ctx, int32(indexer.ID.ValueInt64())).Execute()
+	response, _, err := r.client.IndexerAPI.GetIndexerById(r.auth, int32(indexer.ID.ValueInt64())).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, indexerIptorrentsResourceName, err))
 
@@ -208,7 +210,7 @@ func (r *IndexerIptorrentsResource) Update(ctx context.Context, req resource.Upd
 	// Update IndexerIptorrents
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerAPI.UpdateIndexer(ctx, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.UpdateIndexer(r.auth, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerIptorrentsResourceName, err))
 
@@ -231,7 +233,7 @@ func (r *IndexerIptorrentsResource) Delete(ctx context.Context, req resource.Del
 	}
 
 	// Delete IndexerIptorrents current value
-	_, err := r.client.IndexerAPI.DeleteIndexer(ctx, int32(ID)).Execute()
+	_, err := r.client.IndexerAPI.DeleteIndexer(r.auth, int32(ID)).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Delete, indexerIptorrentsResourceName, err))
 

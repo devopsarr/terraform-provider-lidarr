@@ -24,6 +24,7 @@ func NewSecondaryAlbumTypesDataSource() datasource.DataSource {
 // SecondaryAlbumTypesDataSource defines the secondaryAlbumType implementation.
 type SecondaryAlbumTypesDataSource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 func (d *SecondaryAlbumTypesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -59,14 +60,15 @@ func (d *SecondaryAlbumTypesDataSource) Schema(_ context.Context, _ datasource.S
 }
 
 func (d *SecondaryAlbumTypesDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := dataSourceConfigure(ctx, req, resp); client != nil {
 		d.client = client
+		d.auth = auth
 	}
 }
 
 func (d *SecondaryAlbumTypesDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get secondary album type current value
-	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(ctx).Execute()
+	response, _, err := d.client.MetadataProfileSchemaAPI.GetMetadataprofileSchema(d.auth).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, secondaryAlbumTypesDataSourceName, err))
 

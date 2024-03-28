@@ -25,4 +25,13 @@ provider "lidarr" {
 ### Optional
 
 - `api_key` (String, Sensitive) API key for Lidarr authentication. Can be specified via the `LIDARR_API_KEY` environment variable.
+- `extra_headers` (Attributes Set) Extra headers to be sent along with all Lidarr requests. If this attribute is unset, it can be specified via environment variables following this pattern `LIDARR_EXTRA_HEADER_${Header-Name}=${Header-Value}`. (see [below for nested schema](#nestedatt--extra_headers))
 - `url` (String) Full Lidarr URL with protocol and port (e.g. `https://test.lidarr.audio:8686`). You should **NOT** supply any path (`/api`), the SDK will use the appropriate paths. Can be specified via the `LIDARR_URL` environment variable.
+
+<a id="nestedatt--extra_headers"></a>
+### Nested Schema for `extra_headers`
+
+Required:
+
+- `name` (String) Header name.
+- `value` (String) Header value.
