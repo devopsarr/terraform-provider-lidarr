@@ -24,6 +24,7 @@ func NewMetadataProfileDataSource() datasource.DataSource {
 // MetadataProfileDataSource defines the metadata profile implementation.
 type MetadataProfileDataSource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 func (d *MetadataProfileDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -63,8 +64,9 @@ func (d *MetadataProfileDataSource) Schema(_ context.Context, _ datasource.Schem
 }
 
 func (d *MetadataProfileDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := dataSourceConfigure(ctx, req, resp); client != nil {
 		d.client = client
+		d.auth = auth
 	}
 }
 
@@ -77,7 +79,7 @@ func (d *MetadataProfileDataSource) Read(ctx context.Context, req datasource.Rea
 		return
 	}
 	// Get metadataprofiles current value
-	response, _, err := d.client.MetadataProfileAPI.ListMetadataProfile(ctx).Execute()
+	response, _, err := d.client.MetadataProfileAPI.ListMetadataProfile(d.auth).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Read, metadataProfileDataSourceName, err))
 

@@ -24,6 +24,7 @@ func NewArtistsDataSource() datasource.DataSource {
 // ArtistsDataSource defines the artists implementation.
 type ArtistsDataSource struct {
 	client *lidarr.APIClient
+	auth   context.Context
 }
 
 // Artists describes the artists data model.
@@ -104,14 +105,15 @@ func (d *ArtistsDataSource) Schema(_ context.Context, _ datasource.SchemaRequest
 }
 
 func (d *ArtistsDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
-	if client := helpers.DataSourceConfigure(ctx, req, resp); client != nil {
+	if auth, client := dataSourceConfigure(ctx, req, resp); client != nil {
 		d.client = client
+		d.auth = auth
 	}
 }
 
 func (d *ArtistsDataSource) Read(ctx context.Context, _ datasource.ReadRequest, resp *datasource.ReadResponse) {
 	// Get artists current value
-	response, _, err := d.client.ArtistAPI.ListArtist(ctx).Execute()
+	response, _, err := d.client.ArtistAPI.ListArtist(d.auth).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.List, artistsDataSourceName, err))
 
