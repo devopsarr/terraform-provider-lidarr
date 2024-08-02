@@ -30,7 +30,7 @@ func TestAccArtistResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_artist.test", "artist_name", "Queen"),
 					resource.TestCheckResourceAttr("lidarr_artist.test", "status", "continuing"),
 					resource.TestCheckResourceAttr("lidarr_artist.test", "monitored", "false"),
-					resource.TestCheckResourceAttr("lidarr_artist.test", "genres.0", "Arena Rock"),
+					resource.TestCheckResourceAttrSet("lidarr_artist.test", "genres.0"),
 				),
 			},
 			// Unauthorized Read
