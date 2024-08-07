@@ -28,7 +28,7 @@ func TestAccArtistResource(t *testing.T) {
 					resource.TestCheckResourceAttr("lidarr_artist.test", "path", "/config/test"),
 					resource.TestCheckResourceAttrSet("lidarr_artist.test", "id"),
 					resource.TestCheckResourceAttr("lidarr_artist.test", "artist_name", "Queen"),
-					resource.TestCheckResourceAttr("lidarr_artist.test", "status", "continuing"),
+					resource.TestCheckResourceAttr("lidarr_artist.test", "status", "ended"),
 					resource.TestCheckResourceAttr("lidarr_artist.test", "monitored", "false"),
 					resource.TestCheckResourceAttrSet("lidarr_artist.test", "genres.0"),
 				),
