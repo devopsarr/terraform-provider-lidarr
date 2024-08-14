@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.12.1](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.12.0...v1.12.1) (2024-08-14)
+
+
+### Bug Fixes
+
+* artist test ([833ee11](https://github.com/devopsarr/terraform-provider-lidarr/commit/833ee118acb5bb7e1ad6867f8bc6c48af232698c))
+* bump golangci-lint version ([67e1cb8](https://github.com/devopsarr/terraform-provider-lidarr/commit/67e1cb8084f9f9378a32857c25c33fa032439e4d))
+* **deps:** update terraform-framework ([545446f](https://github.com/devopsarr/terraform-provider-lidarr/commit/545446fcb3c93146f07a9312cb4cea276f01a564))
+* gorreleaser syntax ([5a49878](https://github.com/devopsarr/terraform-provider-lidarr/commit/5a4987895084ad95d4c014dff51fb9dbbc62f297))
+
 ## [1.12.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.11.0...v1.12.0) (2024-05-05)
 
 
