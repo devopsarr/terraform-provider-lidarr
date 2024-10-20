@@ -158,6 +158,7 @@ func (u UpdateConfig) getType() attr.Type {
 type LoggingConfig struct {
 	LogLevel         types.String `tfsdk:"log_level"`
 	ConsoleLogLevel  types.String `tfsdk:"console_log_level"`
+	LogSizeLimit     types.Int64  `tfsdk:"log_size_limit"`
 	AnalyticsEnabled types.Bool   `tfsdk:"analytics_enabled"`
 }
 
@@ -166,6 +167,7 @@ func (l LoggingConfig) getType() attr.Type {
 		map[string]attr.Type{
 			"log_level":         types.StringType,
 			"console_log_level": types.StringType,
+			"log_size_limit":    types.Int64Type,
 			"analytics_enabled": types.BoolType,
 		})
 }
@@ -247,6 +249,10 @@ func (r *HostResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 						MarkdownDescription: "Console log level.",
 						Optional:            true,
 						Computed:            true,
+					},
+					"log_size_limit": schema.Int64Attribute{
+						MarkdownDescription: "Log size limit.",
+						Required:            true,
 					},
 					"analytics_enabled": schema.BoolAttribute{
 						MarkdownDescription: "Enable analytics flag.",
@@ -527,6 +533,7 @@ func (l *LoggingConfig) write(host *lidarr.HostConfigResource) {
 	l.AnalyticsEnabled = types.BoolValue(host.GetAnalyticsEnabled())
 	l.ConsoleLogLevel = types.StringValue(host.GetConsoleLogLevel())
 	l.LogLevel = types.StringValue(host.GetLogLevel())
+	l.LogSizeLimit = types.Int64Value(int64(host.GetLogSizeLimit()))
 }
 
 func (u *UpdateConfig) write(host *lidarr.HostConfigResource) {
@@ -609,6 +616,7 @@ func (l *LoggingConfig) read(host *lidarr.HostConfigResource) {
 	host.SetAnalyticsEnabled(l.AnalyticsEnabled.ValueBool())
 	host.SetConsoleLogLevel(l.LogLevel.ValueString())
 	host.SetLogLevel(l.LogLevel.ValueString())
+	host.SetLogSizeLimit(int32(l.LogSizeLimit.ValueInt64()))
 }
 
 func (u *UpdateConfig) read(host *lidarr.HostConfigResource) {
