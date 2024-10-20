@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.13.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.12.0...v1.13.0) (2024-10-20)
+
+
+### Features
+
+* add support for log size limit ([ca54021](https://github.com/devopsarr/terraform-provider-lidarr/commit/ca54021472f06e17ccbc5fa94e10b5cd7cae1a70))
+
+
+### Bug Fixes
+
+* artist test ([833ee11](https://github.com/devopsarr/terraform-provider-lidarr/commit/833ee118acb5bb7e1ad6867f8bc6c48af232698c))
+* bump golangci-lint version ([67e1cb8](https://github.com/devopsarr/terraform-provider-lidarr/commit/67e1cb8084f9f9378a32857c25c33fa032439e4d))
+* **deps:** update hotio/lidarr docker tag to release-2.6.4.4402 ([e38c767](https://github.com/devopsarr/terraform-provider-lidarr/commit/e38c76763349d024c79e2ff0803a13df6df4bba5))
+* **deps:** update module github.com/devopsarr/lidarr-go to v1.1.1 ([a8de68c](https://github.com/devopsarr/terraform-provider-lidarr/commit/a8de68cb1797b5fc289c5c9768da99d2fa356a71))
+* **deps:** update terraform-framework ([545446f](https://github.com/devopsarr/terraform-provider-lidarr/commit/545446fcb3c93146f07a9312cb4cea276f01a564))
+* gorreleaser syntax ([5a49878](https://github.com/devopsarr/terraform-provider-lidarr/commit/5a4987895084ad95d4c014dff51fb9dbbc62f297))
+* use int instead of str to update res ([d427d34](https://github.com/devopsarr/terraform-provider-lidarr/commit/d427d3409926debaf41655369dc47788792de367))
+
 ## [1.12.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.11.0...v1.12.0) (2024-05-05)
 
 
