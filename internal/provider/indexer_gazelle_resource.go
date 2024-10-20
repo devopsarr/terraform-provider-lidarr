@@ -266,7 +266,7 @@ func (r *IndexerGazelleResource) Update(ctx context.Context, req resource.Update
 	// Update IndexerGazelle
 	request := indexer.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.IndexerAPI.UpdateIndexer(r.auth, strconv.Itoa(int(request.GetId()))).IndexerResource(*request).Execute()
+	response, _, err := r.client.IndexerAPI.UpdateIndexer(r.auth, request.GetId()).IndexerResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, indexerGazelleResourceName, err))
 

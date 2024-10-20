@@ -296,7 +296,7 @@ func (r *NotificationSubsonicResource) Update(ctx context.Context, req resource.
 	// Update NotificationSubsonic
 	request := notification.read(ctx, &resp.Diagnostics)
 
-	response, _, err := r.client.NotificationAPI.UpdateNotification(r.auth, strconv.Itoa(int(request.GetId()))).NotificationResource(*request).Execute()
+	response, _, err := r.client.NotificationAPI.UpdateNotification(r.auth, request.GetId()).NotificationResource(*request).Execute()
 	if err != nil {
 		resp.Diagnostics.AddError(helpers.ClientError, helpers.ParseClientError(helpers.Update, notificationSubsonicResourceName, err))
 
