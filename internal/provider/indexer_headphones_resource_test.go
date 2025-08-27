@@ -55,6 +55,7 @@ func testAccIndexerHeadphonesResourceConfig(name, user string) string {
 	return fmt.Sprintf(`
 	resource "lidarr_indexer_headphones" "test" {
 		enable_automatic_search = false
+		priority = 1
 		name = "%s"
 		username = "%s"
 		password = "Pass"

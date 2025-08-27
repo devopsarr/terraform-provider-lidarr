@@ -60,5 +60,6 @@ func testAccIndexerRedactedResourceConfig(name, user string) string {
 		api_key = "%s"
 		use_freeleech_token = false
 		minimum_seeders = 1
+		priority = 1
 	}`, name, user)
 }

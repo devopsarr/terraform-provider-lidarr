@@ -59,5 +59,6 @@ func testAccIndexerTorrentRssResourceConfig(name, url string) string {
 		base_url = "%s"
 		allow_zero_size = true
 		minimum_seeders = 1
+		priority = 1
 	}`, name, url)
 }

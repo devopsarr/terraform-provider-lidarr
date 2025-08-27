@@ -60,5 +60,6 @@ func testAccIndexerTorznabResourceConfig(name string, seeders int) string {
 		api_path = "/nabapi"
 		minimum_seeders = %d
 		categories = [2000,2010]
+		priority = 1
 	}`, name, seeders)
 }

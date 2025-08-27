@@ -62,5 +62,6 @@ func testAccIndexerFilelistResourceConfig(name, username string) string {
 		passkey = "Pass"
 		categories = [4,6,1]
 		minimum_seeders = 1
+		priority = 1
 	}`, name, username)
 }
