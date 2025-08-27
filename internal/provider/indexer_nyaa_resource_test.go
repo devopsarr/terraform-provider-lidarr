@@ -58,5 +58,6 @@ func testAccIndexerNyaaResourceConfig(name, url string) string {
 		name = "%s"
 		base_url = "%s"
 		minimum_seeders = 1
+		priority = 1
 	}`, name, url)
 }

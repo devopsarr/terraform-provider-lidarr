@@ -60,5 +60,6 @@ func testAccIndexerTorrentleechResourceConfig(name string, seeders int) string {
 		base_url = "http://rss.torrentleech.org"
 		api_key = "Key"
 		minimum_seeders = %d
+		priority = 1
 	}`, name, seeders)
 }

@@ -63,5 +63,6 @@ func testAccIndexerGazelleResourceConfig(name, user string) string {
 		base_url = "https://orpheus.network"
 		use_freeleech_token = false
 		minimum_seeders = 1
+		priority = 1
 	}`, name, user)
 }
