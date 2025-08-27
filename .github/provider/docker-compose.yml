@@ -2,7 +2,7 @@
 version: "3.9"
 services:
   lidarr:
-    image: ghcr.io/hotio/lidarr:release-2.8.2.4493
+    image: ghcr.io/hotio/lidarr:release-2.12.4.4658
     container_name: lidarr
     depends_on:
       - transmission
