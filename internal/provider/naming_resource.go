@@ -38,6 +38,7 @@ type Naming struct {
 	ArtistFolderFormat       types.String `tfsdk:"artist_folder_format"`
 	MultiDiscTrackFormat     types.String `tfsdk:"multi_disc_track_format"`
 	StandardTrackFormat      types.String `tfsdk:"standard_track_format"`
+	ColonReplacement         types.Int64  `tfsdk:"colon_replacement"`
 	ID                       types.Int64  `tfsdk:"id"`
 	RenameTracks             types.Bool   `tfsdk:"rename_tracks"`
 	ReplaceIllegalCharacters types.Bool   `tfsdk:"replace_illegal_characters"`
@@ -76,6 +77,10 @@ func (r *NamingResource) Schema(_ context.Context, _ resource.SchemaRequest, res
 			},
 			"standard_track_format": schema.StringAttribute{
 				MarkdownDescription: "Standard track formatss.",
+				Required:            true,
+			},
+			"colon_replacement": schema.Int64Attribute{
+				MarkdownDescription: "Colon Replacement. `0` Delete, `1` Replace with Dash, `2` Replace with Space Dash, `3` Replace with Space Dash Space, `4` Smart Replace",
 				Required:            true,
 			},
 		},
@@ -193,6 +198,7 @@ func (n *Naming) write(naming *lidarr.NamingConfigResource) {
 	n.ArtistFolderFormat = types.StringValue(naming.GetArtistFolderFormat())
 	n.MultiDiscTrackFormat = types.StringValue(naming.GetMultiDiscTrackFormat())
 	n.StandardTrackFormat = types.StringValue(naming.GetStandardTrackFormat())
+	n.ColonReplacement = types.Int64Value(int64(naming.GetColonReplacementFormat()))
 }
 
 func (n *Naming) read() *lidarr.NamingConfigResource {
@@ -203,6 +209,7 @@ func (n *Naming) read() *lidarr.NamingConfigResource {
 	naming.SetArtistFolderFormat(n.ArtistFolderFormat.ValueString())
 	naming.SetMultiDiscTrackFormat(n.MultiDiscTrackFormat.ValueString())
 	naming.SetStandardTrackFormat(n.StandardTrackFormat.ValueString())
+	naming.SetColonReplacementFormat(int32(n.ColonReplacement.ValueInt64()))
 
 	return naming
 }

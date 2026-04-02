@@ -24,6 +24,7 @@ data "lidarr_naming" "example" {
 ### Read-Only
 
 - `artist_folder_format` (String) Artist folder format.
+- `colon_replacement` (Number) Colon Replacement. `0` Delete, `1` Replace with Dash, `2` Replace with Space Dash, `3` Replace with Space Dash Space, `4` Smart Replace
 - `id` (Number) Naming ID.
 - `multi_disc_track_format` (String) Multi disc track format.
 - `rename_tracks` (Boolean) Lidarr will use the existing file name if false.

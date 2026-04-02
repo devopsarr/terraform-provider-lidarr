@@ -58,6 +58,10 @@ func (d *NamingDataSource) Schema(_ context.Context, _ datasource.SchemaRequest,
 				MarkdownDescription: "Standard track formatss.",
 				Computed:            true,
 			},
+			"colon_replacement": schema.Int64Attribute{
+				MarkdownDescription: "Colon Replacement. `0` Delete, `1` Replace with Dash, `2` Replace with Space Dash, `3` Replace with Space Dash Space, `4` Smart Replace",
+				Computed:            true,
+			},
 		},
 	}
 }
