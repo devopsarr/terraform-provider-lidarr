@@ -22,6 +22,7 @@ resource "lidarr_naming" "example" {
   standard_track_format      = "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
   multi_disc_track_format    = "{Album Title} ({Release Year})/{Medium Format} {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
   artist_folder_format       = "{Artist Name}"
+  colon_replacement          = 4
 }
 ```
 
@@ -31,6 +32,7 @@ resource "lidarr_naming" "example" {
 ### Required
 
 - `artist_folder_format` (String) Artist folder format.
+- `colon_replacement` (Number) Colon Replacement. `0` Delete, `1` Replace with Dash, `2` Replace with Space Dash, `3` Replace with Space Dash Space, `4` Smart Replace
 - `multi_disc_track_format` (String) Multi disc track format.
 - `rename_tracks` (Boolean) Lidarr will use the existing file name if false.
 - `replace_illegal_characters` (Boolean) Replace illegal characters. They will be removed if false.

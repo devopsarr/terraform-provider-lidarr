@@ -59,5 +59,6 @@ func testAccNamingResourceConfig(artist string) string {
 		standard_track_format      = "{Album Title} ({Release Year})/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
 		multi_disc_track_format    = "{Album Title} ({Release Year})/{Medium Format} {medium:00}/{Artist Name} - {Album Title} - {track:00} - {Track Title}"
 		artist_folder_format       = "%s"
+		colon_replacement					 = 0
 	}`, artist)
 }
