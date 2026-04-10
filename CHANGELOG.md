@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.14.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.13.0...v1.14.0) (2026-03-12)
+
+
+### Features
+
+* **notification:** add access_token field to ntfy notification resource ([a5ca9a3](https://github.com/devopsarr/terraform-provider-lidarr/commit/a5ca9a3d2b1a5aa2d388129919848d33b0c42738))
+
+
+### Bug Fixes
+
+* bump golangci-lint to v2 ([48505d9](https://github.com/devopsarr/terraform-provider-lidarr/commit/48505d91b1357744619464a10bda0bc481e58356))
+* bump lidarr to 2.12.4.4658 ([d08d623](https://github.com/devopsarr/terraform-provider-lidarr/commit/d08d623a400125fd255ce389aa1c8493cb567061))
+* **deps:** update ghcr.io/hotio/lidarr docker tag to release-2.12.4.4658 ([8424d2b](https://github.com/devopsarr/terraform-provider-lidarr/commit/8424d2bee3cc9c777daec280e0cca0d734389ce8))
+* **deps:** update ghcr.io/hotio/lidarr docker tag to release-2.13.3.4711 ([a0614f0](https://github.com/devopsarr/terraform-provider-lidarr/commit/a0614f0c7ffdde933ec49ca17907922526c6449a))
+* **deps:** update ghcr.io/hotio/lidarr docker tag to v3 ([7c5f01a](https://github.com/devopsarr/terraform-provider-lidarr/commit/7c5f01a402a637c9b1e48b512ef3328f7b20a501))
+* **deps:** update hotio/lidarr docker tag to release-2.8.2.4493 ([b2cf930](https://github.com/devopsarr/terraform-provider-lidarr/commit/b2cf9308105ddccd407b5f2e7553b8843c8bbf0a))
+* **deps:** update module github.com/devopsarr/lidarr-go to v1.2.0 ([660e04f](https://github.com/devopsarr/terraform-provider-lidarr/commit/660e04f8b26266db0b7478d52ebe3299aa6181a2))
+* **deps:** update module github.com/devopsarr/lidarr-go to v1.2.1 ([9bbf5ad](https://github.com/devopsarr/terraform-provider-lidarr/commit/9bbf5adbada856ee32c36931e0f123b0e6f3371c))
+* **deps:** update module github.com/stretchr/testify to v1.10.0 ([79c8c23](https://github.com/devopsarr/terraform-provider-lidarr/commit/79c8c234c3d439344bdecdef4c73c34e633e31c8))
+* **deps:** update module github.com/stretchr/testify to v1.11.1 ([9a1fda6](https://github.com/devopsarr/terraform-provider-lidarr/commit/9a1fda6c85288c61272368b2b4038fbc172fb503))
+* v3 tests changed requirements ([e134f2a](https://github.com/devopsarr/terraform-provider-lidarr/commit/e134f2a8d335706d26ba38d2465442168404c02b))
+
 ## [1.13.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.12.0...v1.13.0) (2024-10-20)
 
 
