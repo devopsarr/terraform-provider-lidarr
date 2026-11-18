@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.14.0 (2026-11-18)
+
+## What's Changed
+* fix(deps): update module github.com/devopsarr/lidarr-go to v1.2.0 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/237
+* chore(deps): bump golang.org/x/net from 0.25.0 to 0.33.0 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/240
+* fix(deps): update hotio/lidarr docker tag to release-2.8.2.4493 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/235
+* fix(deps): update module github.com/stretchr/testify to v1.10.0 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/236
+* build: change image registry by @Fuochi in https://github.com/devopsarr/terraform-provider-lidarr/pull/246
+* chore(deps): bump github.com/cloudflare/circl from 1.3.7 to 1.6.1 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/245
+* chore(deps): bump golang.org/x/net from 0.33.0 to 0.38.0 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/244
+* fix(deps): update ghcr.io/hotio/lidarr docker tag to release-2.12.4.4658 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/248
+* fix(deps): update module github.com/stretchr/testify to v1.11.1 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/247
+* fix(deps): update ghcr.io/hotio/lidarr docker tag to release-2.13.3.4711 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/249
+* doc: move back to terraform-plugin-docs by @Fuochi in https://github.com/devopsarr/terraform-provider-lidarr/pull/251
+* fix(deps): update module github.com/devopsarr/lidarr-go to v1.2.1 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/250
+* fix(deps): update ghcr.io/hotio/lidarr docker tag to v3 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/253
+* chore(deps): bump golang.org/x/crypto from 0.38.0 to 0.45.0 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/254
+* chore(deps): bump github.com/cloudflare/circl from 1.6.1 to 1.6.3 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/256
+* Add access_token support to ntfy notification resource by @StephanMeijer in https://github.com/devopsarr/terraform-provider-lidarr/pull/258
+* chore: add config files for release please v4 migration by @Fuochi in https://github.com/devopsarr/terraform-provider-lidarr/pull/260
+* chore(deps): bump google.golang.org/grpc from 1.63.2 to 1.79.3 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/261
+* feat: add support for Colon Replacement in Track Naming by @hgfi in https://github.com/devopsarr/terraform-provider-lidarr/pull/262
+* chore(deps): bump golang.org/x/crypto from 0.46.0 to 0.52.0 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/265
+* chore(deps): bump golang.org/x/net from 0.54.0 to 0.55.0 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/263
+* fix(deps): update module github.com/stretchr/testify to v1.12.1 by @renovate[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/267
+* chore(deps): bump google.golang.org/grpc from 1.79.3 to 1.82.1 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/266
+* chore(deps): bump google.golang.org/grpc from 1.82.1 to 1.83.1 by @dependabot[bot] in https://github.com/devopsarr/terraform-provider-lidarr/pull/268
+* chore: update changelog type to github by @Fuochi in https://github.com/devopsarr/terraform-provider-lidarr/pull/272
+
+## New Contributors
+* @StephanMeijer made their first contribution in https://github.com/devopsarr/terraform-provider-lidarr/pull/258
+* @hgfi made their first contribution in https://github.com/devopsarr/terraform-provider-lidarr/pull/262
+
+**Full Changelog**: https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.13.0...v1.14.0
+
 ## [1.13.0](https://github.com/devopsarr/terraform-provider-lidarr/compare/v1.12.0...v1.13.0) (2024-10-20)
 
 
